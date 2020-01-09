@@ -56,12 +56,12 @@
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     extractConditions($row["conditions"]);
-                    extractAgeGroups($row["age_groups"]);
-                    extractPhases($row["phases"]);
-                    extractInterventionTypes($row["interventions"]);
-                    extractStudyDesignTypes($row["study_designs"]);
-                    extractStatuses($row["status"]);
-                    extractStudyTypes($row["study_types"]);
+                    // extractAgeGroups($row["age_groups"]);
+                    // extractPhases($row["phases"]);
+                    // extractInterventionTypes($row["interventions"]);
+                    // extractStudyDesignTypes($row["study_designs"]);
+                    // extractStatuses($row["status"]);
+                    // extractStudyTypes($row["study_types"]);
                 }
             } else {
                 $stmt->close();
@@ -86,9 +86,11 @@
         $arrCondition = explode("|", $data);
 
         foreach($arrCondition as $condition) {
-            if (!in_array($condition, $conditions)) {
-                array_push($conditions, $condition);
-            }
+            $val = getValue($condition);
+            pushData($val);
+            // if (!in_array($val, $conditions) && strlen($val) > 0) {
+            //     array_push($conditions, $val);
+            // }
         }
     }
     
@@ -101,8 +103,9 @@
         $arrAgeGroups = explode("|", $data);
 
         foreach($arrAgeGroups as $ageGroup) {
-            if (!in_array($ageGroup, $age_groups)) {
-                array_push($age_groups, $ageGroup);
+            $val = getValue($ageGroup);
+            if (!in_array($val, $age_groups) && strlen($val) > 0) {
+                array_push($age_groups, $val);
             }
         }
     }
@@ -116,8 +119,9 @@
         $arrPhases = explode("|", $data);
 
         foreach($arrPhases as $phase) {
-            if (!in_array($phase, $phases)) {
-                array_push($phases, $phase);
+            $val = getValue($phase);
+            if (!in_array($val, $phases) && strlen($val) > 0) {
+                array_push($phases, $val);
             }
         }
     }
@@ -131,8 +135,8 @@
         $arrInterventions = explode("|", $data);
 
         foreach($arrInterventions as $intervention) {
-            $interventionType = explode(":", $intervention)[0];
-            if (!in_array($interventionType, $intervention_types)) {
+            $interventionType = getValue(explode(":", $intervention)[0]);
+            if (!in_array($interventionType, $intervention_types) && strlen($interventionType) > 0) {
                 array_push($intervention_types, $interventionType);
             }
         }
@@ -147,8 +151,8 @@
         $arrStudyDesigns = explode("|", $data);
 
         foreach($arrStudyDesigns as $studyDesign) {
-            $studyDesignType = explode(":", $studyDesign)[0];
-            if (!in_array($studyDesignType, $study_design_types)) {
+            $studyDesignType = getValue(explode(":", $studyDesign)[0]);
+            if (!in_array($studyDesignType, $study_design_types) && strlen($studyDesignType) > 0) {
                 array_push($study_design_types, $studyDesignType);
             }
         }
@@ -161,7 +165,8 @@
             return;
         }
 
-        if (!in_array($data, $statuses)) {
+        $data = getValue($data);
+        if (!in_array($data, $statuses) && strlen($data) > 0) {
             array_push($statuses, $data);
         }
    }
@@ -172,10 +177,19 @@
         if (!isset($data) || strlen($data) < 1) {
             return;
         }
-        
-        if (!in_array($data, $study_types)) {
+
+        $data = getValue($data);
+        if (!in_array($data, $study_types) && strlen($data) > 0) {
             array_push($study_types, $data);
         }
+    }
+
+    //Replace ', " character with \', \"
+    function getValue($val) {
+        if ($val=='""') {
+            return "";
+        }
+        return trim(str_replace("'", "\'", str_replace("\\", "\\\\", $val)));
     }
 
     function saveData() {
@@ -190,13 +204,13 @@
 
         mysqli_autocommit($conn,FALSE);
 
-        saveEachData($age_groups, "age_groups", "age_group");
         saveEachData($conditions, "conditions", "condition");
-        saveEachData($phases, "phases", "phase");
-        saveEachData($intervention_types, "intervention_types", "intervention_type");
-        saveEachData($study_design_types, "study_design_types", "study_design_type");
-        saveEachData($statuses, "statuses", "status");
-        saveEachData($study_types, "study_types", "study_type");
+        // saveEachData($age_groups, "age_groups", "age_group");
+        // saveEachData($phases, "phases", "phase");
+        // saveEachData($intervention_types, "intervention_types", "intervention_type");
+        // saveEachData($study_design_types, "study_design_types", "study_design_type");
+        // saveEachData($statuses, "statuses", "status");
+        // saveEachData($study_types, "study_types", "study_type");
 
         if (!mysqli_commit($conn)) {
             echo "Commit transaction failed";
@@ -213,9 +227,9 @@
 
         while(count($subData) > 0) {
             $values = "('" . implode("'), ('", $subData) . "')";
-            $query = "INSERT INTO `$table` ($columnName) VALUES $values";
-            $query .= " ON DUPLICATE KEY UPDATE $columnName = VALUES($columnName)";
-            print_r($query);
+            $query = "INSERT INTO `$table` (`$columnName`) VALUES $values";
+            $query .= " ON DUPLICATE KEY UPDATE `$columnName` = VALUES(`$columnName`)";
+            //print_r($query);
             if (!mysqli_query($conn, $query)) {
                 echo "<br> Error in mysql query: " . mysqli_error($conn);
             }
@@ -224,21 +238,51 @@
         }
     }
 
-        // Calculate elapsed time
-        function time_elapsed($secs){
-            $bit = array(
-                'y' => $secs / 31556926 % 12,
-                'w' => $secs / 604800 % 52,
-                'd' => $secs / 86400 % 7,
-                'h' => $secs / 3600 % 24,
-                'm' => $secs / 60 % 60,
-                's' => $secs % 60
-                );
-            $ret[] = "";
-            foreach($bit as $k => $v)
-                if($v > 0)
-                    $ret[] = $v . $k;
-               
-            return join(' ', $ret);
+    // Calculate elapsed time
+    function time_elapsed($secs){
+        $bit = array(
+            'y' => $secs / 31556926 % 12,
+            'w' => $secs / 604800 % 52,
+            'd' => $secs / 86400 % 7,
+            'h' => $secs / 3600 % 24,
+            'm' => $secs / 60 % 60,
+            's' => $secs % 60
+            );
+        $ret[] = "";
+        foreach($bit as $k => $v)
+            if($v > 0)
+                $ret[] = $v . $k;
+            
+        return join(' ', $ret);
+    }
+
+    function pushData($newData) {
+        if (strlen($newData) < 1) {
+            return;
         }
-    
+        global $conditions;
+        $newData = str_replace('"', '', $newData);
+        if (substr($newData, 0, 1) == "-") {
+            $newData = trim(substr($newData, 1));
+        }
+
+        if (in_array($newData, $conditions)) {
+            return;
+        }
+
+        // remove xxxs
+        if (substr($newData, -1) == "s") {
+            $val = substr($newData, 0, strlen($newData)-1);
+            if (in_array($val, $conditions)) {
+                return;
+            }
+        }
+        
+        $val = $newData . "s";
+        if (in_array($newData, $conditions)) {
+            return;
+        }
+        
+        array_push($conditions, $newData);
+
+    }

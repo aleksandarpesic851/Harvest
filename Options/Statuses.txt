@@ -1,1 +1,0 @@
-Completed, Terminated, Unknown status, Active, not recruiting, Withdrawn, Recruiting, Enrolling by invitation, Suspended, Approved for marketing, No longer available, Not yet recruiting, Withheld, Available, Temporarily not available

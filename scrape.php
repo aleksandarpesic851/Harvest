@@ -78,10 +78,7 @@
         if (count($xml->children()) < $down_count) {
             break;
         } 
-
     
-        // $totQuery = "";
-        // $nCnt = 0;
         foreach($xml->children() as $study) {
             if ($study->getName() != "study") {
                 continue;
@@ -111,38 +108,11 @@
             $fields .= ", `rank`, `status_open`";
             $updates = "ON DUPLICATE KEY UPDATE " . $updates . ", `rank`='" . $study["rank"] . "', `status_open`='" . $status_open . "'";
             $query = " INSERT INTO studies ($fields) VALUES ($values) $updates; ";
-            // $totQuery .= $query;
-            // $nCnt++;
             if (!mysqli_query($conn, $query)) {
                 echo "<br> Error in mysql query: " . mysqli_error($conn);
             }
 
-            // if ($nCnt > 99) {
-            //     // Insert or Update data into db
-            //     if (!mysqli_multi_query($conn, $totQuery)) {
-            //         echo "<br> Error in mysql query: " . mysqli_error($conn);
-            //         echo "<br> query:" . $totQuery;
-            //     }
-            //     while(mysqli_more_results($conn))
-            //     {
-            //         mysqli_next_result($conn);
-            //     }
-            //     $nCnt = 0;
-            //     $totQuery = "";
-            // }
         }
-
-        // if (strlen($totQuery) > 0) {
-        //     // Insert or Update data into db
-        //     if (!mysqli_multi_query($conn, $totQuery)) {
-        //         echo "<br> Error in mysql query: " . mysqli_error($conn);
-        //         echo "<br> query:" . $totQuery;
-        //     }
-        //     while(mysqli_more_results($conn))
-        //     {
-        //         mysqli_next_result($conn);
-        //     }
-        // }
 
         // Commit transaction
         if (!mysqli_commit($conn)) {

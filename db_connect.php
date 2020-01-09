@@ -3,7 +3,6 @@
     $username = "root";
     $password = "";
     $dbname = "harvest";
-
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
