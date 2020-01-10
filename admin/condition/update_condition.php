@@ -10,7 +10,7 @@ include "../../enable_error_report.php";
     switch($_POST["action"]) {
         case "UPDATE PARENT":
             $currentId = $_POST["currentId"];
-            $parentId = $_POST["parentId"];
+            $parentId = isset($_POST["parentId"]) ? $_POST["parentId"] : 0;
             $category = $_POST["category"];
             $hasChildren = $_POST["hasChildren"];
         

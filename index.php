@@ -1,6 +1,6 @@
 <?php
     include "db_connect.php";
-    include "check_update.php";
+    include "admin/check_update.php";
 
     echo "Index Page";
 

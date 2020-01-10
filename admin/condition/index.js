@@ -87,7 +87,7 @@ function createTree(title, data, nIdx) {
     
         allowDropChild: false, // allows to drop as child
         
-        allowMultiSelection: true,
+//        allowMultiSelection: true,
         
         allowEditing: true,
     
@@ -112,6 +112,15 @@ function createTree(title, data, nIdx) {
             // if dragged node has children, it's category must be changed too.
             let hasChildren = args.draggedNodeData.hasChildren;
 
+            if (droppedIdx !== 0) {
+                let dropedNodeDepth = calculateNodeDepth(dropedCategory, droppedIdx);
+                if (args.dropLevel == dropedNodeDepth) {
+                    droppedIdx = args.droppedNodeData.parentID;
+                    if (droppedIdx === null) {
+                        droppedIdx = 0;
+                    }
+                }
+            }
             //Call update node parent
             $.ajax({
                 type: "POST",
@@ -139,9 +148,17 @@ function createTree(title, data, nIdx) {
     
         nodeDragStop: function(args) {
             let droppedTreeID = getDropedTreeID(args);
+            // Prevent make child in unmanaged tree
             if ( droppedTreeID==-1 || (droppedTreeID== 0 && args.dropLevel > 1) ) {
-                args.cancel=true;
+                args.cancel = true;
             }
+            //in unmanaged tree, Prevent drop child, which has child node
+            if (droppedTreeID == 0 && args.draggedNodeData.hasChildren) {
+                args.cancel = true;
+            }
+        },
+        dataSourceChanged: function(args){
+            let aaa = 0;
         }
     });
 
@@ -245,13 +262,15 @@ function createCategory() {
                 alert("There is same category already. Please try other category.");
                 return;
             }
-
+            
             response = JSON.parse(response);
             let newCategory = {id: response["category"], category: categoryName, conditions: [{nodeId: response["condition"], nodeText: categoryName}]};
             managedConditions.push(newCategory);
             createTree(newCategory["category"], newCategory["conditions"], newCategory["id"]);
 
             $("#create-category-dlg").modal("hide");
+
+            loadUnmanagedConditions();
         }
     });
 }
@@ -259,4 +278,15 @@ function createCategory() {
 function showCreateCategoryDlg() {
     $("#category-name").val("");
     $("#create-category-dlg").modal("show");
+}
+
+// Calculate Node depth by id
+function calculateNodeDepth(categoryId, nodeId) {
+    let depth = 0;
+    let searchingNode = $("#tree-" + categoryId).find(`[data-uid='` + nodeId + `']`)[0];
+    while(searchingNode) {
+        searchingNode = searchingNode.closest("ul").closest("li");
+        depth++;
+    }
+    return depth;
 }

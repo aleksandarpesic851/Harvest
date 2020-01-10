@@ -1,7 +1,7 @@
 <?php
 // Manage Terms for 
-    include "db_connect.php";
-    include "enable_error_report.php";
+    include "../db_connect.php";
+    include "../enable_error_report.php";
     
     $age_groups = array();
     $conditions = array();
@@ -13,18 +13,18 @@
 
     $start = time();
     extractData();
-    saveData();
-
-    echo "Age Groups: " . count($age_groups);
-    echo "Conditions: " . count($conditions);
-    echo "Phases: " . count($phases);
-    echo "Intervention Types: " . count($intervention_types);
-    echo "Study Design Types: " . count( $study_design_types);
-    echo "Statuses: " . count($statuses);
-    echo "Study Types: " . count($study_types);
+    //saveData();
+    print_r("<br>Extracting was completed.<br>");
+    print_r("<br>Age Groups: " . count($age_groups));
+    print_r("<br>Conditions: " . count($conditions));
+    print_r("<br>Phases: " . count($phases));
+    print_r("<br>Intervention Types: " . count($intervention_types));
+    print_r("<br>Study Design Types: " . count( $study_design_types));
+    print_r("<br>Statuses: " . count($statuses));
+    print_r("<br>Study Types: " . count($study_types));
 
     $end = time();
-    print_r("Elapsed Total Time" . time_elapsed($end-$start));
+    print_r("<br><br>Total Elapsed Time" . time_elapsed($end-$start));
     mysqli_close($conn);
 
     function extractData() {
@@ -48,32 +48,29 @@
             $stmt->execute();
 
             $result = $stmt->get_result();
-            $end = time();
-            echo "<br>$nCnt: ";
-            echo "<br> First query: " . time_elapsed($end-$start);
-            $start=time();
-
+            
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
                     extractConditions($row["conditions"]);
-                    // extractAgeGroups($row["age_groups"]);
-                    // extractPhases($row["phases"]);
-                    // extractInterventionTypes($row["interventions"]);
-                    // extractStudyDesignTypes($row["study_designs"]);
-                    // extractStatuses($row["status"]);
-                    // extractStudyTypes($row["study_types"]);
+                    extractAgeGroups($row["age_groups"]);
+                    extractPhases($row["phases"]);
+                    extractInterventionTypes($row["interventions"]);
+                    extractStudyDesignTypes($row["study_designs"]);
+                    extractStatuses($row["status"]);
+                    extractStudyTypes($row["study_types"]);
                 }
             } else {
                 $stmt->close();
             break;
             }
-            $end=time();
-            echo "<br> fetch query: " . time_elapsed($end-$start);
-            echo "<br> Condition Cnt:" . count($conditions);
-            ob_flush();
-            flush();
             $nCnt++;
             $stmt->close();
+
+            $end=time();
+            echo "<br> Now Extracted from " . $nCnt*$nRows . " data";
+            echo "<br> The number of extracted diseases: " . count($conditions) . "</br>";
+            ob_flush();
+            flush();
         }
     }
 
@@ -189,7 +186,7 @@
         if ($val=='""') {
             return "";
         }
-        return trim(str_replace("'", "\'", str_replace("\\", "\\\\", $val)));
+        return trim(strtolower(str_replace("'", "\'", str_replace("\\", "\\\\", $val))));
     }
 
     function saveData() {
@@ -205,12 +202,12 @@
         mysqli_autocommit($conn,FALSE);
 
         saveEachData($conditions, "conditions", "condition");
-        // saveEachData($age_groups, "age_groups", "age_group");
-        // saveEachData($phases, "phases", "phase");
-        // saveEachData($intervention_types, "intervention_types", "intervention_type");
-        // saveEachData($study_design_types, "study_design_types", "study_design_type");
-        // saveEachData($statuses, "statuses", "status");
-        // saveEachData($study_types, "study_types", "study_type");
+        saveEachData($age_groups, "age_groups", "age_group");
+        saveEachData($phases, "phases", "phase");
+        saveEachData($intervention_types, "intervention_types", "intervention_type");
+        saveEachData($study_design_types, "study_design_types", "study_design_type");
+        saveEachData($statuses, "statuses", "status");
+        saveEachData($study_types, "study_types", "study_type");
 
         if (!mysqli_commit($conn)) {
             echo "Commit transaction failed";
@@ -261,9 +258,23 @@
             return;
         }
         global $conditions;
+        //remove ""
         $newData = str_replace('"', '', $newData);
+        // remove first -
         if (substr($newData, 0, 1) == "-") {
             $newData = trim(substr($newData, 1));
+        }
+        //remove ''
+        if (substr($newData, 0, 1) == "'" && substr($newData, -1) == "'") {
+            $newData = trim(substr($newData, 1, -1));
+        }
+        //remove last (xxx)
+        if (substr($newData, -1) == ")") {
+            $newData = trim(substr($newData, 0, strpos($newData, "(")));
+        }
+
+        if (strlen($newData) < 1) {
+            return;
         }
 
         if (in_array($newData, $conditions)) {
@@ -272,17 +283,17 @@
 
         // remove xxxs
         if (substr($newData, -1) == "s") {
-            $val = substr($newData, 0, strlen($newData)-1);
+            $val = substr($newData, 0, -1);
             if (in_array($val, $conditions)) {
                 return;
             }
         }
         
         $val = $newData . "s";
-        if (in_array($newData, $conditions)) {
+        if (in_array($val, $conditions)) {
             return;
         }
-        
+
         array_push($conditions, $newData);
 
     }

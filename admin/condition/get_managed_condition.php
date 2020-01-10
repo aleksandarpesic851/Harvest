@@ -41,7 +41,7 @@
         $result = mysqli_query($conn, $query);
         
         if ($result->num_rows < 1) {
-            return;
+            return array();
         }
         // Fetch all
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -60,7 +60,7 @@
         $sql = "SELECT `id` AS `nodeId`, `condition` AS `nodeText`, `parentid`, `categoryid` AS `nodeCategory` FROM `conditions` WHERE `parentid` = $parentId";
         $result = mysqli_query($conn, $sql);
         if ($result->num_rows < 1) {
-            return;
+            return array();
         }
         // Fetch all
         $arrData = mysqli_fetch_all($result, MYSQLI_ASSOC);

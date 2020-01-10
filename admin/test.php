@@ -1,6 +1,6 @@
 <?php
 
-    include "db_connect.php";
+    include "../db_connect.php";
 
     $query = "SELECT rank FROM studies ORDER BY rank";
     $result = mysqli_query($conn, $query);

@@ -7,7 +7,7 @@
     $conditionCnt = isset($_POST["cnt"]) ? $_POST["cnt"] : 1000;
     $arrData = array();
 
-    $query = "SELECT `id` AS `nodeId`, `condition` AS `nodeText`, `parentid`, `categoryid` AS `nodeCategory` FROM conditions WHERE `condition` like '%$searchKey%' AND `categoryid` = 0 ORDER BY `id` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
+    $query = "SELECT `id` AS `nodeId`, `condition` AS `nodeText`, `parentid`, `categoryid` AS `nodeCategory` FROM conditions WHERE `condition` like '%$searchKey%' AND `categoryid` = 0 ORDER BY `condition` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
     $stmt = $conn->prepare($query);
 
     if ($stmt != false) {

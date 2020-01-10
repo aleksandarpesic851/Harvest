@@ -19,13 +19,25 @@ include "../../enable_error_report.php";
             mysqli_query($conn, $query);
             $newCategoryId = mysqli_insert_id($conn);
             
-            // Update condition table too
-            $query = "INSERT INTO `conditions` (`condition`, `parentid`, `categoryid`) VALUES ('$newCategory', '0', '$newCategoryId')";
-            $query .= " ON DUPLICATE KEY UPDATE `condition`='$newCategory', `parentid`='0', `categoryid`='$newCategoryId'";
+            // check condition is already exist
+            $query = "SELECT * FROM `conditions` WHERE `condition` = '$newCategory'";
+            $result = mysqli_query($conn, $query);
             
-            mysqli_query($conn, $query);
-            $conditionId = mysqli_insert_id($conn);
-
+            // if exist, update
+            if ($result->num_rows > 0) {
+                $row = mysqli_fetch_assoc($result);
+                mysqli_free_result($result);
+                $conditionId = $row["id"];
+                $query = "UPDATE `conditions` SET `parentid` = '0', `categoryid` = $newCategoryId WHERE `id` = '$conditionId'";
+                mysqli_query($conn, $query);
+            } 
+            // else, insert
+            else {
+                $query = "INSERT INTO `conditions` (`condition`, `parentid`, `categoryid`) VALUES ('$newCategory', '0', '$newCategoryId')";
+                mysqli_query($conn, $query);
+                $conditionId = mysqli_insert_id($conn);
+            }
+            
             $result = ["category" => $newCategoryId, "condition" => $conditionId];
             echo json_encode($result);
         break;
