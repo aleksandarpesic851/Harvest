@@ -98,7 +98,8 @@
 			<div class="row">
 				<div class="ml-auto padding-5">
 					<button class="btn btn-primary" onclick="showCreateCategoryDlg()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Create New Category</button>
-					<button title="In order to speed up calculation of study statistics, Calculate studies related with conditions in hierarchy"  class="btn btn-primary" onclick="calculateStudyCondition()"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Calculate Study Condition</button>
+					<button title="In order to speed up calculation of study statistics, Calculate studies related with conditions in hierarchy. NOTE: This may take long. Please click after hierarchy looks good." 
+						class="btn btn-primary" onclick="calculateStudyCondition()"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Calculate Study Condition</button>
 				</div>
 			</div>
 

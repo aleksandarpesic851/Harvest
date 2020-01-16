@@ -26,24 +26,23 @@ require_once "../../enable_error_report.php";
             if ($category == $prev_parentId) {
                 $query = "UPDATE `condition_hierarchy` SET `parentid` = $parentId WHERE `condition_id` = '$currentId' AND `parent_id` = '$prev_parentId'";
                 mysqli_query($conn, $query);
-                break;
+                
+                // update all childs's categoryid.
+                // if ($hasChildren) {
+                //     $children = getChildren($currentId);
+                //     if(isset($children)) {
+                //         mysqli_autocommit($conn,FALSE);
+                //         updateCategories($children, $category);
+                //         mysqli_commit($conn);
+        
+                //         echo json_encode($children);
+                //     }
+                // }
+            } else {
+                $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$currentId', '$parentId', '$category'); ";
+                mysqli_query($conn, $query);
             }
 
-            $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$currentId', '$parentId', '$category'); ";
-            mysqli_query($conn, $query);
-            break;
-            
-            // // If current node has child nodes, update all childs's categoryid.
-            // if ($hasChildren) {
-            //     $children = getChildren($currentId);
-            //     if(isset($children)) {
-            //         mysqli_autocommit($conn,FALSE);
-            //         updateCategories($children, $category);
-            //         mysqli_commit($conn);
-    
-            //         echo json_encode($children);
-            //     }
-            // }
         break;
 
         case "UPDATE TEXT":

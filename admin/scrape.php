@@ -138,6 +138,11 @@
         }
     }
 
+    //Extract Data
+    require_once "terms.php";
+    //Extract study ids related with condition hierarchy
+    require_once "condition/calculate_study_condition.php";
+    
     mysqli_close($conn);
     $endTime = time();
     echo "<br> Total Time Elapsed: " . time_elapsed($endTime - $startTime);

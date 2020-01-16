@@ -359,12 +359,13 @@ function calculateStudyCondition() {
     $.ajax({
         type: "POST",
         url: "calculate_study_condition.php",
+        data: {post: true},
         success: function(response) {
             hideWaiting();
             if (response == "ok") {
                 alert("Calculation Sucess!");
             } else {
-                alert("Calculation Fail!");
+                alert("Calculation Fail! Error: " + response);
             }
         }
     });

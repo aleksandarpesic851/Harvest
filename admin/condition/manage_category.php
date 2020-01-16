@@ -74,6 +74,8 @@ require_once "../../enable_error_report.php";
             $categoryID = $_POST["id"];
             $query = "DELETE FROM `condition_categories` WHERE `id` = '$categoryID'";
             mysqli_query($conn, $query);
+            $query = "DELETE FROM `condition_hierarchy` WHERE `category_id` = '$categoryID'";
+            mysqli_query($conn, $query);
             echo "delete_ok";
         break;
     }

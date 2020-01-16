@@ -3,66 +3,129 @@
     require_once "../../db_connect.php";
     require_once "../../enable_error_report.php";
 
+    $log = false;
+    if (isset($_POST) && isset($_POST["post"])) {
+        $log = true;
+    }
+    if ($log) {
+        echo "<br>-----------------------Calculate Study Ids Related with Condition Hierarchy----------------------------";
+    }
     $totalData = array();
-    readAllHierarchy();
-    calculateStudyIds();
-    calculateLeafIds();
+    $query = "DELETE FROM condition_hierarchy_modifier_stastics";
+    mysqli_query($conn, $query);
+
+    calculateStudyConditions();
+
+    echo "ok";
     //echo json_encode($totalData);
-    printStudyIdCnts();
+
+    function calculateStudyConditions() {
+        global $totalData;
+
+        $modifiers = readModifiers();
+        $conditions = readAllHierarchy();
+
+        foreach($modifiers as $modifier) {
+            if ($log) {
+                echo "<br>-----------------------" . $modifier["modifier"] . "----------------------------";
+            }
+            $totalData = $conditions;
+            calculateStudyIds($modifier["modifier"]);
+            mergeIds();
+            saveData($modifier["id"]);
+        }
+        
+    }
 
     function mysqlReadAll($query) {
         global $conn;
         
         $result = mysqli_query($conn, $query);
         if ($result->num_rows < 1) {
-            return;
+            return array();
         }
         // Fetch all
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
         // Free result set
         mysqli_free_result($result);
-        return $data;
+        return isset($data) ? $data : array();
+    }
+
+    // Read All Modifiers
+    function readModifiers() {
+        $query = "SELECT * FROM modifiers";
+        return mysqlReadAll($query);
     }
 
     //Read All conditions in hierarchy
     function readAllHierarchy() {
-        global $totalData;
-        $query = "SELECT h.*, c.`condition_name`, c.`synonym` FROM condition_hierarchy AS h JOIN conditions as c ON c.id = h.`condition_id`";
-        $totalData = mysqlReadAll($query);
+        $query = "SELECT `id`, `condition_name`, `synonym`, `parent_id`, `condition_id` FROM condition_hierarchy_view";
+        return mysqlReadAll($query);
     }
 
     // Calculate study ids related with condition name
-    function calculateStudyIds() {
+    function calculateStudyIds($modifier) {
         global $totalData;
 
         foreach($totalData as $key=>$condition) {
             $start = time();
-            $query = "SELECT `nct_id` FROM study_id_conditions WHERE `condition` LIKE '%" . $condition["condition_name"] . "%' GROUP BY `nct_id`";
+            $query = "SELECT `nct_id` FROM study_id_conditions WHERE ( `condition` LIKE '%" . $condition["condition_name"] . "%' ";
+            if (isset($condition["synonym"]) && strlen($condition["synonym"]) > 0) {
+                $query .= " OR  `condition` LIKE '%" . $condition["synonym"] . "%' ";
+            }
+            $query .= ") ";
+            if (strlen($modifier) > 0 && $modifier != "NONE") {
+                $query .= " AND  `condition` LIKE '%" . $modifier . "%' ";
+            }
+            $query .= " GROUP BY `nct_id`";
+
             $nctIds = mysqlReadAll($query);
             $totalData[$key]["study_ids"] = array();
+            
             foreach($nctIds as $id) {
                 array_push($totalData[$key]["study_ids"], $id["nct_id"]);
             }
+            
             $end = time();
-            print_r("<br>Calculate Study Id - ". $condition["condition_name"] . " : " . time_elapsed($end-$start));
-            echo ", Count: " . count($nctIds);
-            ob_flush();
-            flush();
+            if ($log) {
+                echo "<br>Calculate Study Id - ". $condition["condition_name"] . " : " . time_elapsed($end-$start);
+                echo ", Count: " . count($nctIds);
+                ob_flush();
+                flush();
+            }
         }
     }
 
-    // Calculate Study Ids for Leaf node.
-    function calculateLeafIds() {
+    // merge Study Ids
+    function mergeIds() {
+        if ($log) {
+            printStudyIdCnts("Before Merge");
+        }
         global $totalData;
+
+        $start = time();
         foreach($totalData as $key=>$condition) {
             if ($condition["parent_id"] == 0) {
                 mergeParentChild($key);
             }
         }
+        if ($log) {
+            printStudyIdCnts("Merge Parent -> Child");
+        }
+        $end = time();
+        if ($log) {
+            echo "<br>Time : " . time_elapsed($end-$start);
+        }
+        $start = time();
         foreach($totalData as $key => $condition) {
-            if ($condition["leaf"]) {
+            if (isset($condition["leaf"]) && $condition["leaf"]) {
                 mergeChildParent($key);
             }
+        }
+        $end= time();
+        if ($log) {
+            printStudyIdCnts("Merge Child -> Parent");
+            echo "<br>Time : " . time_elapsed($end-$start);
         }
     }
 
@@ -71,7 +134,7 @@
         global $totalData;
         $isLeaf = true;
         foreach($totalData as $key => $condition) {
-            if ($condition["parent_id"] != $totalData[$parentKey]["condition_id"]) {
+            if ($condition["parent_id"] != $totalData[$parentKey]["id"]) {
                 continue;
             }
             $isLeaf = false;
@@ -89,10 +152,12 @@
 
         // Get Parent Node
         foreach($totalData as $key => $condition) {
-            if ($condition["category_id"])
+            if ($condition["id"] == $totalData[$childKey]["parent_id"])  {
+                $totalData[$key]["study_ids"] = mergeArray($totalData[$key]["study_ids"], $totalData[$childKey]["study_ids"]);
+                mergeChildParent($key);
+                break;
+            }
         }
-        $parentId = $totalData[$childKey]["parent_id"];
-
     }
 
     function mergeArray($array1, $array2) {
@@ -105,9 +170,9 @@
         return $merged;
     }
 
-    function printStudyIdCnts() {
+    function printStudyIdCnts($explain) {
         global $totalData;
-        echo "<br> Final Results:";
+        echo "<br> $explain:";
         foreach($totalData as $key=>$condition) {
             echo "<br>" .  $condition["condition_name"] . ": " . count($condition["study_ids"]);
         }
@@ -130,4 +195,14 @@
         return join(' ', $ret);
     }
     
+    function saveData($modifierID) {
+        global $totalData;
+        global $conn;
+
+        foreach($totalData as $data) {
+            $query = "INSERT INTO `condition_hierarchy_modifier_stastics` (`hierarchy_id`, `modifier_id`, `condition_id`, `condition_name`, `study_ids`)";
+            $query .= "VALUES ('" . $data["id"] . "', '$modifierID', '" . $data["condition_id"] . "', '" . $data["condition_name"] . "', '" . implode(",", $data["study_ids"]) . "'); ";
+            mysqli_query($conn, $query);
+        }
+    }
 ?>

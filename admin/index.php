@@ -73,10 +73,15 @@
                 <div class="col-8 ml-auto mr-auto split"></div>
             </div>
             <div class="row">
+                <div class="col-8">
+                    <img class="image" src="img/terms.png">
+                </div>
                 <div class="col-4">
                     <h5> Extract Terms From Scraped Data </h5>
                     As scraped data will change for every scraping, it's needed to extract terms (age groups, conditions - diseases, phases, intervention types, study design types, statuses, study types).
-                    The extracted terms will be saved on each table of database.
+                    The extracted terms will be saved on each table of database. 
+                    <br>
+                    In order to speed up "Condition" search, it extracts study nct_id and conditions in separated table.
                     <br>
                     It will take a few ten minutes to complete this task.
                     <br><br>
@@ -84,17 +89,11 @@
                         <a class="ml-auto mr-auto btn btn-primary" href="terms.php">Extract</a>
                     </div>
                 </div>
-                <div class="col-8">
-                    <img class="image" src="img/terms.png">
-                </div>
             </div>
             <div class="row">
                 <div class="col-8 ml-auto mr-auto split"></div>
             </div>
 			<div class="row">
-                <div class="col-8">
-                    <img class="image" src="img/scrape.png">
-                </div>
                 <div class="col-4">
                     <h5>Scrape Data</h5>
                     Scrape data from <a href="https://clinicaltrials.gov">https://clinicaltrials.gov</a> into database. In backend, scrape data automatically every 7 days.
@@ -106,8 +105,12 @@
                         <button class="ml-auto mr-auto btn btn-primary" onclick="scrape()">Scrape Manually</button>
                     </div>
                 </div>
+                <div class="col-8">
+                    <img class="image" src="img/scrape.png">
+                </div>
             </div>
-            <div class="row">
+
+            <!-- <div class="row">
                 <div class="col-8 ml-auto mr-auto split"></div>
             </div>
             <div class="row">
@@ -122,7 +125,7 @@
                 <div class="col-8">
                     <img class="image" src="img/test.png">
                 </div>
-            </div>
+            </div> -->
             <br><br><br>
 		</div>
 </html>

@@ -2,7 +2,7 @@
 // Manage Terms for 
 require_once "../db_connect.php";
 require_once "../enable_error_report.php";
-    
+    echo "<br>-----------------------Extracting Data from scraped Studies-----------";
     $conditions = array();
 
     $start = time();
@@ -28,7 +28,7 @@ require_once "../enable_error_report.php";
     $end = time();
     print_r("<br><br>Total Elapsed Time" . time_elapsed($end-$start));
 
-    mysqli_close($conn);
+    // mysqli_close($conn);
 
     function processData() {
         global $conn;
