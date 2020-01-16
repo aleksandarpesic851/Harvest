@@ -1,12 +1,18 @@
 let studyTable;
 let conditionTree;
+let conditionSearchTree;
 let modifiers = ["Relapsed", "Refractory", "Chronic", "Acute", "High-risk", "Healthy", "Systemic", "Resistance", "Advanced", "Metastases",
                 "Myocardial Infarction", "Smoldering", "Atopic", "Progression", "Recurrent", "Adult", "Child"];
+let searchItems;
+let loadedCnt = 0;
 
 $(document).ready(function() {
+    ej.base.enableRipple(true);
+
     initChart();
     initDatatable();
     initConditionTree();
+    initSearchConditionTree();
     changeCanvasSize();
     initDateRangePicker();
 } );
@@ -36,8 +42,13 @@ function initDatatable() {
             type: "POST",
             url: "read_table_data.php",
             data: function ( d ) {
-                return  $.extend(d, getSearchItems());
-             }
+                let searchKeys = {};
+                searchKeys.manual_search = searchItems;
+                return  $.extend(d, searchKeys);
+            },
+        },
+        drawCallback: function() {
+            hideWaiting();
         },
         columns: [
             //{ data: "rank" },
@@ -274,6 +285,10 @@ function initConditionTree() {
                 try {
                     data = JSON.parse(response);
                     conditionTree.fields.dataSource = data;
+                    conditionTree.refresh();
+                    conditionTree.checkAll();
+                    conditionTree.expandAll();
+                    readGraphData();
                 } catch (e) {
                     console.log(e);
                 }
@@ -281,7 +296,6 @@ function initConditionTree() {
         }
     });
 
-    ej.base.enableRipple(true);
     conditionTree = new ej.navigations.TreeView({
         fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
         showCheckBox: true
@@ -300,15 +314,42 @@ function initConditionTree() {
     conditionTree.appendTo("#condition-tree");
 }
 
+function initSearchConditionTree() {
+    conditionSearchTree = new ej.navigations.TreeView({
+        fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
+        showCheckBox: true
+    });
+    conditionSearchTree.appendTo("#condition-serch-tree");
+}
+
+function readGraphData() {
+    if (!searchItems) {
+        readSearchItems();
+    }
+    conditionSearchTree.fields.dataSource = searchItems["conditions"];
+    conditionSearchTree.refresh();
+    conditionSearchTree.checkAll();
+    conditionSearchTree.expandAll();
+
+    //load graph data
+    
+    hideWaiting();
+}
+
 function search() {
+    showWaiting();
+    // Get search items
+    readSearchItems();
+    // Load table data
     studyTable.ajax.reload();
+    // Load Graph Data
+    readGraphData();
     $("#search-modal").modal("hide");
 }
 
-function getSearchItems() {
-    let searchItems = {};
-    searchItems.manual_search = getFormData($("#search-other-form"));
-    return searchItems;
+function readSearchItems() {
+    searchItems = getFormData($("#search-other-form"));
+    searchItems["conditions"] = getCheckedConditions();
 }
 
 function getFormData(form){
@@ -330,4 +371,57 @@ function getFormData(form){
     });
 
     return indexed_array;
+}
+
+function getCheckedConditions() {
+    let checkedNodes = getCheckedNodes("condition-tree");
+    
+    // console.log("function:", checkedNodes);
+    checkedNodes.forEach(element => {
+        let nodeObject = conditionTree.getNodeObject(element);
+        removeChildren(nodeObject.nodeChild, checkedNodes);
+    });
+    
+    checkedNodes.forEach((element, index) => {
+        checkedNodes[index] = conditionTree.getNodeObject(element);
+    });
+    
+    return checkedNodes;
+}
+
+function removeChildren(children, checkedNodes) {
+    if (!children || children.length < 1 || !checkedNodes || checkedNodes.length < 1) {
+        return;
+    }
+    children.forEach(element => {
+        let idx = checkedNodes.indexOf(element.nodeId);
+        if ( idx == -1) {
+            return;
+        }
+        checkedNodes.splice(idx, 1);
+        removeChildren(element.nodeChild, checkedNodes);
+    });
+}
+
+function getCheckedNodes(id) {
+    let checkedElements = $("#" + id + " .e-check").toArray();
+    let checkedNodes = [];
+    checkedElements.forEach(element => {
+        checkedNodes.push( $(element.closest("li")).data("uid") );
+    });
+    return checkedNodes;
+}
+
+function hideWaiting() {
+    if (loadedCnt >= 1) {
+        $("#waiting").hide();
+        loadedCnt = 0;
+    } else {
+        loadedCnt++;
+    }
+}
+
+function showWaiting() {
+    loadedCnt=0;
+    $("#waiting").show();
 }

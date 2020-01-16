@@ -55,7 +55,6 @@ require_once "../../enable_error_report.php";
                 $conditionId = $row["id"];
                 $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$conditionId', '0', '$newCategoryId'); ";
                 mysqli_query($conn, $query);
-                $conditionHierarchyID = mysqli_insert_id($conn);
             } 
             // else, insert
             else {
@@ -64,10 +63,9 @@ require_once "../../enable_error_report.php";
                 $conditionId = mysqli_insert_id($conn);
                 $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$conditionId', '0', '$newCategoryId'); ";
                 mysqli_query($conn, $query);
-                $conditionHierarchyID = mysqli_insert_id($conn);
             }
             
-            $result = ["category" => $newCategoryId, "condition" => $conditionHierarchyID];
+            $result = ["category" => $newCategoryId, "condition" => $conditionId];
             echo json_encode($result);
         break;
         case "Delete":

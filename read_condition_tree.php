@@ -39,8 +39,10 @@
         return $arrData;
     }
 
+    $nCnt = 0;
     function getCategoryData($categoryID) {
         global $conn;
+        global $nCnt;
 
         // Get Category Root IDS
         $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id` from condition_hierarchy_view WHERE `category_id` = $categoryID AND `parent_id` = 0 ";
@@ -55,6 +57,8 @@
         mysqli_free_result($result);
 
         foreach($data as $key => $parent) {
+            $nCnt++;
+            $data[$key]["nodeId"] = $nCnt . "_" . $data[$key]["nodeId"];
             $data[$key]["nodeChild"] = getChildren($parent["nodeId"]);
         }
         return $data;
@@ -62,7 +66,8 @@
 
     function getChildren($parentId) {
         global $conn;
-        
+        global $nCnt;
+
         $sql = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id` FROM `condition_hierarchy_view` WHERE `parent_id` = $parentId";
         $result = mysqli_query($conn, $sql);
         if ($result->num_rows < 1) {
@@ -74,6 +79,8 @@
         mysqli_free_result($result);
 
         foreach($arrData as $key=>$data) {
+            $nCnt++;
+            $arrData[$key]["nodeId"] = $nCnt . "_" . $arrData[$key]["nodeId"];
             $arrData[$key]["nodeChild"] = getChildren($data["nodeId"]);
         }
         return $arrData;

@@ -67,12 +67,18 @@
                     width: 100%;
                     height: 70vh;
                 }
+                .graph-left {
+                    max-height: calc(70vh - 50px);
+                }
             }
 
             @media (orientation: portrait) {
                 .chart-container {
                     width: 100%;
-                    height: 60vw;
+                    height: 80vw;
+                }
+                .graph-left {
+                    max-height: 60vw;
                 }
             }
             .item-box {
@@ -104,9 +110,47 @@
                 flex-grow : 1;
                 overflow: auto;
             }
+			.lds-container {
+				width: 100%;
+				height: 100%;
+				background: rgba(0,0,0,0.6);
+				z-index: 1000;
+				position: fixed;
+				top: 0;
+				left: 0;
+				display: flex;
+			}
+			.lds-dual-ring {
+				display: inline-block;
+				width: 80px;
+				height: 80px;
+				margin: auto;
+			}
+			.lds-dual-ring:after {
+				content: " ";
+				display: block;
+				width: 64px;
+				height: 64px;
+				margin: 8px;
+				border-radius: 50%;
+				border: 6px solid #fff;
+				border-color: #fff transparent #fff transparent;
+				animation: lds-dual-ring 1.2s linear infinite;
+			}
+			@keyframes lds-dual-ring {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
         </style>
     </head>
     <body>
+        <div class="lds-container" id="waiting">
+			<div class="lds-dual-ring"></div>
+		</div>
         <!-- Main Contents -->
         <div class="top-container"> 
             <div class="row box">
@@ -120,17 +164,17 @@
             </div>
             <!-- Chart Graph -->
             <div class="row box box-border">
-                <div class="col-4 col-md-3 col-lg-2 graph-search-box ">
+                <div class="col-12 col-md-3 col-lg-2 graph-search-box ">
                     <label class="font-bold">Searched Conditions</label>
                     <div class="form-check-inline">
                         <label class="form-check-label">
                             <input name="search-age-group" type="checkbox" class="form-check-input">Modifier
                         </label>
                     </div>
-                    <div class="enable-scroll height-remaining" id="condition-serch-tree">
+                    <div class="enable-scroll height-remaining graph-left" id="condition-serch-tree">
                     </div>
                 </div>
-                <div class="col-8 col-md-9 col-lg-10  enable-scroll">
+                <div class="col-12 col-md-9 col-lg-10  enable-scroll">
                     <div class="chart-container">
                         <canvas id="myChart"></canvas>
                     </div>

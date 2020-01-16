@@ -50,16 +50,55 @@
 			.e-treeview > .e-ul {
 				overflow: initial !important;
 			}
-			
+			.lds-container {
+				width: 100%;
+				height: 100%;
+				background: rgba(0,0,0,0.6);
+				z-index: 1000;
+				position: fixed;
+				top: 0;
+				left: 0;
+				display: flex;
+			}
+			.lds-dual-ring {
+				display: inline-block;
+				width: 80px;
+				height: 80px;
+				margin: auto;
+			}
+			.lds-dual-ring:after {
+				content: " ";
+				display: block;
+				width: 64px;
+				height: 64px;
+				margin: 8px;
+				border-radius: 50%;
+				border: 6px solid #fff;
+				border-color: #fff transparent #fff transparent;
+				animation: lds-dual-ring 1.2s linear infinite;
+			}
+			@keyframes lds-dual-ring {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+
         </style>
 	</head>
 	
 	<body>
+		<div class="lds-container" id="waiting">
+			<div class="lds-dual-ring"></div>
+		</div>
 		<div class="container">
 			<h4 class="title">Manage Conditions Hierachy</h4>
 			<div class="row">
 				<div class="ml-auto padding-5">
 					<button class="btn btn-primary" onclick="showCreateCategoryDlg()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Create New Category</button>
+					<button title="In order to speed up calculation of study statistics, Calculate studies related with conditions in hierarchy"  class="btn btn-primary" onclick="calculateStudyCondition()"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Calculate Study Condition</button>
 				</div>
 			</div>
 

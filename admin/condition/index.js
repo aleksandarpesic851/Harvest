@@ -58,6 +58,7 @@ $(function() {
     createTree("Unmanaged Conditions", [], 0);
     loadUnmanagedConditions(1);
     loadManagedConditions();
+    hideWaiting();
 //    createTree("Condtion1", org_data, 1);
 });
 
@@ -351,4 +352,28 @@ function deleteCategory(id) {
             }
         });
     }
+}
+
+function calculateStudyCondition() {
+    showWaiting();
+    $.ajax({
+        type: "POST",
+        url: "calculate_study_condition.php",
+        success: function(response) {
+            hideWaiting();
+            if (response == "ok") {
+                alert("Calculation Sucess!");
+            } else {
+                alert("Calculation Fail!");
+            }
+        }
+    });
+}
+
+function hideWaiting() {
+    $("#waiting").hide();
+}
+
+function showWaiting() {
+    $("#waiting").show();
 }

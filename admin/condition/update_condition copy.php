@@ -16,36 +16,21 @@ require_once "../../enable_error_report.php";
             $prev_category = $_POST["prev_category"];
         
             // if dropped on unmanaged category, delete the node in hierarchy.
-            if ($category == 0) {
-                if ($prev_category != 0) {
-                    $query = "DELETE FROM `condition_hierarchy` WHERE `id` = $currentId";
-                    mysqli_query($conn, $query);
-                }
-                break;
-            }
-
-            //if category is equal with prev category, update parent id
-            if ($category == $prev_category) {
-                $query = "UPDATE `condition_hierarchy` SET `parentid` = $parentId WHERE `id` = '$currentId'";
+            if ($category == 0 && $prev_parentId != -1) {
+                $query = "DELETE FROM `condition_hierarchy` WHERE `id` = $currentId AND `parent_id` = $prev_parentId";
                 mysqli_query($conn, $query);
                 break;
             }
 
-            if ($prev_category == 0) {
-                $condition_id = $currentId;echo "0: " . $condition_id;
-            } else {
-                $query = "SELECT condition_id FROM condition_hierarchy WHERE id=$currentId;";
-                $result = mysqli_query($conn, $query);
-                // if exist, update
-                if ($result->num_rows < 1) {
-                    break;
-                }
-                $row = mysqli_fetch_assoc($result);
-                mysqli_free_result($result);
-                $condition_id = $row["condition_id"];echo "1: " . $condition_id;
+            //if category is equal with prev category, update parent id
+            if ($category == $prev_parentId) {
+                $query = "UPDATE `condition_hierarchy` SET `parentid` = $parentId WHERE `condition_id` = '$currentId' AND `parent_id` = '$prev_parentId'";
+                mysqli_query($conn, $query);
+                break;
             }
-            $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$condition_id', '$parentId', '$category'); ";
-            mysqli_query($conn, $query);echo $query;
+
+            $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$currentId', '$parentId', '$category'); ";
+            mysqli_query($conn, $query);
             break;
             
             // // If current node has child nodes, update all childs's categoryid.
