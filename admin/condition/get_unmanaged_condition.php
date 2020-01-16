@@ -1,13 +1,13 @@
 <?php
-	include "../../db_connect.php";
-	include "../../enable_error_report.php";
+	require_once "../../db_connect.php";
+	require_once "../../enable_error_report.php";
 
     $pageNum = isset($_POST["page"]) ? $_POST["page"] - 1 : 1;
     $searchKey = isset($_POST["search"]) ? $_POST["search"] : "";
-    $conditionCnt = isset($_POST["cnt"]) ? $_POST["cnt"] : 1000;
+    $conditionCnt = isset($_POST["cnt"]) ? $_POST["cnt"] : 100;
     $arrData = array();
 
-    $query = "SELECT `id` AS `nodeId`, `condition` AS `nodeText`, `parentid`, `categoryid` AS `nodeCategory` FROM conditions WHERE `condition` like '%$searchKey%' AND `categoryid` = 0 ORDER BY `condition` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
+    $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `synonym` FROM conditions WHERE `condition_name` like '%$searchKey%' ORDER BY `condition_name` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
     $stmt = $conn->prepare($query);
 
     if ($stmt != false) {

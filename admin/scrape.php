@@ -1,9 +1,6 @@
 <?php
-    include "../enable_error_report.php";
-
-    if (!isset($conn)) {
-        include "../db_connect.php";
-    }
+    require_once "../enable_error_report.php";
+    require_once "../db_connect.php";
 
     //Replace ', " character with \', \"
     function getValue($item) {
@@ -14,10 +11,16 @@
     function getItem($studyItem) {
         $field = $studyItem->getName();
         $value = "";
+        $enumSetFields = ["phases", "age_groups"];
         if (count($studyItem->children()) > 0) {                        // In the case of An item has multiple subitem
             foreach($studyItem->children() as $item) {
+                
                 if (strlen($value) > 0) {
-                    $value .= "|";
+                    if (in_array($field, $enumSetFields)) {
+                        $value .= ",";    
+                    } else {
+                        $value .= "|";
+                    }
                 }
                 if ($field == "interventions") {                // type:content|type: content
                     $value .= $item["type"] .":" . $item;
@@ -33,7 +36,10 @@
             if (strpos($name, "date") > 0 || strpos($name, "posted") > 0) {
                 $time = strtotime($studyItem);
                 $value = date('Y-m-d',$time);
-            } else {
+            } else if ($name == "nct_id") {
+                $value = substr($studyItem, 3);
+            }
+            else {
                 $value = $studyItem;
             }
         }
@@ -60,8 +66,9 @@
     }
 
     $startTime = time();
-    $down_chunk = 1;
+    $down_chunk = 328;
     $down_count = 1000;
+    $ignoreFields = ["documents", "study_documents", "url", "other_ids", "funded_bys", "acronym", "exp_acc_types"];
     mysqli_autocommit($conn,FALSE);
     while (true) {
         echo "<br> Working on " . ($down_chunk-1) * 1000 . " - " . $down_chunk * 1000 .  " data:";
@@ -75,11 +82,6 @@
         // Load xml data and save into db
         $xml=simplexml_load_file("data.xml") or die("Error: Can't read data from file");
         
-        //if there is no data, stop updating
-        if (count($xml->children()) < $down_count) {
-            break;
-        } 
-    
         foreach($xml->children() as $study) {
             if ($study->getName() != "study") {
                 continue;
@@ -91,23 +93,28 @@
             $status_open = 1;
 
             foreach($study->children() as $studyItem) {
+                $field = $studyItem->getName();
+                $value = getItem($studyItem);
+                if (in_array($field, $ignoreFields)) {
+                    continue;
+                }
+
                 if (strlen($fields) > 0) {
                     $values .= ", ";
                     $fields .= ", ";
                     $updates .= ", ";
                 }
-                $field = $studyItem->getName();
                 $fields .= "`" . $field . "`";
-                $value = getItem($studyItem);
+                
                 $values .="'" . $value . "'";
                 $updates .= "`" . $field . "`='" . $value . "'";
                 if ($field == "status" && $studyItem["open"] == "N") {
                     $status_open = 0;
                 }
             }
-            $values .= ", '" . $study["rank"] . "'" . ", '" . $status_open . "'";
-            $fields .= ", `rank`, `status_open`";
-            $updates = "ON DUPLICATE KEY UPDATE " . $updates . ", `rank`='" . $study["rank"] . "', `status_open`='" . $status_open . "'";
+            $values .= ", '" . $status_open . "'";
+            $fields .= ",  `status_open`";
+            $updates = "ON DUPLICATE KEY UPDATE " . $updates . ", `status_open`='" . $status_open . "'";
             $query = " INSERT INTO studies ($fields) VALUES ($values) $updates; ";
             if (!mysqli_query($conn, $query)) {
                 echo "<br> Error in mysql query: " . mysqli_error($conn);
@@ -124,6 +131,11 @@
         echo ",    Complete Time: " . time_elapsed($chuckEnd - $chuckStart);
         ob_flush();
         flush();
+
+        //if there is no data, stop updating
+        if (count($xml->children()) < $down_count) {
+            break;
+        }
     }
 
     mysqli_close($conn);

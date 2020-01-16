@@ -1,8 +1,10 @@
 <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "harvest";
+    $ini = parse_ini_file("app.ini");
+
+    $servername = $ini["db_host"];
+    $username = $ini["db_user"];
+    $password = $ini["db_password"];
+    $dbname = $ini["db_name"];
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 

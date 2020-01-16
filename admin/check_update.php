@@ -33,5 +33,5 @@
         ob_flush();
         flush();
 
-        include "scrape.php";
+        require_once "scrape.php";
     }

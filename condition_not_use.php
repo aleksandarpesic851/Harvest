@@ -1,7 +1,7 @@
 <?php
 // Manage Terms for 
-    include "db_connect.php";
-    include "enable_error_report.php";
+require_once "db_connect.php";
+require_once "enable_error_report.php";
 
     $nCnt = 0;
     $nRows = 1000;

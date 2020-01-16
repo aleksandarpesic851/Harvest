@@ -58,6 +58,22 @@
             </div>
             <div class="row">
                 <div class="col-4">
+                    <h5> Disease Synonym Management </h5>
+                    You can insert synonyms for diseases. For every diseases can be searched by origin name and synonym.
+                    <br><br>
+                    <div class="row">
+                        <a class="ml-auto mr-auto btn btn-primary" href="condition/synonym">Synonym</a>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <img class="image" src="img/synonym.png">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 ml-auto mr-auto split"></div>
+            </div>
+            <div class="row">
+                <div class="col-4">
                     <h5> Extract Terms From Scraped Data </h5>
                     As scraped data will change for every scraping, it's needed to extract terms (age groups, conditions - diseases, phases, intervention types, study design types, statuses, study types).
                     The extracted terms will be saved on each table of database.

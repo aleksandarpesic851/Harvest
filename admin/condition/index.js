@@ -1,7 +1,7 @@
 ej.base.enableRipple(true);
-var conditionCnt = 1000;
+var conditionCnt = 100;
 var managedConditions = [];
-
+var draggedTreeId = -1;
 //define the array of JSON
 var org_data = [
     {
@@ -53,6 +53,7 @@ var org_data = [
 ];
 
 var treeViewInstances = [];
+
 $(function() {
     createTree("Unmanaged Conditions", [], 0);
     loadUnmanagedConditions(1);
@@ -73,7 +74,11 @@ function CreateManagedConditionTrees() {
 
 function createTree(title, data, nIdx) {
     if (nIdx > 0) {
-        let treeHtml = '<div class="col-12 col-lg-6 padding-5"><div class="box"><h5 class="tree-title">' + title + '</h5>';
+        let treeHtml = '<div class="col-12 col-lg-6 padding-5" id="tree-container-' + nIdx + '"><div class="box">';
+        treeHtml += '<h5 class="tree-title edit" id="' + nIdx + '">' + title + '</h5>';
+        treeHtml += '<div class="row" style="text-align: right; padding-right: 20px; padding-bottom: 5px">';
+        treeHtml += '<button class="ml-auto btn btn-danger" title="Delete This Category" onclick="deleteCategory(' + nIdx + ')">';
+        treeHtml += '<i class="fa fa-trash" aria-hidden="true"></i></button></div>';
         treeHtml += '<div class="small-box tree-box" id="tree-' + nIdx + '"></div></div></div>';
     
         $("#managed-trees").append(treeHtml);
@@ -104,16 +109,17 @@ function createTree(title, data, nIdx) {
                 droppedIdx = args.droppedNodeData.id;
             }
 
+            let droppedTreeId = getDropedTreeID(args);
+
             // if droppedIdx is 0, it means that it was dropped on the parent of the tree.
             // if category is 0, it means it's in unmanaged condition (parentID == -1)
             // if category is greater than 0, it means it's in managed condition (parentId == 0)
-            let dropedCategory = getDropedTreeID(args); 
 
-            // if dragged node has children, it's category must be changed too.
-            let hasChildren = args.draggedNodeData.hasChildren;
+            // // if dragged node has children, it's category must be changed too.
+            // let hasChildren = args.draggedNodeData.hasChildren;
 
             if (droppedIdx !== 0) {
-                let dropedNodeDepth = calculateNodeDepth(dropedCategory, droppedIdx);
+                let dropedNodeDepth = calculateNodeDepth(droppedTreeId, droppedIdx);
                 if (args.dropLevel == dropedNodeDepth) {
                     droppedIdx = args.droppedNodeData.parentID;
                     if (droppedIdx === null) {
@@ -121,11 +127,17 @@ function createTree(title, data, nIdx) {
                     }
                 }
             }
+
+            let draggedParent = args.draggedNodeData.parentID;
             //Call update node parent
             $.ajax({
                 type: "POST",
                 url: "update_condition.php",
-                data: {currentId: draggedIdx, parentId: droppedIdx, category: dropedCategory, hasChildren: hasChildren,  action: "UPDATE PARENT"}
+                data: {currentId: draggedIdx, parentId: droppedIdx, category: droppedTreeId, prev_parentId: draggedParent, prev_category: draggedTreeId, action: "UPDATE PARENT"},
+                success: function(response) {
+                    reloadChangedTree(draggedTreeId);
+                    reloadChangedTree(droppedTreeId);
+                }
             });
             return true;
         },
@@ -147,23 +159,27 @@ function createTree(title, data, nIdx) {
         },
     
         nodeDragStop: function(args) {
-            let droppedTreeID = getDropedTreeID(args);
+            let droppedIdx = getDropedTreeID(args);
             // Prevent make child in unmanaged tree
-            if ( droppedTreeID==-1 || (droppedTreeID== 0 && args.dropLevel > 1) ) {
+            if (droppedIdx == -1 || (droppedIdx== 0 && args.dropLevel > 1) ){
                 args.cancel = true;
+                return;
             }
-            //in unmanaged tree, Prevent drop child, which has child node
-            if (droppedTreeID == 0 && args.draggedNodeData.hasChildren) {
+            //Prevent drop child, which has child node between other trees
+            if (droppedIdx != draggedTreeId && args.draggedNodeData.hasChildren) {
                 args.cancel = true;
             }
         },
-        dataSourceChanged: function(args){
-            let aaa = 0;
-        }
+
+        nodeDragStart: function(args) {
+            draggedTreeId = nIdx;
+        },
+
     });
 
     treeViewInstances[nIdx].appendTo("#tree-"+ nIdx);
-    treeViewInstances[nIdx].expandAll();
+
+    initEditables();
 }
 
 function prevPage() {
@@ -213,6 +229,19 @@ function loadUnmanagedConditions() {
       });
 }
 
+function loadManagedCondition(id) {
+    let data = {treeId: id};
+    $.ajax({
+        type: "POST",
+        url: "get_managed_condition.php",
+        data: data,
+        success: function(response) {
+            let conditions = JSON.parse(response);
+            treeViewInstances[id].fields.dataSource = conditions;
+        }
+      });
+}
+
 function loadManagedConditions() {
     $.ajax({
         type: "POST",
@@ -227,8 +256,17 @@ function loadManagedConditions() {
       });
 }
 
+function reloadChangedTree(id) {
+    if (id == 0) {
+        loadUnmanagedConditions();
+    } else {
+        loadManagedCondition(id);
+    }
+}
+
 function search() {
     $("#page").val(1);
+    $("#prev-page").prop("disabled", true);
 
     loadUnmanagedConditions();
 }
@@ -289,4 +327,28 @@ function calculateNodeDepth(categoryId, nodeId) {
         depth++;
     }
     return depth;
+}
+
+function initEditables() {
+    $('.edit').editable('manage_category.php', {
+        indicator : 'Saving…',
+        event     : 'click',
+        submit    : 'Save',
+        tooltip   : 'Click to edit…'
+    });
+}
+
+function deleteCategory(id) {
+    if (confirm("Are you sure to delete this category?")) {
+        $.ajax({
+            type: "POST",
+            url: "manage_category.php",
+            data: {action: "Delete", id: id},
+            success: function(response) {
+                if (response == "delete_ok") {
+                    $("#tree-container-" + id).remove();
+                }
+            }
+        });
+    }
 }
