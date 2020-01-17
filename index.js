@@ -1,26 +1,66 @@
 let studyTable;
 let conditionTree;
 let conditionSearchTree;
-let modifiers = ["Relapsed", "Refractory", "Chronic", "Acute", "High-risk", "Healthy", "Systemic", "Resistance", "Advanced", "Metastases",
-                "Myocardial Infarction", "Smoldering", "Atopic", "Progression", "Recurrent", "Adult", "Child"];
 let searchItems;
 let loadedCnt = 0;
+let graphSrcData;
+let graphDrawDetails;
+let modifiers;
+let chartGraph;
+let isModifier;
+let zoomIn = 1;
+let bgColor = [
+    "rgba(255, 99, 132, 0.2)",
+    "rgba(255, 159, 64, 0.2)",
+    "rgba(255, 205, 86, 0.2)",
+    "rgba(75, 192, 192, 0.2)",
+    "rgba(54, 162, 235, 0.2)",
+    "rgba(153, 102, 255, 0.2)",
+    "rgba(201, 203, 207, 0.2)"];
+let bdColor = [
+    "rgb(255, 99, 132)",
+    "rgb(255, 159, 64)",
+    "rgb(255, 205, 86)",
+    "rgb(75, 192, 192)",
+    "rgb(54, 162, 235)",
+    "rgb(153, 102, 255)",
+    "rgb(201, 203, 207)"];
+let checkedProgramatically = false;
 
 $(document).ready(function() {
     ej.base.enableRipple(true);
-
     initChart();
     initDatatable();
     initConditionTree();
     initSearchConditionTree();
-    changeCanvasSize();
     initDateRangePicker();
+    initModifiers();
 } );
 
-function changeCanvasSize() {
+function changeGraphSize(deltaZoom) {
+    zoomIn += deltaZoom/2;
+    if (zoomIn > 1) {
+        $("#btn-zoom-out").prop("disabled", false);
+    } else {
+        zoomIn = 1;
+        $("#btn-zoom-out").prop("disabled", true);
+    }
+
+    if (zoomIn < 5) {
+        $("#btn-zoom-in").prop("disabled", false);
+    } else {
+        zoomIn = 5;
+        $("#btn-zoom-in").prop("disabled", true);
+    }
+    let zoomPercent = 100 * zoomIn;
     $(".chart-container").css({
-        "min-width": "3000px"
+        "width": zoomPercent + "%"
     });
+    chartGraph.update();
+}
+
+function resetZoom() {
+    chartGraph.resetZoom();
 }
 
 function initDateRangePicker() {
@@ -34,6 +74,7 @@ function initDateRangePicker() {
 function initDatatable() {
     studyTable = $('#study-table').DataTable({
         bFilter: false,
+        searching: false,
         processing: true,
         serverSide: true,
         scrollX: true,
@@ -52,101 +93,25 @@ function initDatatable() {
         },
         columns: [
             //{ data: "rank" },
-            { data: "nct_id"},
-            { data: "title"},
-            { data: "enrollment"},
-            { data: "status"},
-            { data: "study_types"},
-            { data: "conditions"},
-            { data: "interventions"},
-            { data: "outcome_measures", width: "30%"},
-            { data: "phases"},
-            { data: "study_designs"},
+            { data: "nct_id" },
+            { data: "title" },
+            { data: "enrollment" },
+            { data: "status" },
+            { data: "study_types" },
+            { data: "conditions" },
+            { data: "interventions" },
+            { data: "outcome_measures" },
+            { data: "phases" },
+            { data: "study_designs" },
         ],
-        order: [[ 0, 'asc' ]]
+        order: [[ 0, 'desc' ]]
     });
 }
 
 function initChart() {
-    let backgroundColor = [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(255, 159, 64, 0.2)",
-        "rgba(255, 205, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(201, 203, 207, 0.2)"];
-    let borderColor = [
-        "rgb(255, 99, 132)",
-        "rgb(255, 159, 64)",
-        "rgb(255, 205, 86)",
-        "rgb(75, 192, 192)",
-        "rgb(54, 162, 235)",
-        "rgb(153, 102, 255)",
-        "rgb(201, 203, 207)"];
-
         var data = {
-            labels: ["x1", "x2", "x3","x1", "x2", "x3","x1", "x2", "x3","x1", "x2", "x3"],
             datasets: [{
-                label: "First",
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderWidth: 1,
-                data: [10, 20, 30],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Second",
-                backgroundColor: 'rgba(99, 132, 255, 0.2)',
-                borderWidth: 1,
-                data: [5, 30, 35],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Third",
-                backgroundColor: 'rgba(99, 255, 132, 0.2)',
-                borderWidth: 1,
-                data: [5, 30, 35],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Fourth",
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                borderWidth: 1,
-                data: [5, 30, 35],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Fourth",
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                borderWidth: 1,
-                data: [5, 30, 35],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Fourth",
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                borderWidth: 1,
-                data: [5, 30, 35],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Fourth",
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                borderWidth: 1,
-                data: [5, 30, 35],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Fourth",
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                borderWidth: 1,
-                data: [5, 30, 35],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Fourth",
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                borderWidth: 1,
-                data: [5, 30, 35],
-                xAxisID: "bar-x-axis1",
-            }, {
-                label: "Total",
-                backgroundColor: 'rgba(100, 100, 100, 0.2)',
-                borderWidth: 1,
-                data: [30, 30, 35],
-                xAxisID: "bar-x-axis2",
+                borderWidth: 1
             }]
         };
           
@@ -154,127 +119,34 @@ function initChart() {
             responsive: true,
             maintainAspectRatio: false,
             legend: {
-                display: true,
-                position: "right"
+                display: false,
             },
             responsiveAnimationDuration: 200,
-            scales: {
-                xAxes: [
-                {
-                    id: "bar-x-axis1",
-                    //barThickness: 30,
-                    barPercentage: 0.9,
-                    categoryPercentage: 0.6,
-                    offset: true
-                }, 
-                {
-                    display: false,
-                    stacked: true,
-                    id: "bar-x-axis2",
-                    //barThickness: 330,
-                    // these are needed because the bar controller defaults set only the first x axis properties
-                    offset: true,
-                    barPercentage: 0.9,
-                    categoryPercentage: 0.8
-                }],
-                yAxes: [{
-                    stacked: false,
-                    ticks: {
-                        beginAtZero: true
+            plugins: {
+                zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'x',
                     },
-                }]
+                    zoom: {
+                        enabled: true,
+                        drag: false,
+                        mode: 'x',
+                        limits: {
+                            max: 10,
+                            min: 0.5
+                        }
+                    }
+                }
             }
         };
           
         var ctx = document.getElementById("myChart").getContext("2d");
-        var myBarChart = new Chart(ctx, {
+        chartGraph = new Chart(ctx, {
             type: 'bar',
             data: data,
             options: options
         });
-          
-        
-    // var chart = new Chart(document.getElementById("myChart"),
-    //     {
-    //         type:"bar",
-    //         data:
-    //         {
-    //             labels:["Paris", "London", "Mumbai"],
-    //             datasets:[
-    //             {   
-    //                 label:"Store",
-    //                 data:[15, 20, 25],
-    //                 fill:false,
-    //                 backgroundColor:backgroundColor,
-    //                 borderColor:borderColor,
-    //                 borderWidth:1,
-    //                 xAxisID: "bar-x-axis2"
-    //             },
-    //             {   
-    //                 label:"Online",
-    //                 data:[30, 25, 15],
-    //                 fill:false,
-    //                 backgroundColor:backgroundColor,
-    //                 borderColor:borderColor,
-    //                 borderWidth:1,
-    //                 xAxisID: "bar-x-axis2"
-    //             },
-    //             {   
-    //                 label:"Total",
-    //                 data:[30, 40, 50],
-    //                 fill:false,
-    //                 backgroundColor:'rgba(0,0,0,0.5)',
-    //                 borderColor:borderColor,
-    //                 borderWidth:1,
-    //                 xAxisID: "bar-x-axis1"
-    //             }]
-    //         },
-    //         options: {
-    //             responsive: true,
-    //             legend: {
-    //                 display: true,
-    //                 position: "right"
-    //             },
-    //             responsiveAnimationDuration: 200,
-    //             scales: {
-    //                 xAxes: [
-    //                     {
-    //                         display: false,
-    //                         scaleLabel: {
-    //                             display: true,
-    //                             fontSize: 15
-    //                         },
-    //                         categoryPercentage: 0.5,
-    //                         barPercentage: 0.5,
-    //                         id: "bar-x-axis2"
-    //                     },
-    //                     {
-    //                         display: true,
-    //                         scaleLabel: {
-    //                             display: true,
-    //                             fontSize: 15,
-    //                         },
-    //                         id: "bar-x-axis1",
-    //                         categoryPercentage: 0.4,
-    //                         barPercentage: 1,
-    //                         gridLines: {
-    //                             offsetGridLines: true
-    //                         },
-    //                     }
-    //                 ],
-    //                 yAxes: [{
-    //                     display: true,
-    //                     scaleLabel: {
-    //                         display: true,
-    //                         fontSize: 15,
-    //                         labelString: "Number of studies"
-    //                     },
-    //                     ticks: {"beginAtZero":true},
-    //                 }]
-    //             },
-    //         }
-    //     });
-    //updateDisplayData();
 }
 
 function initConditionTree() {
@@ -317,7 +189,12 @@ function initConditionTree() {
 function initSearchConditionTree() {
     conditionSearchTree = new ej.navigations.TreeView({
         fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
-        showCheckBox: true
+        showCheckBox: true,
+        nodeChecked: function() {
+            if (!checkedProgramatically) {
+                updateGraph();
+            }
+        }
     });
     conditionSearchTree.appendTo("#condition-serch-tree");
 }
@@ -326,14 +203,27 @@ function readGraphData() {
     if (!searchItems) {
         readSearchItems();
     }
+    checkedProgramatically = true;
     conditionSearchTree.fields.dataSource = searchItems["conditions"];
     conditionSearchTree.refresh();
     conditionSearchTree.checkAll();
     conditionSearchTree.expandAll();
-
+    checkedProgramatically = false;
     //load graph data
-    
-    hideWaiting();
+    $.ajax({
+        type: "POST",
+        url: "read_graph_data.php",
+        data: searchItems,
+        success: function(response) {
+            hideWaiting();
+            try {
+                graphSrcData = JSON.parse(response);
+                updateGraph();
+            } catch(e) {
+                console.log(e);
+            }
+        }
+    });
 }
 
 function search() {
@@ -349,7 +239,7 @@ function search() {
 
 function readSearchItems() {
     searchItems = getFormData($("#search-other-form"));
-    searchItems["conditions"] = getCheckedConditions();
+    searchItems["conditions"] = getCheckedConditions("condition-tree");
 }
 
 function getFormData(form){
@@ -373,8 +263,8 @@ function getFormData(form){
     return indexed_array;
 }
 
-function getCheckedConditions() {
-    let checkedNodes = getCheckedNodes("condition-tree");
+function getCheckedConditions(selector) {
+    let checkedNodes = getCheckedNodes(selector);
     
     // console.log("function:", checkedNodes);
     checkedNodes.forEach(element => {
@@ -424,4 +314,81 @@ function hideWaiting() {
 function showWaiting() {
     loadedCnt=0;
     $("#waiting").show();
+}
+function updateGraph() {
+    graphDrawDetails = [];
+
+    let checkedNodes = getCheckedConditions("condition-serch-tree");
+    isModifier = $("#graph-modifier").is(":checked");
+
+    // if only one leaf is checked, draw modifiers.
+    if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length == 0) {
+        isModifier = true;
+    }
+    // if checked only one category and has children, display the children
+    if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
+        drawGraph(checkedNodes[0].nodeChild);
+        return;
+    }
+
+    drawGraph(checkedNodes);
+}
+
+function drawGraph(nodes) {
+    let graphLabels = [];
+    let graphDrawData = [];
+    let backgroundColors = [];
+    let borderColors = [];
+    let chartCnt = 0;
+
+    nodes.forEach(node => {
+        // if modifier, extract all data for modifiers.
+        let id = node.nodeId.substr(10);
+        if (isModifier) {
+            modifiers.forEach( modifier=> {
+                let nCnt = graphSrcData[id]["count"][modifier];
+                if (nCnt > 0) {
+                    graphLabels.push(node.nodeText + " - " + modifier);
+                    graphDrawData.push(nCnt);
+                    graphDrawDetails.push({node: node, modifier: modifier, cnt: nCnt});
+                    backgroundColors.push(bgColor[chartCnt % 7]);
+                    borderColors.push(bdColor[chartCnt % 7]);
+                    chartCnt++;
+                }
+            });
+        } else {    // else, extract all child node data
+            let nCnt = graphSrcData[id]["count"]["All"];
+            if (nCnt > 0) {
+                graphLabels.push(node.nodeText);
+                graphDrawData.push(nCnt);
+                graphDrawDetails.push({node: node, cnt: nCnt});
+                backgroundColors.push(bgColor[chartCnt % 7]);
+                borderColors.push(bdColor[chartCnt % 7]);
+                chartCnt++;
+            }
+        }
+    });
+    chartGraph.data.labels = graphLabels;
+    chartGraph.data.labels = graphLabels;
+    chartGraph.data.datasets[0].data = graphDrawData;
+    chartGraph.data.datasets[0].backgroundColor = backgroundColors;
+    chartGraph.data.datasets[0].borderColor = borderColors;
+    console.log(backgroundColors);
+    chartGraph.update();
+}
+
+// Read modifiers
+function initModifiers() {
+    $.ajax({
+        url: "read_modifier.php",
+        success: function(response) {
+            if (response) {
+                try {
+                    modifiers = JSON.parse(response);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+    });
 }

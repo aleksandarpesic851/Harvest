@@ -21,7 +21,10 @@
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
         <!-- Chart -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.4"></script>
         <!-- Date Range Picker -->
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -145,6 +148,11 @@
 					transform: rotate(360deg);
 				}
 			}
+            canvas {
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }
         </style>
     </head>
     <body>
@@ -160,15 +168,18 @@
             </div>
             <!-- Search -->
             <div class="row box">
-                <button class="ml-auto btn btn-primary" data-toggle="modal" data-target="#search-modal"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search</button>
+                <div class="ml-auto">
+                    <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"><i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom</button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search</button>
+                </div>
             </div>
             <!-- Chart Graph -->
             <div class="row box box-border">
                 <div class="col-12 col-md-3 col-lg-2 graph-search-box ">
-                    <label class="font-bold">Searched Conditions</label>
-                    <div class="form-check-inline">
+                    <label class="font-bold" style="text-align: center">Searched Conditions</label>
+                    <div class="form-check-inline offset-1 box-border" style="padding-left: 5px">
                         <label class="form-check-label">
-                            <input name="search-age-group" type="checkbox" class="form-check-input">Modifier
+                            <input name="graph-modifier" id="graph-modifier" type="checkbox" class="form-check-input" onchange="updateGraph()">Modifier
                         </label>
                     </div>
                     <div class="enable-scroll height-remaining graph-left" id="condition-serch-tree">

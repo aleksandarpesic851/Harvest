@@ -1,94 +1,181 @@
 <?php 
-    require_once 'vendor/autoload.php';
-    require_once 'enable_error_report.php';
-    use Ozdemir\Datatables\DB\MySQL;
-    use Ozdemir\Datatables\Datatables;
+    // require_once 'vendor/autoload.php';
+    // require_once 'enable_error_report.php';
+    require_once 'generate_query_condition.php';
 
-    $ini = parse_ini_file("app.ini");
+    require_once "db_connect.php";
+    require_once "enable_error_report.php";
 
-    $config = [ 'host'     => $ini["db_host"],
-                'port'     => $ini["db_port"],
-                'username' => $ini["db_user"],
-                'password' => $ini["db_password"],
-                'database' => $ini["db_name"] ];
+    // use Ozdemir\Datatables\DB\MySQL;
+    // use Ozdemir\Datatables\Datatables;
 
-    $dt = new Datatables( new MySQL($config) );
+    // $ini = parse_ini_file("app.ini");
+
+    // $config = [ 'host'     => $ini["db_host"],
+    //             'port'     => $ini["db_port"],
+    //             'username' => $ini["db_user"],
+    //             'password' => $ini["db_password"],
+    //             'database' => $ini["db_name"] ];
+
+    // $dt = new Datatables( new MySQL($config) );
 
     $query = "SELECT `nct_id`, `title`, `enrollment`, `status`, `study_types`, `conditions`, `interventions`, `outcome_measures`, `phases`, `study_designs` FROM studies ";
+    $countQuery = "SELECT COUNT(*) AS cnt FROM studies ";
+
     if (isset($_POST) && isset($_POST["manual_search"])) {
         $manualSearch = $_POST["manual_search"];
-        $searchQuery = generateQueryCondition($manualSearch);
-
+        $searchQuery = generateOtherSearchQuery($manualSearch);
+        $conditionQuery = generateConditionForTable($manualSearch);
+        if (strlen($searchQuery) > 0 && strlen($conditionQuery) > 0) {
+            $searchQuery .= " AND ";
+        }
+        $searchQuery .= $conditionQuery;
+        
         if (strlen($searchQuery) > 0) {
             $query .= " WHERE $searchQuery";
+            $countQuery .= " WHERE $searchQuery";
         }
     }
-    $query .= " ORDER BY nct_id DESC";
-    $dt->query($query);
-    
-    $dt->edit('nct_id', function ($data) {
-        $nctPattern = "NCT00000000";
-        return substr($nctPattern, 0, -strlen($data['nct_id'])) . $data['nct_id'];
-    });
+    $result = mysqlReadFirst($countQuery);
+    $totalRecords = $result["cnt"];
 
-    $dt->edit('title', function ($data) {
+    $query .= " ORDER BY nct_id DESC ";
+
+    $start = $_POST["start"];
+    $length = $_POST["length"];
+    $draw = $_POST["draw"];
+    $query .= "LIMIT $length OFFSET $start";
+
+    $totalData = mysqlReadAll($query);
+    // if (count($totalData) < $length) {
+    //     $totalRecords = $start + count($totalData);
+    // } else {
+    //     $totalRecords = $start + 2 * $length;
+    // }
+    
+    // Edit Columns
+    foreach($totalData as $key => $data) {
+        // Edit nct id
+        $nctPattern = "NCT00000000";
+        $totalData[$key]["nct_id"] = substr($nctPattern, 0, -strlen($data['nct_id'])) . $data['nct_id'];
+
+        // Title
         $url = "https://ClinicalTrials.gov/show/NCT00000000";
         $url = substr($url, 0, -strlen($data['nct_id'])) . $data['nct_id'];
-        return '<a href="' . $url . '">' . $data["title"] . '</a>';
-    });
+        $totalData[$key]["title"] = '<a href="' . $url . '">' . $data["title"] . '</a>';
 
-    $dt->edit('conditions', function ($data) {
-        if(strlen($data["conditions"]) < 1) {
-            return "";
+        // Condition
+        if(strlen($data["conditions"]) > 0) {
+            $conditionHtml = '<ul>';
+            $arrCondition = explode("|", $data["conditions"]);
+            foreach($arrCondition as $condition) {
+                $conditionHtml .= '<li>' . getValue($condition) . '</li>';
+            }
+            $conditionHtml .= '</ul>';
+            $totalData[$key]["conditions"] = $conditionHtml;
         }
-        $conditionHtml = '<ul>';
-        $arrCondition = explode("|", $data["conditions"]);
-        foreach($arrCondition as $condition) {
-            $conditionHtml .= '<li>' . getValue($condition) . '</li>';
+        
+        // Phase
+        if(strlen($data["phases"]) > 0) {
+            $phaseHtml = '<ul>';
+            $arrPhases = explode(",", $data["phases"]);
+            foreach($arrPhases as $phase) {
+                $phaseHtml .= "<li>$phase</li>";
+            }
+            $phaseHtml .= '</ul>';
+            $totalData[$key]["phases"] = $phaseHtml;
         }
-        $conditionHtml .= '</ul>';
-        return $conditionHtml;
-    });
+      
+        // Intervention
+        $totalData[$key]["interventions"] = editTypeValColumn($data["interventions"]);
 
-    $dt->edit('phases', function ($data) {
-        if(strlen($data["phases"]) < 1) {
-            return "";
+        // Outcome Measures
+        if(strlen($data["outcome_measures"]) > 0) {
+            $html = '<ul>';
+            $array = explode("|", $data["outcome_measures"]);
+            foreach($array as $item) {
+                $html .= "<li>$item</li>";
+            }
+            $html .= '</ul>';
+            $totalData[$key]["outcome_measures"] = $html;
         }
-        $phaseHtml = '<ul>';
-        $arrPhases = explode(",", $data["phases"]);
-        foreach($arrPhases as $phase) {
-            $phaseHtml .= "<li>$phase</li>";
-        }
-        $phaseHtml .= '</ul>';
-        return $phaseHtml;
-    });
+        
+        // Study Design
+        $totalData[$key]["study_designs"] = editTypeValColumn($data["study_designs"]);
+    };
 
-    $dt->edit('interventions', function ($data) {
-        return editTypeValColumn($data["interventions"]);
-    });
+    $response = array(
+        "draw" => intval($draw),
+        "iTotalRecords" => $totalRecords,
+        "iTotalDisplayRecords" => $totalRecords,
+        "aaData" => $totalData
+    );
 
-    $dt->edit('outcome_measures', function ($data) {
-        if(strlen($data["outcome_measures"]) < 1) {
-            return "";
-        }
-        $html = '<ul>';
-        $array = explode("|", $data["outcome_measures"]);
-        foreach($array as $item) {
-            $html .= "<li>$item</li>";
-        }
-        $html .= '</ul>';
-        return $html;
-    });
+    echo json_encode($response);
 
-    $dt->edit('study_designs', function ($data) {
-        return editTypeValColumn($data["study_designs"]);
-    });
+    // $dt->edit('nct_id', function ($data) {
+    //     $nctPattern = "NCT00000000";
+    //     return substr($nctPattern, 0, -strlen($data['nct_id'])) . $data['nct_id'];
+    // });
+
+    // $dt->edit('title', function ($data) {
+    //     $url = "https://ClinicalTrials.gov/show/NCT00000000";
+    //     $url = substr($url, 0, -strlen($data['nct_id'])) . $data['nct_id'];
+    //     return '<a href="' . $url . '">' . $data["title"] . '</a>';
+    // });
+
+    // $dt->edit('conditions', function ($data) {
+    //     if(strlen($data["conditions"]) < 1) {
+    //         return "";
+    //     }
+    //     $conditionHtml = '<ul>';
+    //     $arrCondition = explode("|", $data["conditions"]);
+    //     foreach($arrCondition as $condition) {
+    //         $conditionHtml .= '<li>' . getValue($condition) . '</li>';
+    //     }
+    //     $conditionHtml .= '</ul>';
+    //     return $conditionHtml;
+    // });
+
+    // $dt->edit('phases', function ($data) {
+    //     if(strlen($data["phases"]) < 1) {
+    //         return "";
+    //     }
+    //     $phaseHtml = '<ul>';
+    //     $arrPhases = explode(",", $data["phases"]);
+    //     foreach($arrPhases as $phase) {
+    //         $phaseHtml .= "<li>$phase</li>";
+    //     }
+    //     $phaseHtml .= '</ul>';
+    //     return $phaseHtml;
+    // });
+
+    // $dt->edit('interventions', function ($data) {
+    //     return editTypeValColumn($data["interventions"]);
+    // });
+
+    // $dt->edit('outcome_measures', function ($data) {
+    //     if(strlen($data["outcome_measures"]) < 1) {
+    //         return "";
+    //     }
+    //     $html = '<ul>';
+    //     $array = explode("|", $data["outcome_measures"]);
+    //     foreach($array as $item) {
+    //         $html .= "<li>$item</li>";
+    //     }
+    //     $html .= '</ul>';
+    //     return $html;
+    // });
+
+    // $dt->edit('study_designs', function ($data) {
+    //     return editTypeValColumn($data["study_designs"]);
+    // });
     
     // $dt->add('rank', function () {
     //     return '';
     // });
 
-    echo $dt->generate();
+    // echo $dt->generate();
 
     function getValue($val) {
         if ($val=='""') {
@@ -124,94 +211,5 @@
             $html .= '</ul>';
         }
         return $html;
-    }
-
-    function generateQueryCondition($manualSearch) {
-        $arrQuery = array();
-        if ( isset($manualSearch["search-title"])) {
-            array_push($arrQuery, "`title` LIKE '%" . $manualSearch["search-title"] . "%'");
-        }
-        if ( isset($manualSearch["search-measure"])) {
-            array_push($arrQuery, "`outcome_measures` LIKE '%" . $manualSearch["search-measure"] . "%'");
-        }
-        if ( isset($manualSearch["search-design"])) {
-            array_push($arrQuery, "`study_designs` LIKE '%" . $manualSearch["search-design"] . "%'");
-        }
-        if ( isset($manualSearch["search-type"])) {
-            array_push($arrQuery, "`study_types` = '" . $manualSearch["search-type"] . "'");
-        }
-        if ( isset($manualSearch["search-sex"])) {
-            array_push($arrQuery, "( `gender` = '" . $manualSearch["search-sex"] . "' OR `gender` = 'All' )");
-        }
-        if ( isset($manualSearch["search-start"])) {
-            $tmpArray = explode(" - ", $manualSearch["search-start"]);
-            $from = date("Y-m-d", strtotime($tmpArray[0]));
-            $to = date("Y-m-d", strtotime($tmpArray[1]));
-            array_push($arrQuery, "`start_date` >= '$from' AND `start_date` <= '$to'");
-        }
-        if ( isset($manualSearch["search-complete"])) {
-            $tmpArray = explode(" - ", $manualSearch["search-complete"]);
-            $from = date("Y-m-d", strtotime($tmpArray[0]));
-            $to = date("Y-m-d", strtotime($tmpArray[1]));
-            array_push($arrQuery, "`completion_date` >= '$from' AND `completion_date` <= '$to'");
-        }
-        if ( isset($manualSearch["search-first-post"])) {
-            $tmpArray = explode(" - ", $manualSearch["search-first-post"]);
-            $from = date("Y-m-d", strtotime($tmpArray[0]));
-            $to = date("Y-m-d", strtotime($tmpArray[1]));
-            array_push($arrQuery, "`study_first_posted` >= '$from' AND `study_first_posted` <= '$to'");
-        }
-        if ( isset($manualSearch["search-last-post"])) {
-            $tmpArray = explode(" - ", $manualSearch["search-last-post"]);
-            $from = date("Y-m-d", strtotime($tmpArray[0]));
-            $to = date("Y-m-d", strtotime($tmpArray[1]));
-            array_push($arrQuery, "`last_update_posted` >= '$from' AND `last_update_posted` <= '$to'");
-        }
-        if ( isset($manualSearch["search-age-from"])) {
-            array_push($arrQuery, "`min_age` <= " . $manualSearch["search-age-from"]);
-        }
-        if ( isset($manualSearch["search-age-group"])) {
-            $ageGroups = $manualSearch["search-age-group"];
-            if (is_array($ageGroups)) {
-                $subQuery = array();
-                foreach($ageGroups as $group) {
-                    array_push($subQuery, "FIND_IN_SET('$group', `age_groups`)");
-                }
-                array_push($arrQuery, "( " . implode(" OR ", $subQuery) . " )");
-            } else {
-                array_push($arrQuery, "FIND_IN_SET('$ageGroups', `age_groups`)");
-            }
-            
-        }
-        if ( isset($manualSearch["search-status"])) {
-            $statuses = $manualSearch["search-status"];
-            if (is_array($statuses)) {
-                $subQuery = array();
-                foreach($statuses as $status) {
-                    array_push($subQuery, "`status` = '$status'");
-                }
-                array_push($arrQuery, "( " . implode(" OR ", $subQuery) . " )");
-            } else {
-                array_push($arrQuery, "`status` = '$statuses'");
-            }
-        }
-        if ( isset($manualSearch["search-phase"])) {
-            $phases = $manualSearch["search-phase"];
-            if (is_array($phases)) {
-                $subQuery = array();
-                foreach($phases as $phase) {
-                    array_push($subQuery, "FIND_IN_SET('$phase', `phases`)");
-                }
-                array_push($arrQuery, "( " . implode(" OR ", $subQuery) . " )");
-            } else {
-                array_push($arrQuery, "FIND_IN_SET('$phases', `phases`)");
-            }
-        }
-        if (isset($manualSearch["condition"])) {
-            $arrIds = getIdFromCondition($manualSearch["condition"]);
-            $ids = "('" . implode("','",$arrIds) . "')";
-            array_push($arrQuery, "nct_id IN $ids");
-        }
-        return implode(" AND ", $arrQuery);
     }
 ?>
