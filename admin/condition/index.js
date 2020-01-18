@@ -225,6 +225,8 @@ function loadUnmanagedConditions() {
             treeViewInstances[0].fields.dataSource = conditions;
             if (conditions.length < conditionCnt) {
                 $("#next-page").prop("disabled", true);
+            } else {
+                $("#next-page").prop("disabled", false);
             }
         }
       });

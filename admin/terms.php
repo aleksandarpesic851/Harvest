@@ -78,7 +78,7 @@ require_once "../enable_error_report.php";
         $arrCondition = explode("|", $data);
 
         foreach($arrCondition as $condition) {
-            $val = getValue($condition);
+            $val =  getTermValue($condition);
             if (isset($val)) {
                 pushData($val);
                 saveStudyCondition($val, $id);
@@ -87,7 +87,7 @@ require_once "../enable_error_report.php";
     }
 
     //Replace ', " character with \', \"
-    function getValue($val) {
+    function  getTermValue($val) {
         if ($val=='""' || strlen($val) < 1) {
             return;
         }

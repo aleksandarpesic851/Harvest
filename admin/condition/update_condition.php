@@ -26,13 +26,13 @@ require_once "../../enable_error_report.php";
 
             //if category is equal with prev category, update parent id
             if ($category == $prev_category) {
-                $query = "UPDATE `condition_hierarchy` SET `parentid` = $parentId WHERE `id` = '$currentId'";
+                $query = "UPDATE `condition_hierarchy` SET `parent_id` = $parentId WHERE `id` = '$currentId'";
                 mysqli_query($conn, $query);
                 break;
             }
 
             if ($prev_category == 0) {
-                $condition_id = $currentId;echo "0: " . $condition_id;
+                $condition_id = $currentId;
             } else {
                 $query = "SELECT condition_id FROM condition_hierarchy WHERE id=$currentId;";
                 $result = mysqli_query($conn, $query);
@@ -42,10 +42,10 @@ require_once "../../enable_error_report.php";
                 }
                 $row = mysqli_fetch_assoc($result);
                 mysqli_free_result($result);
-                $condition_id = $row["condition_id"];echo "1: " . $condition_id;
+                $condition_id = $row["condition_id"];
             }
             $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$condition_id', '$parentId', '$category'); ";
-            mysqli_query($conn, $query);echo $query;
+            mysqli_query($conn, $query);
             break;
             
             // // If current node has child nodes, update all childs's categoryid.

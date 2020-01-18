@@ -21,6 +21,7 @@
 
     function calculateStudyConditions() {
         global $totalData;
+        global $log;
 
         $modifiers = readModifiers();
         $conditions = readAllHierarchy();
@@ -66,7 +67,8 @@
     // Calculate study ids related with condition name
     function calculateStudyIds($modifier) {
         global $totalData;
-
+        global $log;
+        
         foreach($totalData as $key=>$condition) {
             $start = time();
             $query = "SELECT `nct_id` FROM study_id_conditions WHERE ( `condition` LIKE '%" . $condition["condition_name"] . "%' ";
@@ -98,6 +100,8 @@
 
     // merge Study Ids
     function mergeIds() {
+        global $log;
+
         if ($log) {
             printStudyIdCnts("Before Merge");
         }

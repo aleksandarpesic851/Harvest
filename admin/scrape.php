@@ -66,7 +66,7 @@
     }
 
     $startTime = time();
-    $down_chunk = 328;
+    $down_chunk = 1;
     $down_count = 1000;
     $ignoreFields = ["documents", "study_documents", "url", "other_ids", "funded_bys", "acronym", "exp_acc_types"];
     mysqli_autocommit($conn,FALSE);
