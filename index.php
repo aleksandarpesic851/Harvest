@@ -82,6 +82,7 @@
                 }
                 .graph-left {
                     max-height: calc(70vh - 50px);
+                    overflow: auto;
                 }
             }
 
@@ -91,7 +92,8 @@
                     height: 80vw;
                 }
                 .graph-left {
-                    max-height: 60vw;
+                    max-height: calc(60vw - 50px);
+                    overflow: auto;
                 }
             }
             .item-box {
@@ -163,6 +165,9 @@
                 -webkit-user-select: none;
                 -ms-user-select: none;
             }
+            .font-12 {
+                font-size: 12px;
+            }
         </style>
     </head>
     <body>
@@ -185,20 +190,34 @@
             </div>
             <!-- Chart Graph -->
             <div class="row box box-border">
-                <div class="col-12 col-md-3 col-lg-2 graph-search-box ">
-                    <label class="font-bold" style="text-align: center">Searched Conditions</label>
-                    <div class="form-check-inline offset-1 box-border" style="padding-left: 5px">
-                        <label class="form-check-label">
-                            <input name="graph-modifier" id="graph-modifier" type="checkbox" class="form-check-input" onchange="updateGraph()">Modifier
-                        </label>
-                    </div>
-                    <div class="enable-scroll height-remaining graph-left" id="condition-serch-tree">
+                <div class="col-12 col-lg-4 col-xl-3">
+                    <ul class="nav nav-tabs nav-justified" id="graph-tab">
+                        <li class=" nav-item"><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Condition</a></li>
+                        <li class=" nav-item"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifier</a></li>
+                        <li class=" nav-item"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Drug</a></li>
+                    </ul>
+                    <div class="tab-content" style="margin-top: 10px;">
+                        <div class="tab-pane container graph-left active" id="graph-tab-condition">
+                            <!-- Condition Tree -->
+                            <div id="condition-serch-tree">
+                            </div>
+                        </div>
+                        <!-- Modifier Tree -->
+                        <div class="tab-pane container graph-left fade" id="graph-tab-modifier">
+                            modifier
+                        </div>
+                        <!-- Drug -->
+                        <div class="tab-pane container graph-left fade" id="graph-tab-drug">
+                            drug
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-9 col-lg-10  enable-scroll">
+                <!-- Chart Graph -->
+                <div class="col-12 col-lg-8 col-xl-9 enable-scroll">
                     <div class="chart-container">
                         <canvas id="myChart"></canvas>
                     </div>
+                    
                 </div>
             </div>
             <br>

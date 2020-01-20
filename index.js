@@ -8,7 +8,6 @@ let graphDrawDetails;
 let modifiers;
 let chartGraph;
 let isModifier;
-let zoomIn = 1;
 let bgColor = [
     "rgba(255, 99, 132, 0.2)",
     "rgba(255, 159, 64, 0.2)",
@@ -35,28 +34,14 @@ $(document).ready(function() {
     initSearchConditionTree();
     initDateRangePicker();
     initModifiers();
+    initGraphTab();
 } );
 
-function changeGraphSize(deltaZoom) {
-    zoomIn += deltaZoom/2;
-    if (zoomIn > 1) {
-        $("#btn-zoom-out").prop("disabled", false);
-    } else {
-        zoomIn = 1;
-        $("#btn-zoom-out").prop("disabled", true);
-    }
-
-    if (zoomIn < 5) {
-        $("#btn-zoom-in").prop("disabled", false);
-    } else {
-        zoomIn = 5;
-        $("#btn-zoom-in").prop("disabled", true);
-    }
-    let zoomPercent = 100 * zoomIn;
-    $(".chart-container").css({
-        "width": zoomPercent + "%"
+function initGraphTab() {
+    $('#graph-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href");
+        alert(target);
     });
-    chartGraph.update();
 }
 
 function resetZoom() {
