@@ -6,15 +6,18 @@ require_once "../enable_error_report.php";
     $conditions = array();
 
     $start = time();
+    
+    mysqli_autocommit($conn,FALSE);
 
     // Remove all data in study_id_condition table
     $query = "DELETE FROM `study_id_conditions`";
     if (!mysqli_query($conn, $query)) {
         echo "<br> Error in mysql query: " . mysqli_error($conn);
     }
-
-    mysqli_autocommit($conn,FALSE);
-
+    if (!mysqli_commit($conn)) {
+        echo "Commit transaction failed";
+    }
+    
     processData();
     saveData();
 
@@ -26,7 +29,7 @@ require_once "../enable_error_report.php";
     print_r("<br>Conditions: " . count($conditions));
 
     $end = time();
-    print_r("<br><br>Total Elapsed Time" . time_elapsed($end-$start));
+    print_r("<br><br>Total Elapsed Time" . time_diff_string($end-$start));
 
     // mysqli_close($conn);
 
@@ -141,7 +144,7 @@ require_once "../enable_error_report.php";
     }
 
     // Calculate elapsed time
-    function time_elapsed($secs){
+    function time_diff_string($secs){
         $bit = array(
             'y' => $secs / 31556926 % 12,
             'w' => $secs / 604800 % 52,

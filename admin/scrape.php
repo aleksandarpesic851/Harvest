@@ -65,8 +65,17 @@
         return join(' ', $ret);
     }
 
+    // Update history
+    $now = date("Y-m-d H:i:s", time());
+    $query = "INSERT INTO `update_history` (`updated_at`) VALUES ('$now')";
+    
+    if (!mysqli_query($conn, $query)) {
+        echo mysqli_error($conn);
+        exit;
+    }
+
     $startTime = time();
-    $down_chunk = 1;
+    $down_chunk = 327;
     $down_count = 1000;
     $ignoreFields = ["documents", "study_documents", "url", "other_ids", "funded_bys", "acronym", "exp_acc_types"];
     mysqli_autocommit($conn,FALSE);

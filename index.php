@@ -1,6 +1,6 @@
 <?php
     require_once "db_connect.php";
-//    require_once "admin/check_update.php";
+    require_once "admin/check_update.php";
     mysqli_close($conn);
 ?>
 
@@ -22,7 +22,7 @@
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
         <!-- Chart -->
         <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
         <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.4"></script>
         <!-- Date Range Picker -->

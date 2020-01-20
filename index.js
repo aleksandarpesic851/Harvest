@@ -111,6 +111,7 @@ function initDatatable() {
 function initChart() {
         var data = {
             datasets: [{
+                //data: [10, 20, 30],
                 borderWidth: 1
             }]
         };

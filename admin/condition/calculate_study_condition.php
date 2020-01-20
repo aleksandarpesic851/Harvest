@@ -3,18 +3,23 @@
     require_once "../../db_connect.php";
     require_once "../../enable_error_report.php";
 
-    $log = false;
+    $log = true;
     if (isset($_POST) && isset($_POST["post"])) {
-        $log = true;
+        $log = false;
     }
     if ($log) {
         echo "<br>-----------------------Calculate Study Ids Related with Condition Hierarchy----------------------------";
     }
     $totalData = array();
-    $query = "DELETE FROM condition_hierarchy_modifier_stastics";
-    mysqli_query($conn, $query);
+    // $query = "DELETE FROM condition_hierarchy_modifier_stastics";
+    // mysqli_query($conn, $query);
+    mysqli_autocommit($conn,FALSE);
 
     calculateStudyConditions();
+
+    if (!mysqli_commit($conn)) {
+        echo "Commit transaction failed";
+    }
 
     echo "ok";
     //echo json_encode($totalData);
@@ -52,6 +57,14 @@
         return isset($data) ? $data : array();
     }
 
+    function mysqlRowCnt($query) {
+        global $conn;
+        $result = mysqli_query($conn, $query);
+        $nCnt = $result->num_rows;
+        // Free result set
+        mysqli_free_result($result);
+        return $nCnt;
+    }
     // Read All Modifiers
     function readModifiers() {
         $query = "SELECT * FROM modifiers";
@@ -90,7 +103,7 @@
             
             $end = time();
             if ($log) {
-                echo "<br>Calculate Study Id - ". $condition["condition_name"] . " : " . time_elapsed($end-$start);
+                echo "<br>Calculate Study Id - ". $condition["condition_name"] . " : " . time_elapsed_string($end-$start);
                 echo ", Count: " . count($nctIds);
                 ob_flush();
                 flush();
@@ -118,7 +131,7 @@
         }
         $end = time();
         if ($log) {
-            echo "<br>Time : " . time_elapsed($end-$start);
+            echo "<br>Time : " . time_elapsed_string($end-$start);
         }
         $start = time();
         foreach($totalData as $key => $condition) {
@@ -129,7 +142,7 @@
         $end= time();
         if ($log) {
             printStudyIdCnts("Merge Child -> Parent");
-            echo "<br>Time : " . time_elapsed($end-$start);
+            echo "<br>Time : " . time_elapsed_string($end-$start);
         }
     }
 
@@ -182,7 +195,7 @@
         }
     }
     // Calculate elapsed time
-    function time_elapsed($secs){
+    function time_elapsed_string($secs){
         $bit = array(
             'y' => $secs / 31556926 % 12,
             'w' => $secs / 604800 % 52,
@@ -204,8 +217,14 @@
         global $conn;
 
         foreach($totalData as $data) {
-            $query = "INSERT INTO `condition_hierarchy_modifier_stastics` (`hierarchy_id`, `modifier_id`, `condition_id`, `condition_name`, `study_ids`)";
-            $query .= "VALUES ('" . $data["id"] . "', '$modifierID', '" . $data["condition_id"] . "', '" . $data["condition_name"] . "', '" . implode(",", $data["study_ids"]) . "'); ";
+            $query = "SELECT `modifier_id` FROM `condition_hierarchy_modifier_stastics` WHERE `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
+            $nCnt = mysqlRowCnt($query);
+            if ($nCnt < 1) {
+                $query = "INSERT INTO `condition_hierarchy_modifier_stastics` (`hierarchy_id`, `modifier_id`, `condition_id`, `condition_name`, `study_ids`)";
+                $query .= "VALUES ('" . $data["id"] . "', '$modifierID', '" . $data["condition_id"] . "', '" . $data["condition_name"] . "', '" . implode(",", $data["study_ids"]) . "'); ";
+            } else {
+                $query = "UPDATE `condition_hierarchy_modifier_stastics` SET `study_ids` = '" . implode(",", $data["study_ids"]) . "' WHERE  `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
+            }
             mysqli_query($conn, $query);
         }
     }

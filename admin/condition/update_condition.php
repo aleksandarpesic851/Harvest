@@ -64,7 +64,21 @@ require_once "../../enable_error_report.php";
         case "UPDATE TEXT":
             $editedId = $_POST["editedId"];
             $newText = $_POST["newText"];
-            $query = "UPDATE `conditions` SET `condition_name` = '$newText' WHERE `id` = '$editedId'";
+            $category = $_POST["categoryId"];
+            if ($category == 0) {
+                $condition_id = $editedId;
+            } else {
+                $query = "SELECT condition_id FROM condition_hierarchy WHERE id=$editedId;";
+                $result = mysqli_query($conn, $query);
+                // if exist, update
+                if ($result->num_rows < 1) {
+                    break;
+                }
+                $row = mysqli_fetch_assoc($result);
+                mysqli_free_result($result);
+                $condition_id = $row["condition_id"];
+            }
+            $query = "UPDATE `conditions` SET `condition_name` = '$newText' WHERE `id` = '$condition_id'";
             mysqli_query($conn, $query);
         break;
     }

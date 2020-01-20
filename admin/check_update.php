@@ -27,7 +27,7 @@
             return;
         }
 
-        echo "Server is updating...<br>";
+        // echo "Server is updating...<br>";
         echo '<script type="text/javascript">setTimeout(function() { location.reload(true); }, 1000)</script>';
         
         ob_flush();

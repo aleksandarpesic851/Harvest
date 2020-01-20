@@ -149,12 +149,13 @@ function createTree(title, data, nIdx) {
             
             let editedId = args.nodeData.id;
             let newText = args.newText;
-            
+            let categoryId = nIdx;
+
             // Call Update Node data api
             $.ajax({
                 type: "POST",
                 url: "update_condition.php",
-                data: {editedId: editedId, newText: newText, action: "UPDATE TEXT"}
+                data: {editedId: editedId, newText: newText, categoryId: categoryId, action: "UPDATE TEXT"}
             });
             return true;
         },
