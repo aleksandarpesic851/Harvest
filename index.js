@@ -72,6 +72,24 @@ function initDateRangePicker() {
 }
 
 function initDatatable() {
+    // jQuery.fn.DataTable.Api.register( 'buttons.exportData()', function ( options ) {
+    //     let searchKeys = {};
+    //     searchKeys.manual_search = searchItems;
+
+    //     if ( this.context.length ) {
+    //         var jsonResult = $.ajax({
+    //             url: 'read_table_data.php?page=all',
+    //             data: searchKeys,
+    //             success: function (result) {
+    //                 //Do nothing
+    //             },
+    //             async: false
+    //         });
+
+    //         return {body: jsonResult.responseJSON.data, header: $("#myTable thead tr th").map(function() { return this.innerHTML; }).get()};
+    //     }
+    // } );
+
     studyTable = $('#study-table').DataTable({
         bFilter: false,
         searching: false,
@@ -88,6 +106,18 @@ function initDatatable() {
                 return  $.extend(d, searchKeys);
             },
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'collection',
+                text: 'Export',
+                buttons: [
+                    {extend: 'excel',title: "studies"},
+                    {extend: 'csv',title: "studies"},
+                    {extend: 'print'},
+                ]
+            }
+        ],
         drawCallback: function() {
             hideWaiting();
         },
@@ -374,7 +404,6 @@ function drawGraph(nodes) {
     chartGraph.data.datasets[0].data = graphDrawData;
     chartGraph.data.datasets[0].backgroundColor = backgroundColors;
     chartGraph.data.datasets[0].borderColor = borderColors;
-    console.log(backgroundColors);
     chartGraph.update();
 }
 
