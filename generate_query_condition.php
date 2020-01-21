@@ -126,7 +126,7 @@
         global $conn;
         
         $result = mysqli_query($conn, $query);
-        if ($result->num_rows < 1) {
+        if (mysqli_num_rows($result) < 1) {
             return array();
         }
         // Fetch all
@@ -141,7 +141,7 @@
         $result = mysqli_query($conn, $query);
             
         // if exist, update
-        if ($result->num_rows > 0) {
+        if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
             mysqli_free_result($result);
             return $row;

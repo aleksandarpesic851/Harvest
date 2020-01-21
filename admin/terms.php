@@ -4,6 +4,7 @@ require_once "../db_connect.php";
 require_once "../enable_error_report.php";
     echo "<br>-----------------------Extracting Data from scraped Studies-----------";
     $conditions = array();
+    $drugs = array();
 
     $start = time();
     
@@ -14,6 +15,12 @@ require_once "../enable_error_report.php";
     if (!mysqli_query($conn, $query)) {
         echo "<br> Error in mysql query: " . mysqli_error($conn);
     }
+    // Remove all data in study_id_condition table
+    $query = "DELETE FROM `study_id_drugs`";
+    if (!mysqli_query($conn, $query)) {
+        echo "<br> Error in mysql query: " . mysqli_error($conn);
+    }
+
     if (!mysqli_commit($conn)) {
         echo "Commit transaction failed";
     }
@@ -21,25 +28,27 @@ require_once "../enable_error_report.php";
     processData();
     saveData();
 
-    if (!mysqli_commit($conn)) {
-        echo "Commit transaction failed";
-    }
-
     print_r("<br>Extracting was completed.<br>");
     print_r("<br>Conditions: " . count($conditions));
+    print_r("<br>Drugs: " . count($drugs));
 
     $end = time();
     print_r("<br><br>Total Elapsed Time" . time_diff_string($end-$start));
 
     // mysqli_close($conn);
+    
+    ///////////////////////////////////////////// Functions ///////////////////////////////////////////////////
+    $tmpConditions = array();
+    $tmpDrugs = array();
 
     function processData() {
         global $conn;
         global $conditions;
-
+        global $drugs;
+        global $tmpConditions, $tmpDrugs;
         $nCnt = 0;
         $nRows = 1000;
-        $query = "SELECT `nct_id`, `conditions` FROM studies ORDER BY `nct_id` LIMIT ? OFFSET ?;";
+        $query = "SELECT `nct_id`, `conditions`, `interventions` FROM studies ORDER BY `nct_id` LIMIT ? OFFSET ?;";
         
         while(true) {
             $offset = $nCnt*$nRows;
@@ -54,19 +63,26 @@ require_once "../enable_error_report.php";
 
             $result = $stmt->get_result();
             
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    processConditions($row["conditions"], $row["nct_id"]);
-                }
-            } else {
+            if (mysqli_num_rows($result) < 1) {
                 $stmt->close();
-            break;
+                break;
             }
+            $tmpConditions = array();
+            $tmpDrugs = array();
+
+            while($row = $result->fetch_assoc()) {
+                processConditions($row["conditions"], $row["nct_id"]);
+                processDrugs($row["interventions"], $row["nct_id"]);
+            }
+            saveStudyCondition();
+            saveStudyDrug();
+            
             $nCnt++;
             $stmt->close();
-
+            
             echo "<br> Now Extracted from " . $nCnt*$nRows . " data";
             echo "<br> The number of extracted diseases: " . count($conditions) . "</br>";
+            echo "<br> The number of extracted drugs: " . count($drugs) . "</br>";
             ob_flush();
             flush();
         }
@@ -74,6 +90,7 @@ require_once "../enable_error_report.php";
 
     function processConditions($data, $id) {
         global $conditions;
+        global $tmpConditions;
 
         if (!isset($data) || strlen($data) < 1) {
             return;
@@ -84,7 +101,29 @@ require_once "../enable_error_report.php";
             $val =  getTermValue($condition);
             if (isset($val)) {
                 pushData($val);
-                saveStudyCondition($val, $id);
+                array_push($tmpConditions, [ "val" => $val, "id" => $id ]);
+            }
+        }
+    }
+
+    function processDrugs($data, $id) {
+        global $drugs;
+        global $tmpDrugs;
+
+        if (!isset($data) || strlen($data) < 1) {
+            return;
+        }
+        $arrDrugs = explode("|", $data);
+
+        foreach($arrDrugs as $drug) {
+            $tmpArray = explode(":", $drug);
+            if (count($tmpArray) < 2) {
+                continue;
+            }
+            $val =  getTermValue($tmpArray[1]);
+            if (isset($val) && strlen($val) > 2) {
+                $drugs[$val] = '';
+                array_push($tmpDrugs, [ "val" => $val, "id" => $id ]);
             }
         }
     }
@@ -94,9 +133,8 @@ require_once "../enable_error_report.php";
         if ($val=='""' || strlen($val) < 1) {
             return;
         }
-        $newData = trim(strtolower(str_replace("'", "\'", str_replace("\\", "\\\\", $val))));
         //remove ""
-        $newData = str_replace('"', '', $newData);
+        $newData = str_replace('"', '', $val);
         // remove first -
         if (substr($newData, 0, 1) == "-") {
             $newData = trim(substr($newData, 1));
@@ -109,7 +147,9 @@ require_once "../enable_error_report.php";
         if (substr($newData, -1) == ")") {
             $newData = trim(substr($newData, 0, strpos($newData, "(")));
         }
-
+        
+        $newData = trim(strtolower(str_replace("'", "\'", str_replace("\\", "\\\\", $newData))));
+        
         if (strlen($newData) < 1) {
             return;
         }
@@ -119,27 +159,42 @@ require_once "../enable_error_report.php";
 //////////////////////////////////////Save on conditions table/////////////////////////////////////////////////
     function saveData() {
         global $conditions;
+        global $drugs;
         global $conn;
-        saveEachData($conditions, "conditions", "condition");
+        saveEachData($conditions, "conditions", "condition_name");
+        saveEachData($drugs, "drugs", "drug_name");
     }
 
     function saveEachData($data, $table, $columnName) {
         global $conn;
         
-        $nCnt = 0;
-        $nUnit = 1000;
-        $subData = array_slice($data, 0, $nUnit);
-
-        while(count($subData) > 0) {
-            $values = "('" . implode("'), ('", $subData) . "')";
-            $query = "INSERT INTO `$table` (`$columnName`) VALUES $values";
-            $query .= " ON DUPLICATE KEY UPDATE `$columnName` = VALUES(`$columnName`)";
-            //print_r($query);
-            if (!mysqli_query($conn, $query)) {
-                echo "<br> Error in mysql query: " . mysqli_error($conn);
+        // generate value array from key=>val array
+        $valData = array();
+        foreach($data as $key => $val) {
+            array_push($valData, $key);
+        }
+        //Get new data which is not in db.
+        $query = "SELECT `$columnName` FROM `$table` WHERE `$columnName` IN ('" . implode("', '", $valData) . "')";
+        $result = mysqli_query($conn, $query);
+        if (mysqli_num_rows($result) > 0) {
+            while($row = mysqli_fetch_assoc($result)) {
+                unset($data[$row[$columnName]]);
             }
-            $nCnt++;
-            $subData = array_slice($data, $nUnit * $nCnt, $nUnit);
+            mysqli_free_result($result);    
+        }
+
+        // generate value array from key=>val array
+        $valData = array();
+        foreach($data as $key => $val) {
+            array_push($valData, $key);
+        }
+        $query = "INSERT INTO `$table` (`$columnName`) VALUES ('" . implode("', '", $valData) . "')";
+        if (!mysqli_query($conn, $query)) {
+            echo "<br> Error in mysql query: " . mysqli_error($conn);
+        }
+
+        if (!mysqli_commit($conn)) {
+            echo "Commit transaction failed";
         }
     }
 
@@ -164,34 +219,64 @@ require_once "../enable_error_report.php";
     function pushData($newData) {
         global $conditions;
 
-        if (in_array($newData, $conditions)) {
-            return;
-        }
-
         // remove xxxs
         if (substr($newData, -1) == "s") {
             $val = substr($newData, 0, -1);
-            if (in_array($val, $conditions)) {
+            if (isset($conditions[$val])) {
                 return;
             }
         }
         
         $val = $newData . "s";
-        if (in_array($val, $conditions)) {
+        if (isset($conditions[$val])) {
             return;
         }
-
-        array_push($conditions, $newData);
-
+        $conditions[$newData] = '';
     }
 
 //////////////////////////////////////Save on conditions table/////////////////////////////////////////////////
 
-    function saveStudyCondition($condition, $id) {
+    function saveStudyCondition() {
         global $conn;
-        $query = "INSERT INTO `study_id_conditions` (`nct_id`, `condition`) VALUES ('$id', '$condition')";
+        global $tmpConditions;
+
+        $queryVals = "";
+        foreach($tmpConditions as $condition) {
+            if (strlen($queryVals) > 0) {
+                $queryVals .= ", ";
+            }
+            $queryVals .= "('" . $condition["id"] . "', '" . $condition["val"] . "')";
+        }
+
+        $query = "INSERT INTO `study_id_conditions` (`nct_id`, `condition`) VALUES $queryVals";
         if (!mysqli_query($conn, $query)) {
             echo "<br> Query: " . $query;
             echo "<br> Error in mysql query: " . mysqli_error($conn);
+        }
+        if (!mysqli_commit($conn)) {
+            echo "Commit transaction failed";
+        }
+    }
+
+//////////////////////////////////////Save on drug table/////////////////////////////////////////////////
+    function saveStudyDrug() {
+        global $conn;
+        global $tmpDrugs;
+        
+        $queryVals = "";
+        foreach($tmpDrugs as $drug) {
+            if (strlen($queryVals) > 0) {
+                $queryVals .= ", ";
+            }
+            $queryVals .= "('" . $drug["id"] . "', '" . $drug["val"] . "')";
+        }
+
+        $query = "INSERT INTO `study_id_drugs` (`nct_id`, `drug`) VALUES $queryVals";
+        if (!mysqli_query($conn, $query)) {
+            echo "<br> Query: " . $query;
+            echo "<br> Error in mysql query: " . mysqli_error($conn);
+        }
+        if (!mysqli_commit($conn)) {
+            echo "Commit transaction failed";
         }
     }

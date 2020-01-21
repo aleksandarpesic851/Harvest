@@ -12,18 +12,18 @@
         }
     
         foreach($arrData as $key => $category) {
-            $arrData[$key]["conditions"] = getCategoryData($category["id"]);
+            $arrData[$key]["drugs"] = getCategoryData($category["id"]);
         }
     }
     
     mysqli_close($conn);
     echo json_encode($arrData);
 
-    //Read all condition category
+    //Read all drug category
     function getCategories() {
         global $conn;
 
-        $query = "SELECT * FROM condition_categories";
+        $query = "SELECT * FROM drug_categories";
         $result = mysqli_query($conn, $query);
         if (mysqli_num_rows($result) < 1) {
             return;
@@ -40,7 +40,7 @@
         global $conn;
 
         // Get Category Root IDS
-        $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory`, `synonym` from condition_hierarchy_view WHERE `category_id` = $categoryID AND `parent_id` = 0 ";
+        $query = "SELECT `id` AS `nodeId`, `drug_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory` from drug_hierarchy WHERE `category_id` = $categoryID AND `parent_id` = 0 ";
         $result = mysqli_query($conn, $query);
         
         if (mysqli_num_rows($result) < 1) {
@@ -61,7 +61,7 @@
     function getChildren($parentId) {
         global $conn;
         
-        $sql = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory`, `synonym` FROM `condition_hierarchy_view` WHERE `parent_id` = $parentId";
+        $sql = "SELECT `id` AS `nodeId`, `drug_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory` FROM `drug_hierarchy` WHERE `parent_id` = $parentId";
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) < 1) {
             return array();

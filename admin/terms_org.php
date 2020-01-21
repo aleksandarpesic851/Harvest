@@ -49,7 +49,7 @@
 
             $result = $stmt->get_result();
             
-            if ($result->num_rows > 0) {
+            if (mysqli_num_rows($result) > 0) {
                 while($row = $result->fetch_assoc()) {
                     extractConditions($row["conditions"]);
                     // extractAgeGroups($row["age_groups"]);

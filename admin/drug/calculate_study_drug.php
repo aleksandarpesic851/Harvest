@@ -1,5 +1,5 @@
 <?php
-// In order to speed up, calculate all study ids related all conditions in hierarchy.
+// In order to speed up, calculate all study ids related all drugs in hierarchy.
     require_once "../../db_connect.php";
     require_once "../../enable_error_report.php";
 
@@ -8,14 +8,12 @@
         $log = false;
     }
     if ($log) {
-        echo "<br>-----------------------Calculate Study Ids Related with Condition Hierarchy----------------------------";
+        echo "<br>-----------------------Calculate Study Ids Related with Drug Hierarchy----------------------------";
     }
     $totalData = array();
-    // $query = "DELETE FROM condition_hierarchy_modifier_stastics";
-    // mysqli_query($conn, $query);
     mysqli_autocommit($conn,FALSE);
 
-    calculateStudyConditions();
+    calculateStudyDrugs();
 
     if (!mysqli_commit($conn)) {
         echo "Commit transaction failed";
@@ -24,23 +22,14 @@
     echo "ok";
     //echo json_encode($totalData);
 
-    function calculateStudyConditions() {
+    function calculateStudyDrugs() {
         global $totalData;
         global $log;
 
-        $modifiers = readModifiers();
-        $conditions = readAllHierarchy();
-
-        foreach($modifiers as $modifier) {
-            if ($log) {
-                echo "<br>-----------------------" . $modifier["modifier"] . "----------------------------";
-            }
-            $totalData = $conditions;
-            calculateStudyIds($modifier["modifier"]);
-            mergeIds();
-            saveData($modifier["id"]);
-        }
-        
+        $totalData = readAllHierarchy();
+        calculateStudyIds();
+        mergeIds();
+        saveData();
     }
 
     function mysqlReadAll($query) {
@@ -65,35 +54,22 @@
         mysqli_free_result($result);
         return $nCnt;
     }
-    // Read All Modifiers
-    function readModifiers() {
-        $query = "SELECT * FROM modifiers";
-        return mysqlReadAll($query);
-    }
 
-    //Read All conditions in hierarchy
+    //Read All drugs in hierarchy
     function readAllHierarchy() {
-        $query = "SELECT `id`, `condition_name`, `synonym`, `parent_id`, `condition_id` FROM condition_hierarchy_view";
+        $query = "SELECT `id`, `drug_name`, `parent_id`, `drug_id` FROM drug_hierarchy";
         return mysqlReadAll($query);
     }
 
-    // Calculate study ids related with condition name
-    function calculateStudyIds($modifier) {
+    // Calculate study ids related with drug name
+    function calculateStudyIds() {
         global $totalData;
         global $log;
         
-        foreach($totalData as $key=>$condition) {
+        foreach($totalData as $key=>$drug) {
             $start = time();
-            $query = "SELECT `nct_id` FROM study_id_conditions WHERE ( `condition` LIKE '%" . $condition["condition_name"] . "%' ";
-            if (isset($condition["synonym"]) && strlen($condition["synonym"]) > 0) {
-                $query .= " OR  `condition` LIKE '%" . $condition["synonym"] . "%' ";
-            }
-            $query .= ") ";
-            if (strlen($modifier) > 0 && $modifier != "NONE") {
-                $query .= " AND  `condition` LIKE '%" . $modifier . "%' ";
-            }
-            $query .= " GROUP BY `nct_id`";
-
+            $query = "SELECT `nct_id` FROM study_id_drugs WHERE ( `drug` LIKE '%" . $drug["drug_name"] . "%') GROUP BY `nct_id`";
+            
             $nctIds = mysqlReadAll($query);
             $totalData[$key]["study_ids"] = array();
             
@@ -103,7 +79,7 @@
             
             $end = time();
             if ($log) {
-                echo "<br>Calculate Study Id - ". $condition["condition_name"] . " : " . time_elapsed_string($end-$start);
+                echo "<br>Calculate Study Id - ". $drug["drug_name"] . " : " . time_elapsed_string($end-$start);
                 echo ", Count: " . count($nctIds);
                 ob_flush();
                 flush();
@@ -121,8 +97,8 @@
         global $totalData;
 
         $start = time();
-        foreach($totalData as $key=>$condition) {
-            if ($condition["parent_id"] == 0) {
+        foreach($totalData as $key=>$drug) {
+            if ($drug["parent_id"] == 0) {
                 mergeParentChild($key);
             }
         }
@@ -134,8 +110,8 @@
             echo "<br>Time : " . time_elapsed_string($end-$start);
         }
         $start = time();
-        foreach($totalData as $key => $condition) {
-            if (isset($condition["leaf"]) && $condition["leaf"]) {
+        foreach($totalData as $key => $drug) {
+            if (isset($drug["leaf"]) && $drug["leaf"]) {
                 mergeChildParent($key);
             }
         }
@@ -150,8 +126,8 @@
     function mergeParentChild($parentKey) {
         global $totalData;
         $isLeaf = true;
-        foreach($totalData as $key => $condition) {
-            if ($condition["parent_id"] != $totalData[$parentKey]["id"]) {
+        foreach($totalData as $key => $drug) {
+            if ($drug["parent_id"] != $totalData[$parentKey]["id"]) {
                 continue;
             }
             $isLeaf = false;
@@ -168,8 +144,8 @@
         global $totalData;
 
         // Get Parent Node
-        foreach($totalData as $key => $condition) {
-            if ($condition["id"] == $totalData[$childKey]["parent_id"])  {
+        foreach($totalData as $key => $drug) {
+            if ($drug["id"] == $totalData[$childKey]["parent_id"])  {
                 $totalData[$key]["study_ids"] = mergeArray($totalData[$key]["study_ids"], $totalData[$childKey]["study_ids"]);
                 mergeChildParent($key);
                 break;
@@ -190,8 +166,8 @@
     function printStudyIdCnts($explain) {
         global $totalData;
         echo "<br> $explain:";
-        foreach($totalData as $key=>$condition) {
-            echo "<br>" .  $condition["condition_name"] . ": " . count($condition["study_ids"]);
+        foreach($totalData as $key=>$drug) {
+            echo "<br>" .  $drug["drug_name"] . ": " . count($drug["study_ids"]);
         }
     }
     // Calculate elapsed time
@@ -212,19 +188,12 @@
         return join(' ', $ret);
     }
     
-    function saveData($modifierID) {
+    function saveData() {
         global $totalData;
         global $conn;
 
         foreach($totalData as $data) {
-            $query = "SELECT `modifier_id` FROM `condition_hierarchy_modifier_stastics` WHERE `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
-            $nCnt = mysqlRowCnt($query);
-            if ($nCnt < 1) {
-                $query = "INSERT INTO `condition_hierarchy_modifier_stastics` (`hierarchy_id`, `modifier_id`, `condition_id`, `condition_name`, `study_ids`)";
-                $query .= "VALUES ('" . $data["id"] . "', '$modifierID', '" . $data["condition_id"] . "', '" . $data["condition_name"] . "', '" . implode(",", $data["study_ids"]) . "'); ";
-            } else {
-                $query = "UPDATE `condition_hierarchy_modifier_stastics` SET `study_ids` = '" . implode(",", $data["study_ids"]) . "' WHERE  `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
-            }
+            $query = "UPDATE `drug_hierarchy` SET `study_ids` = '" . implode(",", $data["study_ids"]) . "' WHERE `id` = " . $data["id"];
             mysqli_query($conn, $query);
         }
     }

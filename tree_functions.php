@@ -5,7 +5,7 @@
 
         $query = "SELECT `id` FROM condition_categories";
         $result = mysqli_query($conn, $query);
-        if ($result->num_rows < 1) {
+        if (mysqli_num_rows($result) < 1) {
             return;
         }
         // Fetch all
@@ -23,7 +23,7 @@
         $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id` from condition_hierarchy_view WHERE `category_id` = $categoryID AND `parent_id` = 0 ";
         $result = mysqli_query($conn, $query);
         
-        if ($result->num_rows < 1) {
+        if (mysqli_num_rows($result) < 1) {
             return array();
         }
         // Fetch all
@@ -43,7 +43,7 @@
 
         $sql = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id` FROM `condition_hierarchy_view` WHERE `parent_id` = $parentId";
         $result = mysqli_query($conn, $sql);
-        if ($result->num_rows < 1) {
+        if (mysqli_num_rows($result) < 1) {
             return array();
         }
         // Fetch all

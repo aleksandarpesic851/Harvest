@@ -18,7 +18,7 @@ require_once "../../enable_error_report.php";
             // if dropped on unmanaged category, delete the node in hierarchy.
             if ($category == 0) {
                 if ($prev_category != 0) {
-                    $query = "DELETE FROM `condition_hierarchy` WHERE `id` = $currentId";
+                    $query = "DELETE FROM `drug_hierarchy` WHERE `id` = $currentId";
                     mysqli_query($conn, $query);
                 }
                 break;
@@ -26,15 +26,15 @@ require_once "../../enable_error_report.php";
 
             //if category is equal with prev category, update parent id
             if ($category == $prev_category) {
-                $query = "UPDATE `condition_hierarchy` SET `parent_id` = $parentId WHERE `id` = '$currentId'";
+                $query = "UPDATE `drug_hierarchy` SET `parent_id` = $parentId WHERE `id` = '$currentId'";
                 mysqli_query($conn, $query);
                 break;
             }
 
             if ($prev_category == 0) {
-                $condition_id = $currentId;
+                $drug_id = $currentId;
             } else {
-                $query = "SELECT condition_id FROM condition_hierarchy WHERE id=$currentId;";
+                $query = "SELECT drug_id FROM drug_hierarchy WHERE id=$currentId;";
                 $result = mysqli_query($conn, $query);
                 // if exist, update
                 if (mysqli_num_rows($result) < 1) {
@@ -42,9 +42,9 @@ require_once "../../enable_error_report.php";
                 }
                 $row = mysqli_fetch_assoc($result);
                 mysqli_free_result($result);
-                $condition_id = $row["condition_id"];
+                $drug_id = $row["drug_id"];
             }
-            $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$condition_id', '$parentId', '$category'); ";
+            $query = "INSERT INTO `drug_hierarchy` (`drug_id`, `parent_id`, `category_id`) VALUES ('$drug_id', '$parentId', '$category'); ";
             mysqli_query($conn, $query);
             break;
             
@@ -66,9 +66,9 @@ require_once "../../enable_error_report.php";
             $newText = $_POST["newText"];
             $category = $_POST["categoryId"];
             if ($category == 0) {
-                $condition_id = $editedId;
+                $drug_id = $editedId;
             } else {
-                $query = "SELECT condition_id FROM condition_hierarchy WHERE id=$editedId;";
+                $query = "SELECT drug_id FROM drug_hierarchy WHERE id=$editedId;";
                 $result = mysqli_query($conn, $query);
                 // if exist, update
                 if (mysqli_num_rows($result) < 1) {
@@ -76,9 +76,9 @@ require_once "../../enable_error_report.php";
                 }
                 $row = mysqli_fetch_assoc($result);
                 mysqli_free_result($result);
-                $condition_id = $row["condition_id"];
+                $drug_id = $row["drug_id"];
             }
-            $query = "UPDATE `conditions` SET `condition_name` = '$newText' WHERE `id` = '$condition_id'";
+            $query = "UPDATE `drugs` SET `drug_name` = '$newText' WHERE `id` = '$drug_id'";
             mysqli_query($conn, $query);
         break;
     }
@@ -88,7 +88,7 @@ require_once "../../enable_error_report.php";
     // function getChildren($parentId) {
     //     global $conn;
         
-    //     $sql = "SELECT * FROM `conditions` WHERE `parentid` =$parentId";
+    //     $sql = "SELECT * FROM `drugs` WHERE `parentid` =$parentId";
     //     $result = mysqli_query($conn, $sql);
     //     if (mysqli_num_rows($result) < 1) {
     //         return;
@@ -109,7 +109,7 @@ require_once "../../enable_error_report.php";
 
     //     foreach($children as $child) {
     //         $childId = $child["id"];
-    //         $query = "UPDATE `conditions` SET `categoryid` = $category WHERE `id` = '$childId'";
+    //         $query = "UPDATE `drugs` SET `categoryid` = $category WHERE `id` = '$childId'";
     //         mysqli_query($conn, $query);
     //         if (isset($child["nodeChild"])) {
     //             updateCategories($child["nodeChild"], $category);

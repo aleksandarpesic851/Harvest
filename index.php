@@ -204,11 +204,14 @@
                         </div>
                         <!-- Modifier Tree -->
                         <div class="tab-pane container graph-left fade" id="graph-tab-modifier">
-                            modifier
+                            <!-- Condition Tree -->
+                            <div id="modifier-tree">
+                            </div>
                         </div>
                         <!-- Drug -->
                         <div class="tab-pane container graph-left fade" id="graph-tab-drug">
-                            drug
+                            <div id="drug-search-tree">
+                            </div>
                         </div>
                     </div>
                 </div>

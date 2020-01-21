@@ -5,7 +5,7 @@
     $query = "SELECT `modifier` FROM modifiers WHERE id > 1";
     $result = mysqli_query($conn, $query);
     $data = array();
-    if ($result->num_rows > 1) {
+    if (mysqli_num_rows($result) > 1) {
         // Fetch all
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
         // Free result set

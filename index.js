@@ -1,11 +1,14 @@
 let studyTable;
 let conditionTree;
 let conditionSearchTree;
+let drugTree;
+let drugSearchTree;
+let modifierTree;
+let modifiers;
 let searchItems;
 let loadedCnt = 0;
 let graphSrcData;
 let graphDrawDetails;
-let modifiers;
 let chartGraph;
 let isModifier;
 let bgColor = [
@@ -24,7 +27,9 @@ let bdColor = [
     "rgb(54, 162, 235)",
     "rgb(153, 102, 255)",
     "rgb(201, 203, 207)"];
-let checkedProgramatically = false;
+let conditionCheckedAuto = false;
+let modifierCheckedAuto = false;
+let drugCheckedAuto = false;
 
 $(document).ready(function() {
     ej.base.enableRipple(true);
@@ -39,8 +44,7 @@ $(document).ready(function() {
 
 function initGraphTab() {
     $('#graph-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var target = $(e.target).attr("href");
-        alert(target);
+        updateGraph();
     });
 }
 
@@ -207,7 +211,7 @@ function initSearchConditionTree() {
         fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
         showCheckBox: true,
         nodeChecked: function() {
-            if (!checkedProgramatically) {
+            if (!conditionCheckedAuto) {
                 updateGraph();
             }
         }
@@ -219,12 +223,12 @@ function readGraphData() {
     if (!searchItems) {
         readSearchItems();
     }
-    checkedProgramatically = true;
+    conditionCheckedAuto = true;
     conditionSearchTree.fields.dataSource = searchItems["conditions"];
     conditionSearchTree.refresh();
     conditionSearchTree.checkAll();
     conditionSearchTree.expandAll();
-    checkedProgramatically = false;
+    conditionCheckedAuto = false;
     //load graph data
     $.ajax({
         type: "POST",
@@ -255,7 +259,7 @@ function search() {
 
 function readSearchItems() {
     searchItems = getFormData($("#search-other-form"));
-    searchItems["conditions"] = getCheckedConditions("condition-tree");
+    searchItems["conditions"] = getCheckedTreeNodes("condition-tree");
 }
 
 function getFormData(form){
@@ -279,7 +283,7 @@ function getFormData(form){
     return indexed_array;
 }
 
-function getCheckedConditions(selector) {
+function getCheckedTreeNodes(selector) {
     let checkedNodes = getCheckedNodes(selector);
     
     // console.log("function:", checkedNodes);
@@ -333,24 +337,42 @@ function showWaiting() {
 }
 function updateGraph() {
     graphDrawDetails = [];
-
-    let checkedNodes = getCheckedConditions("condition-serch-tree");
-    isModifier = $("#graph-modifier").is(":checked");
-
+    let treeId = "";
+    let activeTabId = $("#graph-tab .active").attr("href");
+    if (activeTabId == "#graph-tab-drug") {
+        treeId = "drug-search-tree";
+        isModifier = false;
+    } else {
+        treeId = "condition-serch-tree";
+        if (activeTabId == "#graph-tab-modifier") {
+            isModifier = true;
+        }
+    }
+    let checkedNodes = getCheckedTreeNodes(treeId);
+    
     // if only one leaf is checked, draw modifiers.
-    if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length == 0) {
+    if (activeTabId == "#graph-tab-condition" && checkedNodes.length == 1 && checkedNodes[0].nodeChild.length == 0) {
         isModifier = true;
+    }
+
+    let checkedModifierNodes;
+    let checkedModifiers = [];
+    if (isModifier) {
+        checkedModifierNodes = getCheckedTreeNodes(treeId);
+        checkedModifierNodes.forEach(element => {
+            checkedModifiers.push(element.nodeText);
+        });
     }
     // if checked only one category and has children, display the children
     if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
-        drawGraph(checkedNodes[0].nodeChild);
+        drawGraph(checkedNodes[0].nodeChild, checkedModifiers);
         return;
     }
 
-    drawGraph(checkedNodes);
+    drawGraph(checkedNodes, checkedModifiers);
 }
 
-function drawGraph(nodes) {
+function drawGraph(nodes, checkedModifiers) {
     let graphLabels = [];
     let graphDrawData = [];
     let backgroundColors = [];
@@ -361,7 +383,7 @@ function drawGraph(nodes) {
         // if modifier, extract all data for modifiers.
         let id = node.nodeId.substr(10);
         if (isModifier) {
-            modifiers.forEach( modifier=> {
+            checkedModifiers.forEach( modifier=> {
                 let nCnt = graphSrcData[id]["count"][modifier];
                 if (nCnt > 0) {
                     graphLabels.push(node.nodeText + " - " + modifier);
@@ -391,7 +413,6 @@ function drawGraph(nodes) {
     chartGraph.data.datasets[0].borderColor = borderColors;
     chartGraph.update();
 }
-
 // Read modifiers
 function initModifiers() {
     $.ajax({
@@ -400,10 +421,42 @@ function initModifiers() {
             if (response) {
                 try {
                     modifiers = JSON.parse(response);
+                    let modifierTreeData = [];
+                    let id = 0;
+                    modifiers.forEach(modifier => {
+                        modifierTreeData.push({nodeId: id, nodeText: modifier});
+                        id++;
+                    });
+                    modifierCheckedAuto = true;
+                    modifierTree.fields.dataSource = modifierTreeData;
+                    modifierTree.refresh();
+                    modifierTree.checkAll();
+                    modifierCheckedAuto = false;
                 } catch (e) {
                     console.log(e);
                 }
             }
         }
     });
+    modifierTree = new ej.navigations.TreeView({
+        fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
+        showCheckBox: true,
+        allowDragAndDrop: true,
+        allowDropChild: false,
+        allowDropSibling: false,
+        nodeDropped: function(args) {
+            updateGraph();
+        },
+        nodeChecked: function() {
+            if (!modifierCheckedAuto) {
+                updateGraph();
+            }
+        },
+        nodeDragStop: function(args) {
+            if (args.dropLevel > 1) {
+                args.cancel = true;
+            }
+        }
+    });
+    modifierTree.appendTo("#modifier-tree");
 }

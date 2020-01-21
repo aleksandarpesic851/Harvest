@@ -9,7 +9,7 @@ require_once "../../enable_error_report.php";
             if (checkExist($categoryName)) {
                 echo "fail";
             } else {
-                $query = "UPDATE `condition_categories` SET `category` = '$categoryName' WHERE `id` = '$categoryID'";
+                $query = "UPDATE `drug_categories` SET `category` = '$categoryName' WHERE `id` = '$categoryID'";
                 mysqli_query($conn, $query);
                 echo "ok";
             }
@@ -25,7 +25,7 @@ require_once "../../enable_error_report.php";
         if (checkExist($categoryName)) {
             echo $categoryName;
         } else {
-            $query = "UPDATE `condition_categories` SET `category` = '$categoryName' WHERE `id` = '$categoryID'";
+            $query = "UPDATE `drug_categories` SET `category` = '$categoryName' WHERE `id` = '$categoryID'";
             mysqli_query($conn, $query);
             echo $categoryName;
         }
@@ -40,41 +40,41 @@ require_once "../../enable_error_report.php";
                 echo "exist";
                 exit;
             }
-            $query = "INSERT INTO `condition_categories` (`category`) VALUES ('$newCategory')";
+            $query = "INSERT INTO `drug_categories` (`category`) VALUES ('$newCategory')";
             mysqli_query($conn, $query);
             $newCategoryId = mysqli_insert_id($conn);
             
-            // check condition is already exist
-            $query = "SELECT * FROM `conditions` WHERE `condition_name` = '$newCategory'";
+            // check drug is already exist
+            $query = "SELECT * FROM `drugs` WHERE `drug_name` = '$newCategory'";
             $result = mysqli_query($conn, $query);
             
             // if exist, update
             if (mysqli_num_rows($result) > 0) {
                 $row = mysqli_fetch_assoc($result);
                 mysqli_free_result($result);
-                $conditionId = $row["id"];
-                $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$conditionId', '0', '$newCategoryId'); ";
+                $drugId = $row["id"];
+                $query = "INSERT INTO `drug_hierarchy` (`drug_id`, `parent_id`, `category_id`) VALUES ('$drugId', '0', '$newCategoryId'); ";
                 mysqli_query($conn, $query);
-                $conditionHierarchyID = mysqli_insert_id($conn);
+                $drugHierarchyID = mysqli_insert_id($conn);
             } 
             // else, insert
             else {
-                $query = "INSERT INTO `conditions` (`condition_name`) VALUES ('$newCategory')";
+                $query = "INSERT INTO `drugs` (`drug_name`) VALUES ('$newCategory')";
                 mysqli_query($conn, $query);
-                $conditionId = mysqli_insert_id($conn);
-                $query = "INSERT INTO `condition_hierarchy` (`condition_id`, `parent_id`, `category_id`) VALUES ('$conditionId', '0', '$newCategoryId'); ";
+                $drugId = mysqli_insert_id($conn);
+                $query = "INSERT INTO `drug_hierarchy` (`drug_id`, `parent_id`, `category_id`) VALUES ('$drugId', '0', '$newCategoryId'); ";
                 mysqli_query($conn, $query);
-                $conditionHierarchyID = mysqli_insert_id($conn);
+                $drugHierarchyID = mysqli_insert_id($conn);
             }
             
-            $result = ["category" => $newCategoryId, "condition" => $conditionHierarchyID];
+            $result = ["category" => $newCategoryId, "drug" => $drugHierarchyID];
             echo json_encode($result);
         break;
         case "Delete":
             $categoryID = $_POST["id"];
-            $query = "DELETE FROM `condition_categories` WHERE `id` = '$categoryID'";
+            $query = "DELETE FROM `drug_categories` WHERE `id` = '$categoryID'";
             mysqli_query($conn, $query);
-            $query = "DELETE FROM `condition_hierarchy` WHERE `category_id` = '$categoryID'";
+            $query = "DELETE FROM `drug_hierarchy` WHERE `category_id` = '$categoryID'";
             mysqli_query($conn, $query);
             echo "delete_ok";
         break;
@@ -85,7 +85,7 @@ require_once "../../enable_error_report.php";
     function checkExist($category) {
         global $conn;
 
-        $sql = "SELECT * FROM `condition_categories` WHERE `category` = '$category'";
+        $sql = "SELECT * FROM `drug_categories` WHERE `category` = '$category'";
         $result = mysqli_query($conn, $sql);
         
         // if there is category already, return true.
@@ -93,8 +93,8 @@ require_once "../../enable_error_report.php";
             return true;
         }
         mysqli_free_result($result);
-        // //if same condition is used in other category, return true
-        // $sql = "SELECT * FROM `conditions` WHERE `condition_name` = '$category'";
+        // //if same drug is used in other category, return true
+        // $sql = "SELECT * FROM `drugs` WHERE `drug_name` = '$category'";
         // $result = mysqli_query($conn, $sql);
         // if (mysqli_num_rows($result) > 0) {
         //     $row = mysqli_fetch_assoc($result);
