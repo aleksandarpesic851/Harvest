@@ -199,7 +199,7 @@
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane container graph-left active" id="graph-tab-condition">
                             <!-- Condition Tree -->
-                            <div id="condition-serch-tree">
+                            <div id="condition-search-tree">
                             </div>
                         </div>
                         <!-- Modifier Tree -->
@@ -276,7 +276,8 @@
 
                             <div class="tab-pane container fade" id="tab-drug">
                                 <div class="row modal-body-content">
-                                    drug
+                                    <div id="drug-tree">
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane container fade" id="tab-other">

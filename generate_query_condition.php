@@ -87,18 +87,37 @@
         return implode(" AND ", $arrQuery);
     }
 
-    function generateConditionForTable($manualSearch) {
-        global $conn;
+    function generateIDListsforTree($manualSearch) {
+        $conditions = generateConditionForTable($manualSearch["conditions"]);
+        $drugs = generateDrugForTable($manualSearch["drugs"]);
+        
+        if (count($conditions) < 1) {
+            if (count($drugs) < 1) {
+                return "";
+            } else {
+                $arrStudyIds = $drugs;        
+            }
+        } else {
+            if (count($drugs) < 1) {
+                $arrStudyIds = $conditions;
+            } else {
+                $arrStudyIds = array_intersect($conditions, $drugs);
+            }
+        }
 
-        $conditions = $manualSearch["conditions"];
+        $ids = "(" . implode(",",$arrStudyIds) . ")";
+        return "nct_id IN $ids";
+    }
+    function generateConditionForTable($conditions) {
+        global $conn;
 
         // If condition is not specified, not calculate
         if (!isset($conditions) || count($conditions) < 1) {
-            return "";
+            return array();
         }
         // If All conditions are checked, not calculate
         if ($conditions[0]["nodeId"] == "ROOT") {
-            return "";
+            return array();
         }
 
         $arrStudyIds = array();
@@ -117,9 +136,38 @@
                 $arrStudyIds = mergeArray($arrStudyIds, $studyIds);
             }
         }
-        rsort($arrStudyIds);
-        $ids = "(" . implode(",",$arrStudyIds) . ")";
-        return "nct_id IN $ids";
+        return $arrStudyIds;
+    }
+
+    function generateDrugForTable($drugs) {
+        global $conn;
+
+        // If condition is not specified, not calculate
+        if (!isset($drugs) || count($drugs) < 1) {
+            return array();
+        }
+        // If All conditions are checked, not calculate
+        if ($drugs[0]["nodeId"] == "ROOT") {
+            return array();
+        }
+
+        $arrStudyIds = array();
+        foreach($drugs as $drug) {
+            $nodeId = substr($drug["nodeId"], 10);
+            $query = "SELECT `study_ids` FROM drug_hierarchy WHERE `id` = $nodeId";
+            $statistics = mysqlReadFirst($query);
+            if (!isset($statistics)) {
+                continue;
+            }
+            $studyIds = explode(",", $statistics["study_ids"]);
+            
+            if (count($arrStudyIds) < 1) {
+                $arrStudyIds = $studyIds;
+            } else {
+                $arrStudyIds = mergeArray($arrStudyIds, $studyIds);
+            }
+        }
+        return $arrStudyIds;
     }
 
     function mysqlReadAll($query) {

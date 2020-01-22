@@ -11,12 +11,12 @@ require_once "../enable_error_report.php";
     mysqli_autocommit($conn,FALSE);
 
     // Remove all data in study_id_condition table
-    $query = "DELETE FROM `study_id_conditions`";
+    $query = "TRUNCATE `study_id_conditions`";
     if (!mysqli_query($conn, $query)) {
         echo "<br> Error in mysql query: " . mysqli_error($conn);
     }
     // Remove all data in study_id_condition table
-    $query = "DELETE FROM `study_id_drugs`";
+    $query = "TRUNCATE `study_id_drugs`";
     if (!mysqli_query($conn, $query)) {
         echo "<br> Error in mysql query: " . mysqli_error($conn);
     }
@@ -33,7 +33,7 @@ require_once "../enable_error_report.php";
     print_r("<br>Drugs: " . count($drugs));
 
     $end = time();
-    print_r("<br><br>Total Elapsed Time" . time_diff_string($end-$start));
+    print_r("<br><br>Total Elapsed Time in extracting terms" . time_diff_string($end-$start));
 
     // mysqli_close($conn);
     
@@ -81,7 +81,7 @@ require_once "../enable_error_report.php";
             $stmt->close();
             
             echo "<br> Now Extracted from " . $nCnt*$nRows . " data";
-            echo "<br> The number of extracted diseases: " . count($conditions) . "</br>";
+            echo "<br> The number of extracted diseases: " . count($conditions);
             echo "<br> The number of extracted drugs: " . count($drugs) . "</br>";
             ob_flush();
             flush();
@@ -173,14 +173,24 @@ require_once "../enable_error_report.php";
         foreach($data as $key => $val) {
             array_push($valData, $key);
         }
-        //Get new data which is not in db.
-        $query = "SELECT `$columnName` FROM `$table` WHERE `$columnName` IN ('" . implode("', '", $valData) . "')";
-        $result = mysqli_query($conn, $query);
-        if (mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_assoc($result)) {
-                unset($data[$row[$columnName]]);
+        
+        // Remove data which are in db already
+        $nCnt = 0;
+        $nUnit = 1000;
+        $subData = array_slice($valData, 0, $nUnit);
+
+        while(count($subData) > 0) {
+            //Get new data which is not in db.
+            $query = "SELECT `$columnName` FROM `$table` WHERE `$columnName` IN ('" . implode("', '", $subData) . "')";
+            $result = mysqli_query($conn, $query);
+            if (mysqli_num_rows($result) > 0) {
+                while($row = mysqli_fetch_assoc($result)) {
+                    unset($data[$row[$columnName]]);
+                }
+                mysqli_free_result($result);    
             }
-            mysqli_free_result($result);    
+            $nCnt++;
+            $subData = array_slice($valData, $nUnit * $nCnt, $nUnit);
         }
 
         // generate value array from key=>val array
@@ -188,13 +198,20 @@ require_once "../enable_error_report.php";
         foreach($data as $key => $val) {
             array_push($valData, $key);
         }
-        $query = "INSERT INTO `$table` (`$columnName`) VALUES ('" . implode("', '", $valData) . "')";
-        if (!mysqli_query($conn, $query)) {
-            echo "<br> Error in mysql query: " . mysqli_error($conn);
-        }
+        $nCnt = 0;
+        $nUnit = 1000;
+        $subData = array_slice($valData, 0, $nUnit);
+        while(count($subData) > 0) {
+            $query = "INSERT INTO `$table` (`$columnName`) VALUES ('" . implode("'), ('", $subData) . "')";
+            if (!mysqli_query($conn, $query)) {
+                echo "<br> Error in mysql query: " . mysqli_error($conn);
+            }
 
-        if (!mysqli_commit($conn)) {
-            echo "Commit transaction failed";
+            if (!mysqli_commit($conn)) {
+                echo "Commit transaction failed";
+            }
+            $nCnt++;
+            $subData = array_slice($valData, $nUnit * $nCnt, $nUnit);
         }
     }
 

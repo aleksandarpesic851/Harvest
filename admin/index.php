@@ -74,8 +74,23 @@
             </div>
             <div class="row">
                 <div class="col-8">
-                    <img class="image" src="img/terms.png">
+                    <img class="image" src="img/drug.png">
                 </div>
+                <div class="col-4">
+                    <h5> Drug Hierarchy Management</h5>
+                    There are many drugs in extracted data.
+                    <br>
+                    In order to manage disease effectively, you can create diseases hierarchy by clicking bellow button.
+                    <br><br>
+                    <div class="row">
+                        <a class="ml-auto mr-auto btn btn-primary" href="drug">Drug Hierarchy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 ml-auto mr-auto split"></div>
+            </div>
+            <div class="row">
                 <div class="col-4">
                     <h5> Extract Terms From Scraped Data </h5>
                     As scraped data will change for every scraping, it's needed to extract terms (age groups, conditions - diseases, phases, intervention types, study design types, statuses, study types).
@@ -89,11 +104,17 @@
                         <a class="ml-auto mr-auto btn btn-primary" href="terms.php">Extract</a>
                     </div>
                 </div>
+                <div class="col-8">
+                    <img class="image" src="img/terms.png">
+                </div>
             </div>
             <div class="row">
                 <div class="col-8 ml-auto mr-auto split"></div>
             </div>
 			<div class="row">
+                <div class="col-8">
+                    <img class="image" src="img/scrape.png">
+                </div>
                 <div class="col-4">
                     <h5>Scrape Data</h5>
                     Scrape data from <a href="https://clinicaltrials.gov">https://clinicaltrials.gov</a> into database. In backend, scrape data automatically every 7 days.
@@ -104,9 +125,6 @@
                     <div class="row">
                         <button class="ml-auto mr-auto btn btn-primary" onclick="scrape()">Scrape Manually</button>
                     </div>
-                </div>
-                <div class="col-8">
-                    <img class="image" src="img/scrape.png">
                 </div>
             </div>
 

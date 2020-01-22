@@ -25,7 +25,7 @@
     if (isset($_POST) && isset($_POST["manual_search"])) {
         $manualSearch = $_POST["manual_search"];
         $searchQuery = generateOtherSearchQuery($manualSearch);
-        $conditionQuery = generateConditionForTable($manualSearch);
+        $conditionQuery = generateIDListsforTree($manualSearch);
         if (strlen($searchQuery) > 0 && strlen($conditionQuery) > 0) {
             $searchQuery .= " AND ";
         }

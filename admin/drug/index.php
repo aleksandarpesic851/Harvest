@@ -99,7 +99,7 @@
 				<div class="ml-auto padding-5">
 					<button class="btn btn-primary" onclick="showCreateCategoryDlg()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Create New Category</button>
 					<button title="In order to speed up calculation of study statistics, Calculate studies related with drugs in hierarchy. NOTE: This may take long. Please click after hierarchy looks good." 
-						class="btn btn-primary" onclick="calculateStudyCondition()"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Calculate Study Condition</button>
+						class="btn btn-primary" onclick="calculateStudyDrug()"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Calculate Study Drug</button>
 				</div>
 			</div>
 
@@ -147,7 +147,7 @@
                     <div class="row">
                         <div class="col-12">
                             <label for="category-name">Category Name :</label>
-                            <input class="form-control" id="category-name" name="category-name" title="Please insert condition category name">
+                            <input class="form-control" id="category-name" name="category-name" title="Please insert drug category name">
                         </div>
                     </div>
                 </div>

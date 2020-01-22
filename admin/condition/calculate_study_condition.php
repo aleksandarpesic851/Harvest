@@ -36,11 +36,19 @@
                 echo "<br>-----------------------" . $modifier["modifier"] . "----------------------------";
             }
             $totalData = $conditions;
+            changeSpecialCaracters();
             calculateStudyIds($modifier["modifier"]);
             mergeIds();
             saveData($modifier["id"]);
         }
-        
+    }
+
+    function changeSpecialCaracters() {
+        global $totalData;
+
+        foreach($totalData as $key=>$val) {
+            $totalData[$key]["condition_name"] = str_replace("'", "\'", $totalData[$key]["condition_name"]);
+        }
     }
 
     function mysqlReadAll($query) {

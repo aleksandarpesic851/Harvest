@@ -7,7 +7,7 @@
     $drugCnt = isset($_POST["cnt"]) ? $_POST["cnt"] : 100;
     $arrData = array();
 
-    $query = "SELECT `id` AS `nodeId`, `drug_name` AS `nodeText`, `synonym` FROM drugs WHERE `drug_name` like '%$searchKey%' ORDER BY `drug_name` LIMIT $drugCnt OFFSET " . $drugCnt * $pageNum;
+    $query = "SELECT `id` AS `nodeId`, `drug_name` AS `nodeText` FROM drugs WHERE `drug_name` like '%$searchKey%' ORDER BY `drug_name` LIMIT $drugCnt OFFSET " . $drugCnt * $pageNum;
     $stmt = $conn->prepare($query);
 
     if ($stmt != false) {

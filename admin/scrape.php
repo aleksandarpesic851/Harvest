@@ -151,6 +151,8 @@
     require_once "terms.php";
     //Extract study ids related with condition hierarchy
     require_once "condition/calculate_study_condition.php";
+    //Extract study ids related with condition hierarchy
+    require_once "drug/calculate_study_drug.php";
     
     mysqli_close($conn);
     $endTime = time();

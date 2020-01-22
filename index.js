@@ -30,13 +30,16 @@ let bdColor = [
 let conditionCheckedAuto = false;
 let modifierCheckedAuto = false;
 let drugCheckedAuto = false;
+let loadedTreeCnt = 0;
 
 $(document).ready(function() {
     ej.base.enableRipple(true);
     initChart();
     initDatatable();
-    initConditionTree();
     initSearchConditionTree();
+    initConditionTree();
+    initSearchDrugTree();
+    initDrugTree();
     initDateRangePicker();
     initModifiers();
     initGraphTab();
@@ -180,6 +183,8 @@ function initConditionTree() {
                     conditionTree.refresh();
                     conditionTree.checkAll();
                     conditionTree.expandAll();
+
+                    loadedTreeCnt++;
                     readGraphData();
                 } catch (e) {
                     console.log(e);
@@ -191,17 +196,6 @@ function initConditionTree() {
     conditionTree = new ej.navigations.TreeView({
         fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
         showCheckBox: true
-        // nodeClicked: function(args) {
-        //     var checkedNode = [args.node];
-        //     if (args.event.target.classList.contains('e-fullrow') || args.event.key == "Enter") {
-        //        var getNodeDetails = conditionTree.getNodeData(args.node);
-        //         if (getNodeDetails.isChecked == 'true') {
-        //             conditionTree.uncheckAll(checkedNode);
-        //         } else {
-        //             conditionTree.checkAll(checkedNode);
-        //         }
-        //     }
-        // }
     });
     conditionTree.appendTo("#condition-tree");
 }
@@ -216,19 +210,75 @@ function initSearchConditionTree() {
             }
         }
     });
-    conditionSearchTree.appendTo("#condition-serch-tree");
+    conditionSearchTree.appendTo("#condition-search-tree");
+}
+
+function initDrugTree() {
+    $.ajax({
+        url: "read_drug_tree.php",
+        success: function(response) {
+            if (response) {
+                try {
+                    data = JSON.parse(response);
+                    drugTree.fields.dataSource = data;
+                    drugTree.refresh();
+                    drugTree.checkAll();
+                    drugTree.expandAll();
+                    
+                    loadedTreeCnt++;
+                    readGraphData();
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+    });
+
+    drugTree = new ej.navigations.TreeView({
+        fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
+        showCheckBox: true
+    });
+    drugTree.appendTo("#drug-tree");
+}
+
+function initSearchDrugTree() {
+    drugSearchTree = new ej.navigations.TreeView({
+        fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
+        showCheckBox: true,
+        nodeChecked: function() {
+            if (!drugCheckedAuto) {
+                updateGraph();
+            }
+        }
+    });
+    drugSearchTree.appendTo("#drug-search-tree");
 }
 
 function readGraphData() {
+    // if condition & drug tree nodes are not loaded, don't search.
+    if (loadedTreeCnt < 2) {
+        return;
+    }
     if (!searchItems) {
         readSearchItems();
     }
+    // Load search tree from drug tree
+    drugCheckedAuto = true;
+    drugSearchTree.fields.dataSource = searchItems["drugs"];
+    drugSearchTree.refresh();
+    drugSearchTree.checkAll();
+    drugSearchTree.expandAll();
+    drugCheckedAuto = false;
+    
+
+    // Load search tree from condition tree
     conditionCheckedAuto = true;
     conditionSearchTree.fields.dataSource = searchItems["conditions"];
     conditionSearchTree.refresh();
     conditionSearchTree.checkAll();
     conditionSearchTree.expandAll();
     conditionCheckedAuto = false;
+
     //load graph data
     $.ajax({
         type: "POST",
@@ -259,7 +309,8 @@ function search() {
 
 function readSearchItems() {
     searchItems = getFormData($("#search-other-form"));
-    searchItems["conditions"] = getCheckedTreeNodes("condition-tree");
+    searchItems["conditions"] = getCheckedTreeNodes("condition-tree", conditionTree);
+    searchItems["drugs"] = getCheckedTreeNodes("drug-tree", drugTree);
 }
 
 function getFormData(form){
@@ -283,17 +334,17 @@ function getFormData(form){
     return indexed_array;
 }
 
-function getCheckedTreeNodes(selector) {
+function getCheckedTreeNodes(selector, tree) {
     let checkedNodes = getCheckedNodes(selector);
     
     // console.log("function:", checkedNodes);
     checkedNodes.forEach(element => {
-        let nodeObject = conditionTree.getNodeObject(element);
+        let nodeObject = tree.getNodeObject(element);
         removeChildren(nodeObject.nodeChild, checkedNodes);
     });
     
     checkedNodes.forEach((element, index) => {
-        checkedNodes[index] = conditionTree.getNodeObject(element);
+        checkedNodes[index] = tree.getNodeObject(element);
     });
     
     return checkedNodes;
@@ -339,16 +390,19 @@ function updateGraph() {
     graphDrawDetails = [];
     let treeId = "";
     let activeTabId = $("#graph-tab .active").attr("href");
+    let checkedNodes;
+
     if (activeTabId == "#graph-tab-drug") {
-        treeId = "drug-search-tree";
         isModifier = false;
+        checkedNodes = getCheckedTreeNodes("drug-search-tree", drugSearchTree);
     } else {
-        treeId = "condition-serch-tree";
-        if (activeTabId == "#graph-tab-modifier") {
+        if("#graph-tab-modifier") {
             isModifier = true;
+        } else {
+            isModifier = false;
         }
+        checkedNodes = getCheckedTreeNodes("condition-serch-tree", conditionSearchTree);
     }
-    let checkedNodes = getCheckedTreeNodes(treeId);
     
     // if only one leaf is checked, draw modifiers.
     if (activeTabId == "#graph-tab-condition" && checkedNodes.length == 1 && checkedNodes[0].nodeChild.length == 0) {
@@ -358,15 +412,14 @@ function updateGraph() {
     let checkedModifierNodes;
     let checkedModifiers = [];
     if (isModifier) {
-        checkedModifierNodes = getCheckedTreeNodes(treeId);
+        checkedModifierNodes = getCheckedTreeNodes("modifier-tree", modifierTree);
         checkedModifierNodes.forEach(element => {
             checkedModifiers.push(element.nodeText);
         });
     }
     // if checked only one category and has children, display the children
     if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
-        drawGraph(checkedNodes[0].nodeChild, checkedModifiers);
-        return;
+        checkedNodes = checkedNodes[0].nodeChild;
     }
 
     drawGraph(checkedNodes, checkedModifiers);

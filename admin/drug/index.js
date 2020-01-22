@@ -1,6 +1,6 @@
 ej.base.enableRipple(true);
-var conditionCnt = 100;
-var managedConditions = [];
+var drugCnt = 100;
+var managedDrugs = [];
 var draggedTreeId = -1;
 //define the array of JSON
 var org_data = [
@@ -55,9 +55,9 @@ var org_data = [
 var treeViewInstances = [];
 
 $(function() {
-    createTree("Unmanaged Conditions", [], 0);
-    loadUnmanagedConditions(1);
-    loadManagedConditions();
+    createTree("Unmanaged Drugs", [], 0);
+    loadUnmanagedDrugs(1);
+    loadManagedDrugs();
     hideWaiting();
 //    createTree("Condtion1", org_data, 1);
 });
@@ -69,8 +69,8 @@ function deleteNode() {
 	// Call remove api
 }
 
-function CreateManagedConditionTrees() {
-    managedConditions.forEach(element => createTree(element["category"], element["conditions"], element["id"]));
+function CreateManagedDrugTrees() {
+    managedDrugs.forEach(element => createTree(element["category"], element["drugs"], element["id"]));
 }
 
 function createTree(title, data, nIdx) {
@@ -113,8 +113,8 @@ function createTree(title, data, nIdx) {
             let droppedTreeId = getDropedTreeID(args);
 
             // if droppedIdx is 0, it means that it was dropped on the parent of the tree.
-            // if category is 0, it means it's in unmanaged condition (parentID == -1)
-            // if category is greater than 0, it means it's in managed condition (parentId == 0)
+            // if category is 0, it means it's in unmanaged drug (parentID == -1)
+            // if category is greater than 0, it means it's in managed drug (parentId == 0)
 
             // // if dragged node has children, it's category must be changed too.
             // let hasChildren = args.draggedNodeData.hasChildren;
@@ -133,7 +133,7 @@ function createTree(title, data, nIdx) {
             //Call update node parent
             $.ajax({
                 type: "POST",
-                url: "update_condition.php",
+                url: "update_drug.php",
                 data: {currentId: draggedIdx, parentId: droppedIdx, category: droppedTreeId, prev_parentId: draggedParent, prev_category: draggedTreeId, action: "UPDATE PARENT"},
                 success: function(response) {
                     reloadChangedTree(draggedTreeId);
@@ -154,7 +154,7 @@ function createTree(title, data, nIdx) {
             // Call Update Node data api
             $.ajax({
                 type: "POST",
-                url: "update_condition.php",
+                url: "update_drug.php",
                 data: {editedId: editedId, newText: newText, categoryId: categoryId, action: "UPDATE TEXT"}
             });
             return true;
@@ -197,7 +197,7 @@ function prevPage() {
     $("#page").val(page);
     $("#prev-page").prop("disabled", false);
 
-    loadUnmanagedConditions();
+    loadUnmanagedDrugs();
 }
 
 function nextPage() {
@@ -206,25 +206,25 @@ function nextPage() {
     $("#prev-page").prop("disabled", false);
     $("#page").val(page);
 
-    loadUnmanagedConditions();
+    loadUnmanagedDrugs();
 }
 
-function loadUnmanagedConditions() {
+function loadUnmanagedDrugs() {
     let searchKey = $("#search").val();
     let pageNum = $("#page").val();
-    let data = {page: pageNum, cnt: conditionCnt, search: searchKey};
+    let data = {page: pageNum, cnt: drugCnt, search: searchKey};
     $.ajax({
         type: "POST",
-        url: "get_unmanaged_condition.php",
+        url: "get_unmanaged_drug.php",
         data: data,
         success: function(response) {
             if (!response) {
                 $("next-page").prop("disabled", true);
                 return;
             }
-            let conditions = JSON.parse(response);
-            treeViewInstances[0].fields.dataSource = conditions;
-            if (conditions.length < conditionCnt) {
+            let drugs = JSON.parse(response);
+            treeViewInstances[0].fields.dataSource = drugs;
+            if (drugs.length < drugCnt) {
                 $("#next-page").prop("disabled", true);
             } else {
                 $("#next-page").prop("disabled", false);
@@ -233,38 +233,38 @@ function loadUnmanagedConditions() {
       });
 }
 
-function loadManagedCondition(id) {
+function loadManagedDrug(id) {
     let data = {treeId: id};
     $.ajax({
         type: "POST",
-        url: "get_managed_condition.php",
+        url: "get_managed_drug.php",
         data: data,
         success: function(response) {
-            let conditions = JSON.parse(response);
-            treeViewInstances[id].fields.dataSource = conditions;
+            let drugs = JSON.parse(response);
+            treeViewInstances[id].fields.dataSource = drugs;
         }
       });
 }
 
-function loadManagedConditions() {
+function loadManagedDrugs() {
     $.ajax({
         type: "POST",
-        url: "get_managed_condition.php",
+        url: "get_managed_drug.php",
         success: function(response) {
             if (!response) {
                 return;
             }
-            managedConditions = JSON.parse(response);
-            CreateManagedConditionTrees();
+            managedDrugs = JSON.parse(response);
+            CreateManagedDrugTrees();
         }
       });
 }
 
 function reloadChangedTree(id) {
     if (id == 0) {
-        loadUnmanagedConditions();
+        loadUnmanagedDrugs();
     } else {
-        loadManagedCondition(id);
+        loadManagedDrug(id);
     }
 }
 
@@ -272,7 +272,7 @@ function search() {
     $("#page").val(1);
     $("#prev-page").prop("disabled", true);
 
-    loadUnmanagedConditions();
+    loadUnmanagedDrugs();
 }
 
 function getDropedTreeID(args) {
@@ -306,13 +306,13 @@ function createCategory() {
             }
             
             response = JSON.parse(response);
-            let newCategory = {id: response["category"], category: categoryName, conditions: [{nodeId: response["condition"], nodeText: categoryName}]};
-            managedConditions.push(newCategory);
-            createTree(newCategory["category"], newCategory["conditions"], newCategory["id"]);
+            let newCategory = {id: response["category"], category: categoryName, drugs: [{nodeId: response["drug"], nodeText: categoryName}]};
+            managedDrugs.push(newCategory);
+            createTree(newCategory["category"], newCategory["drugs"], newCategory["id"]);
 
             $("#create-category-dlg").modal("hide");
 
-            loadUnmanagedConditions();
+            loadUnmanagedDrugs();
         }
     });
 }
@@ -357,11 +357,11 @@ function deleteCategory(id) {
     }
 }
 
-function calculateStudyCondition() {
+function calculateStudyDrug() {
     showWaiting();
     $.ajax({
         type: "POST",
-        url: "calculate_study_condition.php",
+        url: "calculate_study_drug.php",
         data: {post: true},
         success: function(response) {
             hideWaiting();
