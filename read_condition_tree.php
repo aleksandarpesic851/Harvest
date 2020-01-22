@@ -1,7 +1,8 @@
 <?php
-    require_once "db_connect.php";
-    require_once "enable_error_report.php";
-    require_once "tree_functions.php";
+    
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/tree_functions.php";
     
     $arrData = array();
     $arrCategory = getCategories();

@@ -1,6 +1,6 @@
 <?php
-require_once "../../db_connect.php";
-require_once "../../enable_error_report.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
 
     if (!isset($_POST)) {
         if (isset($_GET) && isset($_GET["id"])) {

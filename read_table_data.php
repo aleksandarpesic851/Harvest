@@ -1,10 +1,10 @@
 <?php 
     // require_once 'vendor/autoload.php';
     // require_once 'enable_error_report.php';
-    require_once 'generate_query_condition.php';
-
-    require_once "db_connect.php";
-    require_once "enable_error_report.php";
+    
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/generate_query_condition.php";
 
     // use Ozdemir\Datatables\DB\MySQL;
     // use Ozdemir\Datatables\Datatables;

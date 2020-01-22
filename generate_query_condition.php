@@ -1,6 +1,6 @@
 <?php
-    require_once "db_connect.php";
-    require_once "enable_error_report.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
 
     function generateOtherSearchQuery($manualSearch) {
         $arrQuery = array();

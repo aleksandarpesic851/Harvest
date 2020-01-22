@@ -1,10 +1,10 @@
 <?php 
-    require_once '../../../vendor/autoload.php';
-    
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+
     use Ozdemir\Datatables\DB\MySQL;
     use Ozdemir\Datatables\Datatables;
 
-    $ini = parse_ini_file("../../../app.ini");
+    $ini = parse_ini_file( $_SERVER['DOCUMENT_ROOT'] . "/app.ini");
 
     $config = [ 'host'     => $ini["db_host"],
                 'port'     => $ini["db_port"],

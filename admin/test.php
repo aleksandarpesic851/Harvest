@@ -1,6 +1,6 @@
 <?php
 
-require_once "../db_connect.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
 
     $query = "SELECT rank FROM studies ORDER BY rank";
     $result = mysqli_query($conn, $query);

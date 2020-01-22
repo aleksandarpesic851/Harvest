@@ -1,6 +1,6 @@
 <?php
-    require_once "../db_connect.php";
-    require_once "../enable_error_report.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
 
     $query = "SELECT * from update_history ORDER BY id DESC";
     $result = mysqli_query($conn, $query);
@@ -24,5 +24,5 @@
         ob_flush();
         flush();
 
-        require_once "scrape.php";
+        require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/scrape.php";
     }

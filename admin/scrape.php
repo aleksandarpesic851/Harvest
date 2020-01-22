@@ -1,6 +1,6 @@
 <?php
-    require_once "../enable_error_report.php";
-    require_once "../db_connect.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
 
     //Replace ', " character with \', \"
     function getValue($item) {
@@ -149,11 +149,11 @@
 
     $isScraping = true;
     //Extract Data
-    require_once "terms.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/terms.php";
     //Extract study ids related with condition hierarchy
-    require_once "condition/calculate_study_condition.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/condition/calculate_study_condition.php";
     //Extract study ids related with condition hierarchy
-    require_once "drug/calculate_study_drug.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/drug/calculate_study_drug.php";
     
     mysqli_close($conn);
     $endTime = time();
