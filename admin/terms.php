@@ -26,7 +26,7 @@ require_once "../enable_error_report.php";
     }
     
     processData();
-    saveData();
+    saveTerms();
 
     print_r("<br>Extracting was completed.<br>");
     print_r("<br>Conditions: " . count($conditions));
@@ -157,7 +157,7 @@ require_once "../enable_error_report.php";
         return $newData;
     }
 //////////////////////////////////////Save on conditions table/////////////////////////////////////////////////
-    function saveData() {
+    function saveTerms() {
         global $conditions;
         global $drugs;
         global $conn;

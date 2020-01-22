@@ -166,11 +166,6 @@ CREATE TABLE `update_history` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Data for the table `update_history` */
-
-insert  into `update_history`(`id`,`updated_at`) values 
-(1,'2020-01-23 16:55:50');
-
 DROP TABLE IF EXISTS `condition_categories`;
 
 CREATE TABLE `condition_categories` (
