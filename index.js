@@ -1,16 +1,16 @@
-let studyTable;
-let conditionTree;
-let conditionSearchTree;
-let drugTree;
-let drugSearchTree;
-let modifierTree;
-let modifiers;
-let searchItems;
-let loadedCnt = 0;
-let graphSrcData;
-let graphDrawDetails;
-let chartGraph;
-let isModifier;
+let studyTable;                     //Data table object.
+let conditionTree;                  //Condition Tree in search dialog
+let conditionSearchTree;            //Condition tree on the left of graph
+let drugTree;                       //Drug tree in search dialog
+let drugSearchTree;                 //Drug tree on the left of graph
+let modifierTree;                   //Modifier tree on the left of graph
+let modifiers;                      // modifier array.
+let searchItems;                    // all Search items of search dialog
+let loadedCnt = 0;                  // the number of loaded data , 1 - graph data, 2 - table data
+let graphSrcData;                   // graph origin data, which is filtered by search.
+let graphDrawDetails;               // the sub data of graphSrcData to be displayed on graph
+let chartGraph;                     // Graph Object
+let isModifier;                     // true: draw modifier on the graph, false: not
 let bgColor = [
     "rgba(255, 99, 132, 0.2)",
     "rgba(255, 159, 64, 0.2)",
@@ -18,7 +18,7 @@ let bgColor = [
     "rgba(75, 192, 192, 0.2)",
     "rgba(54, 162, 235, 0.2)",
     "rgba(153, 102, 255, 0.2)",
-    "rgba(201, 203, 207, 0.2)"];
+    "rgba(201, 203, 207, 0.2)"];    // graph bar background color
 let bdColor = [
     "rgb(255, 99, 132)",
     "rgb(255, 159, 64)",
@@ -26,11 +26,12 @@ let bdColor = [
     "rgb(75, 192, 192)",
     "rgb(54, 162, 235)",
     "rgb(153, 102, 255)",
-    "rgb(201, 203, 207)"];
-let conditionCheckedAuto = false;
-let modifierCheckedAuto = false;
+    "rgb(201, 203, 207)"];          // graph bar border color
+let conditionCheckedAuto = false;   // when click search button, condition(drug)SearchTree is initialized automatically and check all.
+let modifierCheckedAuto = false;    // but this code update graph when node checked change, so it's used to prevent auto load again.
 let drugCheckedAuto = false;
-let loadedTreeCnt = 0;
+let loadedTreeCnt = 0;              // there are 2 main trees. 1 - condition tree, 2 - drug tree. when all trees are loaded, load graph data.
+let graphShowKey = "conditions";    // graph showing key. conditions: draw condition as x axis. drugs: draw drug as x axis.
 
 $(document).ready(function() {
     ej.base.enableRipple(true);
@@ -386,22 +387,24 @@ function showWaiting() {
     loadedCnt=0;
     $("#waiting").show();
 }
+
 function updateGraph() {
     graphDrawDetails = [];
-    let treeId = "";
     let activeTabId = $("#graph-tab .active").attr("href");
     let checkedNodes;
 
     if (activeTabId == "#graph-tab-drug") {
         isModifier = false;
         checkedNodes = getCheckedTreeNodes("drug-search-tree", drugSearchTree);
+        graphShowKey = "drugs";
     } else {
-        if("#graph-tab-modifier") {
+        graphShowKey = "conditions";
+        if(activeTabId == "#graph-tab-modifier") {
             isModifier = true;
         } else {
             isModifier = false;
         }
-        checkedNodes = getCheckedTreeNodes("condition-serch-tree", conditionSearchTree);
+        checkedNodes = getCheckedTreeNodes("condition-search-tree", conditionSearchTree);
     }
     
     // if only one leaf is checked, draw modifiers.
@@ -437,29 +440,28 @@ function drawGraph(nodes, checkedModifiers) {
         let id = node.nodeId.substr(10);
         if (isModifier) {
             checkedModifiers.forEach( modifier=> {
-                let nCnt = graphSrcData[id]["count"][modifier];
-                if (nCnt > 0) {
+                let nCnt = graphSrcData[graphShowKey][id]["count"][modifier];
+                // if (nCnt > 0) {
                     graphLabels.push(node.nodeText + " - " + modifier);
                     graphDrawData.push(nCnt);
                     graphDrawDetails.push({node: node, modifier: modifier, cnt: nCnt});
                     backgroundColors.push(bgColor[chartCnt % 7]);
                     borderColors.push(bdColor[chartCnt % 7]);
                     chartCnt++;
-                }
+                // }
             });
         } else {    // else, extract all child node data
-            let nCnt = graphSrcData[id]["count"]["All"];
-            if (nCnt > 0) {
+            let nCnt = graphSrcData[graphShowKey][id]["count"]["All"];
+            // if (nCnt > 0) {
                 graphLabels.push(node.nodeText);
                 graphDrawData.push(nCnt);
                 graphDrawDetails.push({node: node, cnt: nCnt});
                 backgroundColors.push(bgColor[chartCnt % 7]);
                 borderColors.push(bdColor[chartCnt % 7]);
                 chartCnt++;
-            }
+            // }
         }
     });
-    chartGraph.data.labels = graphLabels;
     chartGraph.data.labels = graphLabels;
     chartGraph.data.datasets[0].data = graphDrawData;
     chartGraph.data.datasets[0].backgroundColor = backgroundColors;
@@ -477,7 +479,7 @@ function initModifiers() {
                     let modifierTreeData = [];
                     let id = 0;
                     modifiers.forEach(modifier => {
-                        modifierTreeData.push({nodeId: id, nodeText: modifier});
+                        modifierTreeData.push({nodeId: "MODIFIERS-" + id, nodeText: modifier});
                         id++;
                     });
                     modifierCheckedAuto = true;
