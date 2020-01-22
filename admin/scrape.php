@@ -75,7 +75,7 @@
     }
 
     $startTime = time();
-    $down_chunk = 327;
+    $down_chunk = 328;
     $down_count = 1000;
     $ignoreFields = ["documents", "study_documents", "url", "other_ids", "funded_bys", "acronym", "exp_acc_types"];
     mysqli_autocommit($conn,FALSE);
@@ -147,6 +147,7 @@
         }
     }
 
+    $isScraping = true;
     //Extract Data
     require_once "terms.php";
     //Extract study ids related with condition hierarchy

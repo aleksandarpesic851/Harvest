@@ -1,7 +1,9 @@
 <?php
 // In order to speed up, calculate all study ids related all drugs in hierarchy.
-    require_once "../../db_connect.php";
-    require_once "../../enable_error_report.php";
+    if (!isset($isScraping)) {
+        require_once "../../db_connect.php";
+        require_once "../../enable_error_report.php";
+    }
 
     $log = true;
     if (isset($_POST) && isset($_POST["post"])) {
