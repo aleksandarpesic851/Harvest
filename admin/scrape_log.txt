@@ -1,0 +1,7 @@
+
+ Working on 0 - 1000 data: Download Time:  48s,    Complete Time:  49s
+ Working on 1000 - 2000 data: Download Time:  52s,    Complete Time:  52s
+ Working on 2000 - 3000 data: Download Time:  1m 6s,    Complete Time:  1m 6s
+ Working on 3000 - 4000 data: Download Time:  36s,    Complete Time:  36s
+ Working on 4000 - 5000 data: Download Time:  36s,    Complete Time:  36s
+ Working on 5000 - 6000 data:

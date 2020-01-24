@@ -1,5 +1,8 @@
 <html>
 	<head>
+		<title> US Clinical Trials Condition Hierarchy</title>
+        <link rel="shortcut icon" href="/imgs/clinical_trial_icon.png">
+
 		<script src="../../ej2/ej2.min.js" type="text/javascript"></script>
 		<link href="../../ej2/material.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

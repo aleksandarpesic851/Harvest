@@ -6,6 +6,8 @@
 	<head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title> US Clinical Trials </title>
+        <link rel="shortcut icon" href="/imgs/clinical_trial_icon.png">
         <!-- Font -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- JQuery -->
@@ -176,7 +178,7 @@
         <div class="top-container"> 
             <div class="row box">
                 <div class="col-12">
-                    <h1 style="text-align: center"> Studies </h1>
+                    <img src="/imgs/clinical_index.png" style="height: auto; max-width: 50%; width: 400px">
                 </div>
             </div>
             <!-- Search -->

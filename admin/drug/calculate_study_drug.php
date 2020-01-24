@@ -111,7 +111,7 @@
     function mergeDrugIds() {
 
         $log = "Merging...";
-        logOrPrintConditions($log);
+        logOrPrintDrugs($log);
 
         global $totalData;
 
@@ -129,7 +129,7 @@
         }
 
         $log = "Merge complete";
-        logOrPrintConditions($log);
+        logOrPrintDrugs($log);
 
     }
 
