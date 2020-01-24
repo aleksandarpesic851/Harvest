@@ -105,7 +105,7 @@
 
 			<div class="row">
 				<div class="col-6 col-md-5 col-lg-4 box">
-					<h5 class="tree-title">Unmanaged Drugs</h5>
+					<h5 class="tree-title">All Drugs</h5>
 					<div class="row padding-5">
 						<div class="col-7 offset-1" style="padding: 0">
 							<input class="form-control" placeholder="Search" id="search" onchange="search()"/>

@@ -102,7 +102,7 @@
     function calculateStudyIds($modifier) {
         global $totalData;
         global $log;
-        
+        $nCnt = 0;
         foreach($totalData as $key=>$condition) {
             $start = time();
             $query = "SELECT `nct_id` FROM study_id_conditions WHERE ( `condition` LIKE '%" . $condition["condition_name"] . "%' ";
@@ -126,7 +126,11 @@
             $log = "\r\nCalculate Study Id - ". $condition["condition_name"] . " : " . time_elapsed_string($end-$start) .
                     ", Count: " . count($nctIds);
             logOrPrintConditions($log);
-            
+            $nCnt++;
+            if ($nCnt > 30) {
+                $nCnt = 0;
+                mysqlReconnect();
+            }
         }
     }
 

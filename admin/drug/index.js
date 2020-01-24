@@ -55,7 +55,7 @@ var org_data = [
 var treeViewInstances = [];
 
 $(function() {
-    createTree("All Drugs", [], 0);
+    createTree("Unmanaged Drugs", [], 0);
     loadUnmanagedDrugs(1);
     loadManagedDrugs();
     hideWaiting();
