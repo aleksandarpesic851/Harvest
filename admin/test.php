@@ -11,7 +11,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
         while($row = mysqli_fetch_assoc($result)) {
             if ($row["rank"]-$currentRank > 1) {
                 echo "<br> Error Point at $currentRank";
-                ob_flush();
+                //ob_flush();
                 flush();
                 $invalidPoints++;
             }

@@ -1,7 +1,15 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
+$rootPath = $_SERVER['DOCUMENT_ROOT'];
+$runningCLI = false;
+if (!isset($rootPath) || strlen($rootPath) < 1) {
+    $rootPath = __DIR__ . "/../";
+    $runningCLI = true;
+    $logFile = fopen("scrape_log.txt", "w") or die("Unable to open file!");
+}
 
+    require_once $rootPath . "/db_connect.php";
+	require_once $rootPath . "/enable_error_report.php";
+    
     //Replace ', " character with \', \"
     function getValue($item) {
         return str_replace("'", "\'", str_replace("\\", "\\\\", $item));
@@ -70,17 +78,27 @@
     $query = "INSERT INTO `update_history` (`updated_at`) VALUES ('$now')";
     
     if (!mysqli_query($conn, $query)) {
-        echo mysqli_error($conn);
+        if ($runningCLI) {
+            fwrite($logFile, mysqli_error($conn));
+        } else {
+            echo mysqli_error($conn);
+        }
         exit;
     }
 
     $startTime = time();
-    $down_chunk = 328;
+    $down_chunk = 1;
     $down_count = 1000;
     $ignoreFields = ["documents", "study_documents", "url", "other_ids", "funded_bys", "acronym", "exp_acc_types"];
     mysqli_autocommit($conn,FALSE);
     while (true) {
-        echo "<br> Working on " . ($down_chunk-1) * 1000 . " - " . $down_chunk * 1000 .  " data:";
+        $log = "\r\n Working on " . ($down_chunk-1) * 1000 . " - " . $down_chunk * 1000 .  " data:";
+        if ($runningCLI) {
+            fwrite($logFile, $log);
+        } else {
+            echo $log;
+        }
+        
         $chuckStart = time();
         // Scrape data from the link and save in data.xml file
         // file_put_contents("data.xml", fopen("https://clinicaltrials.gov/ct2/results/download_fields?down_count=$down_count&down_flds=all&down_fmt=xml&down_chunk=$down_chunk", 'r'));
@@ -88,7 +106,12 @@
         // Load xml data and save into db
         $xml=simplexml_load_file("https://clinicaltrials.gov/ct2/results/download_fields?down_count=$down_count&down_flds=all&down_fmt=xml&down_chunk=$down_chunk") or die("Error: Can't read data from file");
         $chuckEnd = time();
-        echo " Download Time: " . time_elapsed($chuckEnd - $chuckStart);
+        $log = " Download Time: " . time_elapsed($chuckEnd - $chuckStart);
+        if ($runningCLI) {
+            fwrite($logFile, $log);
+        } else {
+            echo $log;
+        }
         $down_chunk++;
         
         foreach($xml->children() as $study) {
@@ -126,35 +149,62 @@
             $updates = "ON DUPLICATE KEY UPDATE " . $updates . ", `status_open`='" . $status_open . "'";
             $query = " INSERT INTO studies ($fields) VALUES ($values) $updates; ";
             if (!mysqli_query($conn, $query)) {
-                echo "<br> Error in mysql query: " . mysqli_error($conn);
+                $log = "\r\n Error in mysql query: " . mysqli_error($conn);
+                if ($runningCLI) {
+                    fwrite($logFile, $log);
+                } else {
+                    echo $log;
+                }
             }
 
         }
 
         // Commit transaction
         if (!mysqli_commit($conn)) {
-            echo "Commit transaction failed";
+            $log = "Commit transaction failed";
+            if ($runningCLI) {
+                fwrite($logFile, $log);
+            } else {
+                echo $log;
+            }
             //exit();
         }
         $chuckEnd = time();
-        echo ",    Complete Time: " . time_elapsed($chuckEnd - $chuckStart);
-        ob_flush();
-        flush();
+        $log = ",    Complete Time: " . time_elapsed($chuckEnd - $chuckStart);
+        if ($runningCLI) {
+            fwrite($logFile, $log);
+        } else {
+            echo $log;
+            //ob_flush();
+            flush();
+        }
 
         //if there is no data, stop updating
         if (count($xml->children()) < $down_count) {
             break;
         }
     }
-
+    
     $isScraping = true;
+    mysqlReconnect();
     //Extract Data
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/terms.php";
+    require_once $rootPath . "/admin/terms.php";
+    mysqlReconnect();
     //Extract study ids related with condition hierarchy
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/condition/calculate_study_condition.php";
+    require_once $rootPath . "/admin/condition/calculate_study_condition.php";
+    mysqlReconnect();
     //Extract study ids related with condition hierarchy
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/drug/calculate_study_drug.php";
+    require_once $rootPath . "/admin/drug/calculate_study_drug.php";
     
     mysqli_close($conn);
     $endTime = time();
-    echo "<br> Total Time Elapsed: " . time_elapsed($endTime - $startTime);
+
+    $log = "\r\n Total Time Elapsed: " . time_elapsed($endTime - $startTime);
+    if ($runningCLI) {
+        fwrite($logFile, $log);
+        fclose($logFile);
+    } else {
+        echo $log;
+        //ob_flush();
+        flush();
+    }

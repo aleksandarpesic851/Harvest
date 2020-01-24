@@ -69,7 +69,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
             $end=time();
             echo "<br> Now Extracted from " . $nCnt*$nRows . " data";
             echo "<br> The number of extracted diseases: " . count($conditions) . "</br>";
-            ob_flush();
+            //ob_flush();
             flush();
         }
     }

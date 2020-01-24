@@ -21,7 +21,7 @@
 
     function startScrape() {
         echo '<script type="text/javascript">setTimeout(function() { location.reload(true); }, 1000)</script>';
-        ob_flush();
+        //ob_flush();
         flush();
         global $conn;
         require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/scrape.php";

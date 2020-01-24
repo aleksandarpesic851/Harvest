@@ -1,17 +1,22 @@
 <?php
-// In order to speed up, calculate all study ids related all conditions in hierarchy.
-    if (!isset($isScraping)) {
-        require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
-        require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
+    // In order to speed up, calculate all study ids related all conditions in hierarchy.
+    $rootPath = $_SERVER['DOCUMENT_ROOT'];
+    $runningCLI = false;
+
+    if (!isset($rootPath) || strlen($rootPath) < 1) {
+        $rootPath = __DIR__ . "/../../";
+        $runningCLI = true;
+        $conditionCalcLogFile = fopen("calculate_study_condition_log.txt", "w") or die("Unable to open file!");
     }
 
-    $log = true;
-    if (isset($_POST) && isset($_POST["post"])) {
-        $log = false;
+    if (!isset($isScraping)) {
+        require_once $rootPath . "/db_connect.php";
+        require_once $rootPath . "/enable_error_report.php";
     }
-    if ($log) {
-        echo "<br>-----------------------Calculate Study Ids Related with Condition Hierarchy----------------------------";
-    }
+
+    $log = "\r\n-----------------------Calculate Study Ids Related with Condition Hierarchy----------------------------";
+    logOrPrintConditions($log);
+
     $totalData = array();
     // $query = "DELETE FROM condition_hierarchy_modifier_stastics";
     // mysqli_query($conn, $query);
@@ -20,27 +25,29 @@
     calculateStudyConditions();
 
     if (!mysqli_commit($conn)) {
-        echo "Commit transaction failed";
+        $log = "Commit transaction failed";
+        logOrPrintConditions($log);
     }
 
-    echo "ok";
-    //echo json_encode($totalData);
+    if ($runningCLI) {
+        fclose($conditionCalcLogFile);
+    }
 
     function calculateStudyConditions() {
         global $totalData;
-        global $log;
-
         $modifiers = readModifiers();
         $conditions = readAllHierarchy();
 
         foreach($modifiers as $modifier) {
-            if ($log) {
-                echo "<br>-----------------------" . $modifier["modifier"] . "----------------------------";
-            }
+            $log = "\r\n-----------------------" . $modifier["modifier"] . "----------------------------";
+            logOrPrintConditions($log);
+
             $totalData = $conditions;
             changeSpecialCaracters();
+            mysqlReconnect();
             calculateStudyIds($modifier["modifier"]);
             mergeIds();
+            mysqlReconnect();
             saveData($modifier["id"]);
         }
     }
@@ -70,6 +77,10 @@
     function mysqlRowCnt($query) {
         global $conn;
         $result = mysqli_query($conn, $query);
+        if (!$result) {
+            $log = "ERROR in Row Cnt. THe query is : " . $query ;
+            logOrPrintConditions($log);
+        }
         $nCnt = mysqli_num_rows($result);
         // Free result set
         mysqli_free_result($result);
@@ -112,48 +123,36 @@
             }
             
             $end = time();
-            if ($log) {
-                echo "<br>Calculate Study Id - ". $condition["condition_name"] . " : " . time_elapsed_string($end-$start);
-                echo ", Count: " . count($nctIds);
-                ob_flush();
-                flush();
-            }
+            $log = "\r\nCalculate Study Id - ". $condition["condition_name"] . " : " . time_elapsed_string($end-$start) .
+                    ", Count: " . count($nctIds);
+            logOrPrintConditions($log);
+            
         }
     }
 
     // merge Study Ids
     function mergeIds() {
-        global $log;
-
-        if ($log) {
-            printStudyIdCnts("Before Merge");
-        }
+        
+        $log = "Merging...";
+        logOrPrintConditions($log);
+        
         global $totalData;
 
-        $start = time();
         foreach($totalData as $key=>$condition) {
             if ($condition["parent_id"] == 0) {
                 mergeParentChild($key);
             }
         }
-        if ($log) {
-            printStudyIdCnts("Merge Parent -> Child");
-        }
-        $end = time();
-        if ($log) {
-            echo "<br>Time : " . time_elapsed_string($end-$start);
-        }
-        $start = time();
+
         foreach($totalData as $key => $condition) {
             if (isset($condition["leaf"]) && $condition["leaf"]) {
                 mergeChildParent($key);
             }
         }
-        $end= time();
-        if ($log) {
-            printStudyIdCnts("Merge Child -> Parent");
-            echo "<br>Time : " . time_elapsed_string($end-$start);
-        }
+        
+        $log = "Merge complete";
+        logOrPrintConditions($log);
+        
     }
 
     // merge Parent -> Child
@@ -199,10 +198,11 @@
 
     function printStudyIdCnts($explain) {
         global $totalData;
-        echo "<br> $explain:";
+        $log = "\r\n $explain:";
         foreach($totalData as $key=>$condition) {
-            echo "<br>" .  $condition["condition_name"] . ": " . count($condition["study_ids"]);
+            $log .= "\r\n" .  $condition["condition_name"] . ": " . count($condition["study_ids"]);
         }
+        logOrPrintConditions($log);
     }
     // Calculate elapsed time
     function time_elapsed_string($secs){
@@ -236,6 +236,24 @@
                 $query = "UPDATE `condition_hierarchy_modifier_stastics` SET `study_ids` = '" . implode(",", $data["study_ids"]) . "' WHERE  `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
             }
             mysqli_query($conn, $query);
+        }
+    }
+
+    function logOrPrintConditions($log) {
+        global $runningCLI;
+        global $conditionCalcLogFile;
+        global $_POST;
+
+        if (isset($_POST) && isset($_POST["post"])) {
+            return;
+        }
+
+        if ($runningCLI) {
+            fwrite($conditionCalcLogFile, $log);
+        } else {
+            echo $log;
+            //ob_flush();
+            flush();
         }
     }
 ?>

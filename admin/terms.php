@@ -1,8 +1,18 @@
 <?php
-// Manage Terms for 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
-echo "<br>-----------------------Extracting Data from scraped Studies-----------";
+    // Manage Terms for 
+    $rootPath = $_SERVER['DOCUMENT_ROOT'];
+    $runningCLI = false;
+    if (!isset($rootPath) || strlen($rootPath) < 1) {
+        $rootPath = __DIR__ . "/../";
+        $runningCLI = true;
+        $termsLogFile = fopen("terms_log.txt", "w") or die("Unable to open file!");
+    }
+    require_once $rootPath . "/db_connect.php";
+    require_once $rootPath . "/enable_error_report.php";
+
+    $log = "\r\n-----------------------Extracting Data from scraped Studies-----------";
+    logOrPrintTerms($log);
+
     $conditions = array();
     $drugs = array();
 
@@ -13,30 +23,35 @@ echo "<br>-----------------------Extracting Data from scraped Studies-----------
     // Remove all data in study_id_condition table
     $query = "TRUNCATE `study_id_conditions`";
     if (!mysqli_query($conn, $query)) {
-        echo "<br> Error in mysql query: " . mysqli_error($conn);
+        $log = "\r\n Error in mysql query: " . mysqli_error($conn);
+        logOrPrintTerms($log);
     }
     // Remove all data in study_id_condition table
     $query = "TRUNCATE `study_id_drugs`";
     if (!mysqli_query($conn, $query)) {
-        echo "<br> Error in mysql query: " . mysqli_error($conn);
+        $log = "\r\n Error in mysql query: " . mysqli_error($conn);
+        logOrPrintTerms($log);
     }
 
     if (!mysqli_commit($conn)) {
-        echo "Commit transaction failed";
+        $log = "Commit transaction failed";
+        logOrPrintTerms($log);
     }
     
     processData();
     saveTerms();
 
-    print_r("<br>Extracting was completed.<br>");
-    print_r("<br>Conditions: " . count($conditions));
-    print_r("<br>Drugs: " . count($drugs));
-
     $end = time();
-    print_r("<br><br>Total Elapsed Time in extracting terms" . time_diff_string($end-$start));
+    $log = "\r\nExtracting was completed.\r\n" . 
+        "\r\nConditions: " . count($conditions) .
+        "\r\nDrugs: " . count($drugs) . 
+        "\r\n\r\nTotal Elapsed Time in extracting terms" . time_diff_string($end-$start);
+        logOrPrintTerms($log);
 
     // mysqli_close($conn);
-    
+    if ($runningCLI) {
+        fclose($termsLogFile);
+    }
     ///////////////////////////////////////////// Functions ///////////////////////////////////////////////////
     $tmpConditions = array();
     $tmpDrugs = array();
@@ -55,7 +70,7 @@ echo "<br>-----------------------Extracting Data from scraped Studies-----------
             $stmt = $conn->prepare($query);
 
             if ($stmt === false) {
-                echo "ENDS";
+                logOrPrintTerms("ENDS");
             break;
             }
             $stmt->bind_param("ii", $nRows, $offset);
@@ -80,11 +95,10 @@ echo "<br>-----------------------Extracting Data from scraped Studies-----------
             $nCnt++;
             $stmt->close();
             
-            echo "<br> Now Extracted from " . $nCnt*$nRows . " data";
-            echo "<br> The number of extracted diseases: " . count($conditions);
-            echo "<br> The number of extracted drugs: " . count($drugs) . "</br>";
-            ob_flush();
-            flush();
+            $log = "\r\n Now Extracted from " . $nCnt*$nRows . " data" .
+                "\r\n The number of extracted diseases: " . count($conditions) . 
+                "\r\n The number of extracted drugs: " . count($drugs) . "</br>";
+            logOrPrintTerms($log);
         }
     }
 
@@ -204,11 +218,13 @@ echo "<br>-----------------------Extracting Data from scraped Studies-----------
         while(count($subData) > 0) {
             $query = "INSERT INTO `$table` (`$columnName`) VALUES ('" . implode("'), ('", $subData) . "')";
             if (!mysqli_query($conn, $query)) {
-                echo "<br> Error in mysql query: " . mysqli_error($conn);
+                $log = "\r\n Error in mysql query: " . mysqli_error($conn);
+                logOrPrintTerms($log);
             }
 
             if (!mysqli_commit($conn)) {
-                echo "Commit transaction failed";
+                $log = "Commit transaction failed";
+                logOrPrintTerms($log);
             }
             $nCnt++;
             $subData = array_slice($valData, $nUnit * $nCnt, $nUnit);
@@ -267,11 +283,15 @@ echo "<br>-----------------------Extracting Data from scraped Studies-----------
 
         $query = "INSERT INTO `study_id_conditions` (`nct_id`, `condition`) VALUES $queryVals";
         if (!mysqli_query($conn, $query)) {
-            echo "<br> Query: " . $query;
-            echo "<br> Error in mysql query: " . mysqli_error($conn);
+            
+            $log = "\r\n Query: " . $query . 
+                "\r\n Error in mysql query: " . mysqli_error($conn);
+            logOrPrintTerms($log);
+
         }
         if (!mysqli_commit($conn)) {
-            echo "Commit transaction failed";
+            $log = "Commit transaction failed";
+            logOrPrintTerms($log);
         }
     }
 
@@ -290,10 +310,25 @@ echo "<br>-----------------------Extracting Data from scraped Studies-----------
 
         $query = "INSERT INTO `study_id_drugs` (`nct_id`, `drug`) VALUES $queryVals";
         if (!mysqli_query($conn, $query)) {
-            echo "<br> Query: " . $query;
-            echo "<br> Error in mysql query: " . mysqli_error($conn);
+            $log = "\r\n Query: " . $query .
+                "\r\n Error in mysql query: " . mysqli_error($conn);
+            logOrPrintTerms($log);
         }
         if (!mysqli_commit($conn)) {
-            echo "Commit transaction failed";
+            $log = "Commit transaction failed";
+            logOrPrintTerms($log);
+        }
+    }
+
+    function logOrPrintTerms($log) {
+        global $runningCLI;
+        global $termsLogFile;
+
+        if ($runningCLI) {
+            fwrite($termsLogFile, $log);
+        } else {
+            echo $log;
+            //ob_flush();
+            flush();
         }
     }

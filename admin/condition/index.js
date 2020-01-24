@@ -361,14 +361,14 @@ function calculateStudyCondition() {
     showWaiting();
     $.ajax({
         type: "POST",
-        url: "calculate_study_condition.php",
+        url: "calculate_control.php",
         data: {post: true},
         success: function(response) {
             hideWaiting();
             if (response == "ok") {
-                alert("Calculation Sucess!");
+                alert("Calculation Started in Background!");
             } else {
-                alert("Calculation Fail! Error: " + response);
+                alert("Error: " + response);
             }
         }
     });

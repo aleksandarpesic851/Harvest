@@ -26,7 +26,7 @@
         <script>
             function scrape() {
                 if (confirm("Are you sure to scrape data? This may take 4 hours.")) {
-                    document.location.href="scrape.php";
+                    window.open("scrape_controll.php");
                 }
             }
         </script>

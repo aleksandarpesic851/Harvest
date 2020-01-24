@@ -1,37 +1,45 @@
 <?php
-// In order to speed up, calculate all study ids related all drugs in hierarchy.
-    if (!isset($isScraping)) {
-        require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
-        require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
+    // In order to speed up, calculate all study ids related all drugs in hierarchy.
+    $rootPath = $_SERVER['DOCUMENT_ROOT'];
+    $runningCLI = false;
+
+    if (!isset($rootPath) || strlen($rootPath) < 1) {
+        $rootPath = __DIR__ . "/../../";
+        $runningCLI = true;
+        $drugCalcLogFile = fopen("calculate_study_drug_log.txt", "w") or die("Unable to open file!");
     }
 
-    $log = true;
-    if (isset($_POST) && isset($_POST["post"])) {
-        $log = false;
+    if (!isset($isScraping)) {
+        require_once $rootPath . "/db_connect.php";
+        require_once $rootPath . "/enable_error_report.php";
     }
-    if ($log) {
-        echo "<br>-----------------------Calculate Study Ids Related with Drug Hierarchy----------------------------";
-    }
+
+    $log = "\r\n-----------------------Calculate Study Ids Related with Drug Hierarchy----------------------------";
+    logOrPrintDrugs($log);
+
     $totalData = array();
     mysqli_autocommit($conn,FALSE);
 
     calculateStudyDrugs();
 
     if (!mysqli_commit($conn)) {
-        echo "Commit transaction failed";
+        $log = "Commit transaction failed";
+        logOrPrintDrugs($log);
     }
-
-    echo "ok";
-    //echo json_encode($totalData);
+    
+    if ($runningCLI) {
+        fclose($drugCalcLogFile);
+    }
 
     function calculateStudyDrugs() {
         global $totalData;
-        global $log;
 
         $totalData = readAllDrugHierarchy();
         changeSpecialCaracters_Drug();
+        mysqlReconnect();
         calculateDrugStudyIds();
         mergeDrugIds();
+        mysqlReconnect();
         saveDrugData();
     }
 
@@ -75,7 +83,6 @@
     // Calculate study ids related with drug name
     function calculateDrugStudyIds() {
         global $totalData;
-        global $log;
         
         foreach($totalData as $key=>$drug) {
             $start = time();
@@ -89,22 +96,19 @@
             }
             
             $end = time();
-            if ($log) {
-                echo "<br>Calculate Study Id - ". $drug["drug_name"] . " : " . time_elapsed_string_Drug($end-$start);
-                echo ", Count: " . count($nctIds);
-                ob_flush();
-                flush();
-            }
+            $log = "\r\nCalculate Study Id - ". $drug["drug_name"] . " : " . time_elapsed_string_Drug($end-$start) .
+                    ", Count: " . count($nctIds);
+            logOrPrintDrugs($log);
+        
         }
     }
 
     // merge Study Ids
     function mergeDrugIds() {
-        global $log;
 
-        if ($log) {
-            printStudyIdCnts_Drug("Before Merge");
-        }
+        $log = "Merging...";
+        logOrPrintConditions($log);
+
         global $totalData;
 
         $start = time();
@@ -113,24 +117,16 @@
                 mergeParentChild_Drug($key);
             }
         }
-        if ($log) {
-            printStudyIdCnts_Drug("Merge Parent -> Child");
-        }
-        $end = time();
-        if ($log) {
-            echo "<br>Time : " . time_elapsed_string_Drug($end-$start);
-        }
-        $start = time();
+        
         foreach($totalData as $key => $drug) {
             if (isset($drug["leaf"]) && $drug["leaf"]) {
                 mergeChildParent_Drug($key);
             }
         }
-        $end= time();
-        if ($log) {
-            printStudyIdCnts_Drug("Merge Child -> Parent");
-            echo "<br>Time : " . time_elapsed_string_Drug($end-$start);
-        }
+
+        $log = "Merge complete";
+        logOrPrintConditions($log);
+
     }
 
     // merge Parent -> Child
@@ -176,10 +172,11 @@
 
     function printStudyIdCnts_Drug($explain) {
         global $totalData;
-        echo "<br> $explain:";
+        $log = "\r\n $explain:";
         foreach($totalData as $key=>$drug) {
-            echo "<br>" .  $drug["drug_name"] . ": " . count($drug["study_ids"]);
+            $log .= "\r\n" .  $drug["drug_name"] . ": " . count($drug["study_ids"]);
         }
+        logOrPrintDrugs($log);
     }
     // Calculate elapsed time
     function time_elapsed_string_Drug($secs){
@@ -206,6 +203,24 @@
         foreach($totalData as $data) {
             $query = "UPDATE `drug_hierarchy` SET `study_ids` = '" . implode(",", $data["study_ids"]) . "' WHERE `id` = " . $data["id"];
             mysqli_query($conn, $query);
+        }
+    }
+
+    function logOrPrintDrugs($log) {
+        global $runningCLI;
+        global $drugCalcLogFile;
+        global $_POST;
+
+        if (isset($_POST) && isset($_POST["post"])) {
+            return;
+        }
+
+        if ($runningCLI) {
+            fwrite($drugCalcLogFile, $log);
+        } else {
+            echo $log;
+            //ob_flush();
+            flush();
         }
     }
 ?>
