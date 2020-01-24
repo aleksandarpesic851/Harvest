@@ -55,7 +55,7 @@ var org_data = [
 var treeViewInstances = [];
 
 $(function() {
-    createTree("Unmanaged Conditions", [], 0);
+    createTree("All Conditions", [], 0);
     loadUnmanagedConditions(1);
     loadManagedConditions();
     hideWaiting();

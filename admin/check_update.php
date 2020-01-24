@@ -24,5 +24,5 @@
         //ob_flush();
         flush();
         global $conn;
-        require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/scrape.php";
+        require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/scrape_controll.php";
     }
