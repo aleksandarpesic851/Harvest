@@ -83,7 +83,7 @@
     // Calculate study ids related with drug name
     function calculateDrugStudyIds() {
         global $totalData;
-        
+        $nCnt = 0;
         foreach($totalData as $key=>$drug) {
             $start = time();
             $query = "SELECT `nct_id` FROM study_id_drugs WHERE ( `drug` LIKE '%" . $drug["drug_name"] . "%') GROUP BY `nct_id`";
@@ -99,7 +99,11 @@
             $log = "\r\nCalculate Study Id - ". $drug["drug_name"] . " : " . time_elapsed_string_Drug($end-$start) .
                     ", Count: " . count($nctIds);
             logOrPrintDrugs($log);
-        
+            $nCnt++;
+            if ($nCnt > 30) {
+                $nCnt = 0;
+                mysqlReconnect();
+            }
         }
     }
 
