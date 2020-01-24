@@ -58,6 +58,9 @@
         }
         // If All conditions are checked, not calculate
         if ($conditionTree[0]["nodeId"] == "ROOT") {
+            if (!isset($conditionTree[0]["nodeChild"])) {
+                return array();
+            }
             $conditionTree = $conditionTree[0]["nodeChild"];
         }
 
@@ -91,6 +94,9 @@
         }
         // If All conditions are checked, not calculate
         if ($drugTree[0]["nodeId"] == "ROOT") {
+            if (!isset($drugTree[0]["nodeChild"])) {
+                return array();
+            }
             $drugTree = $drugTree[0]["nodeChild"];
         }
 

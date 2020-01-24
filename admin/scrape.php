@@ -83,13 +83,13 @@
         echo "<br> Working on " . ($down_chunk-1) * 1000 . " - " . $down_chunk * 1000 .  " data:";
         $chuckStart = time();
         // Scrape data from the link and save in data.xml file
-        file_put_contents("data.xml", fopen("https://clinicaltrials.gov/ct2/results/download_fields?down_count=$down_count&down_flds=all&down_fmt=xml&down_chunk=$down_chunk", 'r'));
+        // file_put_contents("data.xml", fopen("https://clinicaltrials.gov/ct2/results/download_fields?down_count=$down_count&down_flds=all&down_fmt=xml&down_chunk=$down_chunk", 'r'));
+
+        // Load xml data and save into db
+        $xml=simplexml_load_file("https://clinicaltrials.gov/ct2/results/download_fields?down_count=$down_count&down_flds=all&down_fmt=xml&down_chunk=$down_chunk") or die("Error: Can't read data from file");
         $chuckEnd = time();
         echo " Download Time: " . time_elapsed($chuckEnd - $chuckStart);
         $down_chunk++;
-
-        // Load xml data and save into db
-        $xml=simplexml_load_file("data.xml") or die("Error: Can't read data from file");
         
         foreach($xml->children() as $study) {
             if ($study->getName() != "study") {
