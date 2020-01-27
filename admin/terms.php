@@ -5,8 +5,12 @@
     if (!isset($rootPath) || strlen($rootPath) < 1) {
         $rootPath = __DIR__ . "/../";
         $runningCLI = true;
-        $termsLogFile = fopen("terms_log.txt", "w") or die("Unable to open file!");
     }
+
+    $logMethodFile = true;
+    $termsLogFile = fopen($rootPath . "/logs/terms_log.txt", "w") or die("Unable to open file!");
+    fwrite($termsLogFile, date("Y-m-d h:i:sa"));
+
     require_once $rootPath . "/db_connect.php";
     require_once $rootPath . "/enable_error_report.php";
 
@@ -49,7 +53,7 @@
         logOrPrintTerms($log);
 
     // mysqli_close($conn);
-    if ($runningCLI) {
+    if ($logMethodFile) {
         fclose($termsLogFile);
     }
     ///////////////////////////////////////////// Functions ///////////////////////////////////////////////////
@@ -321,10 +325,10 @@
     }
 
     function logOrPrintTerms($log) {
-        global $runningCLI;
+        global $logMethodFile;
         global $termsLogFile;
 
-        if ($runningCLI) {
+        if ($logMethodFile) {
             fwrite($termsLogFile, $log);
         } else {
             echo $log;

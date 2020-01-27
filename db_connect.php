@@ -1,4 +1,8 @@
 <?php
+    if(isset($conn)) {
+        mysqli_close($conn);
+    }
+
     $ini = parse_ini_file("app.ini");
 
     $servername = $ini["db_host"];

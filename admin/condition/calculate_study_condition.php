@@ -6,9 +6,11 @@
     if (!isset($rootPath) || strlen($rootPath) < 1) {
         $rootPath = __DIR__ . "/../../";
         $runningCLI = true;
-        $conditionCalcLogFile = fopen("calculate_study_condition_log.txt", "w") or die("Unable to open file!");
     }
-
+    $logMethodFile = true;
+    $conditionCalcLogFile = fopen($rootPath . "/logs/calculate_study_condition_log.txt", "w") or die("Unable to open file!");
+    fwrite($conditionCalcLogFile, date("Y-m-d h:i:sa"));
+    
     if (!isset($isScraping)) {
         require_once $rootPath . "/db_connect.php";
         require_once $rootPath . "/enable_error_report.php";
@@ -29,7 +31,7 @@
         logOrPrintConditions($log);
     }
 
-    if ($runningCLI) {
+    if ($logMethodFile) {
         fclose($conditionCalcLogFile);
     }
 
@@ -244,7 +246,7 @@
     }
 
     function logOrPrintConditions($log) {
-        global $runningCLI;
+        global $logMethodFile;
         global $conditionCalcLogFile;
         global $_POST;
 
@@ -252,7 +254,7 @@
             return;
         }
 
-        if ($runningCLI) {
+        if ($logMethodFile) {
             fwrite($conditionCalcLogFile, $log);
         } else {
             echo $log;

@@ -4,8 +4,10 @@ $runningCLI = false;
 if (!isset($rootPath) || strlen($rootPath) < 1) {
     $rootPath = __DIR__ . "/../";
     $runningCLI = true;
-    $logFile = fopen("scrape_log.txt", "w") or die("Unable to open file!");
 }
+$logMethodFile = true;
+$logFile = fopen($rootPath . "/logs/scrape_log.txt", "w") or die("Unable to open file!");
+fwrite($logFile, date("Y-m-d h:i:sa"));
 
     require_once $rootPath . "/db_connect.php";
 	require_once $rootPath . "/enable_error_report.php";
@@ -46,6 +48,8 @@ if (!isset($rootPath) || strlen($rootPath) < 1) {
                 $value = date('Y-m-d',$time);
             } else if ($name == "nct_id") {
                 $value = substr($studyItem, 3);
+            } else if ($name == "min_age" || $name == "max_age") {
+                $value = intval($studyItem);
             }
             else {
                 $value = $studyItem;
@@ -78,7 +82,7 @@ if (!isset($rootPath) || strlen($rootPath) < 1) {
     $query = "INSERT INTO `update_history` (`updated_at`) VALUES ('$now')";
     
     if (!mysqli_query($conn, $query)) {
-        if ($runningCLI) {
+        if ($logMethodFile) {
             fwrite($logFile, mysqli_error($conn));
         } else {
             echo mysqli_error($conn);
@@ -93,7 +97,7 @@ if (!isset($rootPath) || strlen($rootPath) < 1) {
     mysqli_autocommit($conn,FALSE);
     while (true) {
         $log = "\r\n Working on " . ($down_chunk-1) * 1000 . " - " . $down_chunk * 1000 .  " data:";
-        if ($runningCLI) {
+        if ($logMethodFile) {
             fwrite($logFile, $log);
         } else {
             echo $log;
@@ -103,11 +107,21 @@ if (!isset($rootPath) || strlen($rootPath) < 1) {
         // Scrape data from the link and save in data.xml file
         // file_put_contents("data.xml", fopen("https://clinicaltrials.gov/ct2/results/download_fields?down_count=$down_count&down_flds=all&down_fmt=xml&down_chunk=$down_chunk", 'r'));
 
+        $url = "https://clinicaltrials.gov/ct2/results/download_fields?down_count=$down_count&down_flds=all&down_fmt=xml&down_chunk=$down_chunk";
+        $file_name = $rootPath . "/logs/data.xml";
+        $fp = fopen($file_name, "w");
+        $ch = curl_init($url); 
+        curl_setopt($ch, CURLOPT_FILE, $fp); 
+        curl_setopt($ch, CURLOPT_HEADER, 0); 
+        curl_exec($ch);
+        curl_close($ch);
+        fclose($fp);
         // Load xml data and save into db
-        $xml=simplexml_load_file("https://clinicaltrials.gov/ct2/results/download_fields?down_count=$down_count&down_flds=all&down_fmt=xml&down_chunk=$down_chunk") or die("Error: Can't read data from file");
+        $xml=simplexml_load_file($file_name) or die("Error: Can't read data from file");
+   
         $chuckEnd = time();
         $log = " Download Time: " . time_elapsed($chuckEnd - $chuckStart);
-        if ($runningCLI) {
+        if ($logMethodFile) {
             fwrite($logFile, $log);
         } else {
             echo $log;
@@ -150,7 +164,7 @@ if (!isset($rootPath) || strlen($rootPath) < 1) {
             $query = " INSERT INTO studies ($fields) VALUES ($values) $updates; ";
             if (!mysqli_query($conn, $query)) {
                 $log = "\r\n Error in mysql query: " . mysqli_error($conn);
-                if ($runningCLI) {
+                if ($logMethodFile) {
                     fwrite($logFile, $log);
                 } else {
                     echo $log;
@@ -162,7 +176,7 @@ if (!isset($rootPath) || strlen($rootPath) < 1) {
         // Commit transaction
         if (!mysqli_commit($conn)) {
             $log = "Commit transaction failed";
-            if ($runningCLI) {
+            if ($logMethodFile) {
                 fwrite($logFile, $log);
             } else {
                 echo $log;
@@ -171,7 +185,7 @@ if (!isset($rootPath) || strlen($rootPath) < 1) {
         }
         $chuckEnd = time();
         $log = ",    Complete Time: " . time_elapsed($chuckEnd - $chuckStart);
-        if ($runningCLI) {
+        if ($logMethodFile) {
             fwrite($logFile, $log);
         } else {
             echo $log;
@@ -200,7 +214,7 @@ if (!isset($rootPath) || strlen($rootPath) < 1) {
     $endTime = time();
 
     $log = "\r\n Total Time Elapsed: " . time_elapsed($endTime - $startTime);
-    if ($runningCLI) {
+    if ($logMethodFile) {
         fwrite($logFile, $log);
         fclose($logFile);
     } else {

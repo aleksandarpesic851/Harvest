@@ -104,7 +104,7 @@
                     It will take a few ten minutes to complete this task.
                     <br><br>
                     <div class="row">
-                        <a class="ml-auto mr-auto btn btn-primary" href="terms.php">Extract</a>
+                        <a class="ml-auto mr-auto btn btn-primary" onclick="window.open('terms_constrol.php')">Extract</a>
                     </div>
                 </div>
                 <div class="col-8">

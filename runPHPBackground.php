@@ -3,9 +3,6 @@
         $phpPath = "php";
         $cmd = " $phpPath $targetPath";
         execInBackground($cmd);
-        // $proc=new BackgroundProcess();
-        // $proc->setCmd($cmd);
-        // $proc->start();
     }
 
     function execInBackground($cmd) {

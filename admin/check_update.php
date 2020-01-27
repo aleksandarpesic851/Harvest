@@ -1,6 +1,14 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
+    // require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
+    // require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
+    $ini = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/app.ini");
+
+    $servername = $ini["db_host"];
+    $username = $ini["db_user"];
+    $password = $ini["db_password"];
+    $dbname = $ini["db_name"];
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
     $query = "SELECT * from update_history ORDER BY id DESC";
     $result = mysqli_query($conn, $query);

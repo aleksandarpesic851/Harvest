@@ -6,8 +6,10 @@
     if (!isset($rootPath) || strlen($rootPath) < 1) {
         $rootPath = __DIR__ . "/../../";
         $runningCLI = true;
-        $drugCalcLogFile = fopen("calculate_study_drug_log.txt", "w") or die("Unable to open file!");
     }
+    $logMethodFile = true;
+    $drugCalcLogFile = fopen($rootPath . "/logs/calculate_study_drug_log.txt", "w") or die("Unable to open file!");
+    fwrite($drugCalcLogFile, date("Y-m-d h:i:sa"));
 
     if (!isset($isScraping)) {
         require_once $rootPath . "/db_connect.php";
@@ -27,7 +29,7 @@
         logOrPrintDrugs($log);
     }
     
-    if ($runningCLI) {
+    if ($logMethodFile) {
         fclose($drugCalcLogFile);
     }
 
@@ -211,7 +213,7 @@
     }
 
     function logOrPrintDrugs($log) {
-        global $runningCLI;
+        global $logMethodFile;
         global $drugCalcLogFile;
         global $_POST;
 
@@ -219,7 +221,7 @@
             return;
         }
 
-        if ($runningCLI) {
+        if ($logMethodFile) {
             fwrite($drugCalcLogFile, $log);
         } else {
             echo $log;
