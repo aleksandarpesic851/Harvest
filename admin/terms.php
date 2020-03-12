@@ -126,8 +126,8 @@
         $arrCondition = multiexplode($delimiters, $data);
 
         foreach($arrCondition as $condition) {
-            $val = trim(strtolower($condition));
-            if (is_numeric(substr($condition, 0, 1)) || strlen($condition) < 3) {
+            $val = trim(trim(trim(strtolower($condition)), "-"));
+            if (is_numeric(substr($val, 0, 1)) || strlen($val) < 3) {
                 continue;
             }
             if (isset($stopKeywords[$val])) {
@@ -174,18 +174,12 @@
         //remove ""
         $newData = str_replace('"', '', $val);
         // remove first -
-        if (substr($newData, 0, 1) == "-") {
-            $newData = trim(substr($newData, 1));
-        }
+        $newData = trim($newData, "-");
         //remove ''
-        if (substr($newData, 0, 1) == "'" && substr($newData, -1) == "'") {
-            $newData = trim(substr($newData, 1, -1));
-        }
-        //remove last (xxx)
-        if (substr($newData, -1) == ")") {
-            $newData = trim(substr($newData, 0, strpos($newData, "(")));
-        }
-        
+        $newData = trim($newData, "''");
+        //remove last ()
+        $newData = trim(trim($newData, "("), ")");
+
         $newData = trim(strtolower(str_replace("'", "\'", str_replace("\\", "\\\\", $newData))));
         
         if (strlen($newData) < 1) {
@@ -200,7 +194,7 @@
         global $drugs;
         global $conn;
         saveEachData($conditions, "conditions", "condition_name");
-        //saveEachData($drugs, "drugs", "drug_name");
+        saveEachData($drugs, "drugs", "drug_name");
     }
 
     function saveEachData($data, $table, $columnName) {

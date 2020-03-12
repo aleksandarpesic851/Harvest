@@ -22,6 +22,5 @@
     }
     
     mysqli_close($conn);
-var_dump($arrData);
     echo json_encode($arrData);
 ?>
