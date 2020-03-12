@@ -98,10 +98,10 @@
 
             while($row = $result->fetch_assoc()) {
                 processConditions($row["conditions"], $row["nct_id"]);
-                //processDrugs($row["interventions"], $row["nct_id"]);
+                processDrugs($row["interventions"], $row["nct_id"]);
             }
             saveStudyCondition();
-            //saveStudyDrug();
+            saveStudyDrug();
             
             $nCnt++;
             $stmt->close();

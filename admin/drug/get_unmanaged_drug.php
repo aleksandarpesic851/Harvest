@@ -2,7 +2,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
 
-    $pageNum = isset($_POST["page"]) ? $_POST["page"] - 1 : 1;
+    $pageNum = isset($_POST["page"]) ? $_POST["page"] - 1 : 0;
     $searchKey = isset($_POST["search"]) ? $_POST["search"] : "";
     $drugCnt = isset($_POST["cnt"]) ? $_POST["cnt"] : 100;
     $arrData = array();
@@ -22,6 +22,6 @@
     }
     
     mysqli_close($conn);
-
+var_dump($arrData);
     echo json_encode($arrData);
 ?>
