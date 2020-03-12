@@ -13,6 +13,7 @@
 
     require_once $rootPath . "/db_connect.php";
     require_once $rootPath . "/enable_error_report.php";
+    require_once $rootPath . "/admin/condition/stop_keywords.php";
 
     $log = "\r\n-----------------------Extracting Data from scraped Studies-----------";
     logOrPrintTerms($log);
@@ -30,6 +31,12 @@
         $log = "\r\n Error in mysql query: " . mysqli_error($conn);
         logOrPrintTerms($log);
     }
+    
+    if (!mysqli_commit($conn)) {
+        $log = "Commit transaction failed";
+        logOrPrintTerms($log);
+    }
+
     // Remove all data in study_id_condition table
     $query = "TRUNCATE `study_id_drugs`";
     if (!mysqli_query($conn, $query)) {
@@ -91,10 +98,10 @@
 
             while($row = $result->fetch_assoc()) {
                 processConditions($row["conditions"], $row["nct_id"]);
-                processDrugs($row["interventions"], $row["nct_id"]);
+                //processDrugs($row["interventions"], $row["nct_id"]);
             }
             saveStudyCondition();
-            saveStudyDrug();
+            //saveStudyDrug();
             
             $nCnt++;
             $stmt->close();
@@ -109,19 +116,32 @@
     function processConditions($data, $id) {
         global $conditions;
         global $tmpConditions;
+        global $stopKeywords;
 
         if (!isset($data) || strlen($data) < 1) {
             return;
         }
-        $arrCondition = explode("|", $data);
+
+        $delimiters = array("~", "`", ";", "；" , ",", ".", "|", ":", " ", "/", "\\", "、", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "=", "_", "+", "[", "]", "{", "}", ";", "'", '"', "?", ">", "<", "／", "，");
+        $arrCondition = multiexplode($delimiters, $data);
 
         foreach($arrCondition as $condition) {
-            $val =  getTermValue($condition);
-            if (isset($val)) {
-                pushData($val);
-                array_push($tmpConditions, [ "val" => $val, "id" => $id ]);
+            $val = trim(strtolower($condition));
+            if (is_numeric(substr($condition, 0, 1)) || strlen($condition) < 3) {
+                continue;
             }
+            if (isset($stopKeywords[$val])) {
+                continue;
+            }
+            pushData($val);
+            array_push($tmpConditions, [ "val" => $val, "id" => $id ]);
         }
+    }
+
+    function multiexplode ($delimiters,$string) {
+        $ready = str_replace($delimiters, $delimiters[0], $string);
+        $launch = explode($delimiters[0], $ready);
+        return  $launch;
     }
 
     function processDrugs($data, $id) {
@@ -180,7 +200,7 @@
         global $drugs;
         global $conn;
         saveEachData($conditions, "conditions", "condition_name");
-        saveEachData($drugs, "drugs", "drug_name");
+        //saveEachData($drugs, "drugs", "drug_name");
     }
 
     function saveEachData($data, $table, $columnName) {

@@ -2,7 +2,8 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/generate_query_condition.php";
-
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/modifier/read_modifiers.php";
+    
     if (!isset($_POST) || !isset($_POST["conditions"])) {
         echo "Invalid Parameters";
         exit;
@@ -245,12 +246,7 @@
             $filteredIds[$row["nct_id"]] = '';
         }
     }
-    ///////////////////////////////////////// Read All Modifiers/////////////////////////////
-    function readModifiers() {
-        $query = "SELECT * FROM modifiers WHERE `modifier` != 'NONE'";
-        return mysqlReadAll($query);
-    }
-  
+    
     function calculateCnts() {
         global $conditions;
         global $modifiers;
