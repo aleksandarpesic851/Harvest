@@ -145,6 +145,13 @@ function initChart() {
             legend: {
                 display: false,
             },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
             responsiveAnimationDuration: 200,
             plugins: {
                 zoom: {
