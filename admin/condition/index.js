@@ -2,6 +2,7 @@ ej.base.enableRipple(true);
 var conditionCnt = 100;
 var managedConditions = [];
 var draggedTreeId = -1;
+var selectedModifier = -1;
 //define the array of JSON
 var org_data = [
     {
@@ -60,13 +61,41 @@ $(function() {
     loadManagedConditions();
     hideWaiting();
 //    createTree("Condtion1", org_data, 1);
+    loadModifier();
 });
 
+function loadModifier() {
+    selectedModifier = -1;
+    $.ajax({
+        type: "POST",
+        url: "/admin/modifier/read_modifiers.php",
+        data: {modifier_table: true},
+        success: function(response) {
+            $("#table-modifier tbody").empty().append(response);
+            initModifierTable();
+        }
+    });
+}
+
+function initModifierTable() {
+    $('#table-modifier tbody tr').on('click', function(event) {
+        $(this).addClass('selected').siblings().removeClass('selected');
+        selectedModifier = $(this).prop("id");
+        $("#input-modifier").val($(this).children()[1].innerHTML);
+      });
+}
 function deleteNode() {
 	let selectedNodes = treeViewInstances[0].selectedNodes;
 	treeViewInstances[0].removeNodes(selectedNodes);
 	
-	// Call remove api
+    // Call remove api
+    $.ajax({
+        type: "POST",
+        url: "update_condition.php",
+        data: {currentId: selectedNodes[0], action: "DELETE"},
+        success: function(response) {
+        }
+    });
 }
 
 function CreateManagedConditionTrees() {
@@ -380,4 +409,73 @@ function hideWaiting() {
 
 function showWaiting() {
     $("#waiting").show();
+}
+
+function addModifier() {
+    let modifier = $("#input-modifier").val();
+    if (!modifier) {
+        alert("Please type modifier!");
+        $("#input-modifier").focus();
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/admin/modifier/update_modifier.php",
+        data: {modifier , action: "ADD"},
+        success: function(response) {
+            if (response == "ok") {
+                alert("Added new modifier successfully.");
+                loadModifier();
+            } else if(response == "exist") {
+                alert("There exists same modifier already.");
+            } else {
+                console.log("Error in add modifier" + response);
+            }
+        }
+    });
+}
+
+function updateModifier() {
+    if (!selectedModifier || selectedModifier < 1) {
+        alert("Please select modifier to update!");
+        return;
+    }
+    let modifier = $("#input-modifier").val();
+    if (!modifier) {
+        alert("Please type modifier!");
+        $("#input-modifier").focus();
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/admin/modifier/update_modifier.php",
+        data: {currentId: selectedModifier, modifier_name: modifier, action: "UPDATE"},
+        success: function(response) {
+            if (response == "ok") {
+                loadModifier();
+            } else {
+                console.log("Error in update modifier" + response);
+            }
+        }
+    });
+}
+
+function deleteModifier() {
+    if (!selectedModifier || selectedModifier < 1) {
+        alert("Please select modifier to delete!");
+        return;
+    }
+    
+    $.ajax({
+        type: "POST",
+        url: "/admin/modifier/update_modifier.php",
+        data: {currentId: selectedModifier, action: "DELETE"},
+        success: function(response) {
+            if (response == "ok") {
+                loadModifier();
+            } else {
+                console.log("Error in delete modifier" + response);
+            }
+        }
+    });
 }

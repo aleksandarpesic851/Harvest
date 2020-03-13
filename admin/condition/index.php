@@ -24,11 +24,11 @@
 			}
 			.big-box {
 				overflow: auto;
-				height: calc(100vh - 250px);
+				height: calc(100vh - 230px);
 			}
 			.small-box {
 				overflow: auto;
-				height: calc(100vh - 300px);
+				height: calc(100vh - 400px);
 			}
 			.right-box {
 				box-shadow: 1px 1px 3px rgba(0,0,0,0.1), -1px -1px 3px rgba(0,0,0,0.1);
@@ -88,7 +88,18 @@
 					transform: rotate(360deg);
 				}
 			}
-
+			.container {
+				width: 95%;
+				max-width: 95%;
+				margin: auto;
+			}
+			tr.selected {
+				background-color: #007bff !important;
+				color: white;
+			}
+			#table-modifier tbody tr {
+				cursor: pointer;
+			}
         </style>
 	</head>
 	
@@ -97,6 +108,7 @@
 			<div class="lds-dual-ring"></div>
 		</div>
 		<div class="container">
+			<!-- Title -->
 			<h4 class="title">Manage Conditions Hierachy</h4>
 			<div class="row">
 				<div class="ml-auto padding-5">
@@ -106,8 +118,40 @@
 				</div>
 			</div>
 
+			<!-- Contents -->
 			<div class="row">
-				<div class="col-6 col-md-5 col-lg-4 box">
+				<!-- Modifiers -->
+				<div class="col-4 col-lg-3 box p-3">
+					<h5 class="tree-title">Modifiers</h5>
+					<div class="row" style="margin: 1.5rem 0">
+						<div class="col">
+							<input class="form-control" id="input-modifier">
+						</div>
+						<div class="ml-auto">
+							<button class="btn btn-primary" title="Add New Modifier" onclick="addModifier()">
+								<i class="fa fa-plus" aria-hidden="true"></i>
+							</button>
+							<button class="btn btn-info" title="Update Selected Modifier" onclick="updateModifier()">
+								<i class="fa fa-edit" aria-hidden="true"></i>
+							</button>
+							<button class="btn btn-danger" title="Delete Selected Modifier" onclick="deleteModifier()">
+								<i class="fa fa-trash" aria-hidden="true"></i>
+							</button>
+						</div>
+					</div>
+					<div class="big-box" style="overflow: auto">
+						<table class="table table-striped table-hover table-bordered dt-responsive nowrap" id="table-modifier">
+							<thead>
+								<th>No</th>
+								<th>Modifier</th>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- Unmanaged Conditions -->
+				<div class="col-4 col-lg-3 box">
 					<h5 class="tree-title">All Condtions</h5>
 					<div class="row padding-5">
 						<div class="col-7 offset-1" style="padding: 0">
@@ -129,7 +173,8 @@
 						</button>
 					</div>
 				</div>
-				<div class="col-6 col-md-7 col-lg-8">
+				<!-- Condition Hierarchy -->
+				<div class="col-4 col-lg-6">
 					<div class="row right-box" id="managed-trees">
 					</div>
 				</div>

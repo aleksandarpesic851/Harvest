@@ -81,6 +81,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
             $query = "UPDATE `conditions` SET `condition_name` = '$newText' WHERE `id` = '$condition_id'";
             mysqli_query($conn, $query);
         break;
+
+        case "DELETE":
+            $condition_id = $_POST["currentId"];
+            $query = "UPDATE `conditions` SET `is_active` = 0 WHERE `id` = '$condition_id'";
+            mysqli_query($conn, $query);
+        break;
     }
 
     mysqli_close($conn);

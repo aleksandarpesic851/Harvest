@@ -7,9 +7,9 @@
     $searchKey = isset($_POST["search"]) ? $_POST["search"] : "";
     $conditionCnt = isset($_POST["cnt"]) ? $_POST["cnt"] : 100;
     $arrData = array();
-    $modifiers = readModifierNamesAsKey();
+    $modifiers = readModifierNames();
 
-    $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `synonym` FROM conditions WHERE `condition_name` like '%$searchKey%' ORDER BY `condition_name` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
+    $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `synonym` FROM conditions WHERE `is_active` = 1 AND  `condition_name` like '%$searchKey%' AND `condition_name` NOT IN ('" . implode("', '", $modifiers) . "') ORDER BY `condition_name` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
     
     $stmt = $conn->prepare($query);
 
@@ -18,9 +18,6 @@
         $result = $stmt->get_result();
         if (mysqli_num_rows($result) > 0) {
             while($row = $result->fetch_assoc()) {
-                // If current condition is in modifier list, not show it.
-                if (isset($modifiers[$row["nodeText"]]))
-                    continue;
                 array_push($arrData, $row);
             }
         }
