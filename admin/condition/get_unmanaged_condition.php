@@ -18,6 +18,7 @@
         $result = $stmt->get_result();
         if (mysqli_num_rows($result) > 0) {
             while($row = $result->fetch_assoc()) {
+                // If current condition is in modifier list, not show it.
                 if (isset($modifiers[$row["nodeText"]]))
                     continue;
                 array_push($arrData, $row);

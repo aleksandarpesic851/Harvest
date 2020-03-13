@@ -1,5 +1,5 @@
 <?php
-    // Manage Terms for 
+    // Manage Terms for
     $rootPath = $_SERVER['DOCUMENT_ROOT'];
     $runningCLI = false;
     if (!isset($rootPath) || strlen($rootPath) < 1) {
@@ -22,7 +22,7 @@
     $drugs = array();
 
     $start = time();
-    
+
     mysqli_autocommit($conn,FALSE);
 
     // Remove all data in study_id_condition table
@@ -31,7 +31,7 @@
         $log = "\r\n Error in mysql query: " . mysqli_error($conn);
         logOrPrintTerms($log);
     }
-    
+
     if (!mysqli_commit($conn)) {
         $log = "Commit transaction failed";
         logOrPrintTerms($log);
@@ -48,14 +48,14 @@
         $log = "Commit transaction failed";
         logOrPrintTerms($log);
     }
-    
+
     processData();
     saveTerms();
 
     $end = time();
-    $log = "\r\nExtracting was completed.\r\n" . 
+    $log = "\r\nExtracting was completed.\r\n" .
         "\r\nConditions: " . count($conditions) .
-        "\r\nDrugs: " . count($drugs) . 
+        "\r\nDrugs: " . count($drugs) .
         "\r\n\r\nTotal Elapsed Time in extracting terms" . time_diff_string($end-$start);
         logOrPrintTerms($log);
 
@@ -75,7 +75,7 @@
         $nCnt = 0;
         $nRows = 1000;
         $query = "SELECT `nct_id`, `conditions`, `interventions` FROM studies ORDER BY `nct_id` LIMIT ? OFFSET ?;";
-        
+
         while(true) {
             $offset = $nCnt*$nRows;
             $stmt = $conn->prepare($query);
@@ -88,7 +88,7 @@
             $stmt->execute();
 
             $result = $stmt->get_result();
-            
+
             if (mysqli_num_rows($result) < 1) {
                 $stmt->close();
                 break;
@@ -102,12 +102,12 @@
             }
             saveStudyCondition();
             saveStudyDrug();
-            
+
             $nCnt++;
             $stmt->close();
-            
+
             $log = "\r\n Now Extracted from " . $nCnt*$nRows . " data" .
-                "\r\n The number of extracted diseases: " . count($conditions) . 
+                "\r\n The number of extracted diseases: " . count($conditions) .
                 "\r\n The number of extracted drugs: " . count($drugs) . "</br>";
             logOrPrintTerms($log);
         }
@@ -181,7 +181,7 @@
         $newData = trim(trim($newData, "("), ")");
 
         $newData = trim(strtolower(str_replace("'", "\'", str_replace("\\", "\\\\", $newData))));
-        
+
         if (strlen($newData) < 1) {
             return;
         }
@@ -199,13 +199,13 @@
 
     function saveEachData($data, $table, $columnName) {
         global $conn;
-        
+
         // generate value array from key=>val array
         $valData = array();
         foreach($data as $key => $val) {
             array_push($valData, $key);
         }
-        
+
         // Remove data which are in db already
         $nCnt = 0;
         $nUnit = 1000;
@@ -219,7 +219,7 @@
                 while($row = mysqli_fetch_assoc($result)) {
                     unset($data[$row[$columnName]]);
                 }
-                mysqli_free_result($result);    
+                mysqli_free_result($result);
             }
             $nCnt++;
             $subData = array_slice($valData, $nUnit * $nCnt, $nUnit);
@@ -263,7 +263,7 @@
         foreach($bit as $k => $v)
             if($v > 0)
                 $ret[] = $v . $k;
-            
+
         return join(' ', $ret);
     }
 
@@ -277,7 +277,7 @@
                 return;
             }
         }
-        
+
         $val = $newData . "s";
         if (isset($conditions[$val])) {
             return;
@@ -301,8 +301,8 @@
 
         $query = "INSERT INTO `study_id_conditions` (`nct_id`, `condition`) VALUES $queryVals";
         if (!mysqli_query($conn, $query)) {
-            
-            $log = "\r\n Query: " . $query . 
+
+            $log = "\r\n Query: " . $query .
                 "\r\n Error in mysql query: " . mysqli_error($conn);
             logOrPrintTerms($log);
 
@@ -317,7 +317,7 @@
     function saveStudyDrug() {
         global $conn;
         global $tmpDrugs;
-        
+
         $queryVals = "";
         foreach($tmpDrugs as $drug) {
             if (strlen($queryVals) > 0) {
