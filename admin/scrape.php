@@ -96,6 +96,10 @@ fwrite($logFile, date("Y-m-d h:i:sa"));
     $ignoreFields = ["documents", "study_documents", "url", "other_ids", "funded_bys", "acronym", "exp_acc_types"];
     mysqli_autocommit($conn,FALSE);
     while (true) {
+        // The maximum updates number is less than 3000, so restricts as 3000 as maximum
+        if ($down_chunk > 3) {
+        break;
+        }
         $log = "\r\n Working on " . ($down_chunk-1) * 1000 . " - " . $down_chunk * 1000 .  " data:";
         if ($logMethodFile) {
             fwrite($logFile, $log);
