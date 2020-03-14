@@ -47,12 +47,14 @@
                 </div>
                 <div class="col-4">
                     <h5> Diseases Hierarchy Management</h5>
-                    There are almost 80, 000 Diseases in extracted data.
+                    There are almost 30, 000 Diseases in extracted data.
                     <br>
                     In order to manage disease effectively, you can create diseases hierarchy by clicking bellow button.
-                    <br><br>
+                    <br>
+                    Here you can manage modifiers too.
+                    <br>
                     <div class="row">
-                        <a class="ml-auto mr-auto btn btn-primary" href="condition">Disease Hierarchy</a>
+                        <a class="ml-auto mr-auto btn btn-primary" href="condition">Disease Modifier & Hierarchy</a>
                     </div>
                 </div>
             </div>

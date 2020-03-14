@@ -23,31 +23,10 @@
 
     $start = time();
 
-    mysqli_autocommit($conn,FALSE);
-
+    mysqli_autocommit($conn,false);
     // Remove all data in study_id_condition table
-    $query = "TRUNCATE `study_id_conditions`";
-    if (!mysqli_query($conn, $query)) {
-        $log = "\r\n Error in mysql query: " . mysqli_error($conn);
-        logOrPrintTerms($log);
-    }
-
-    if (!mysqli_commit($conn)) {
-        $log = "Commit transaction failed";
-        logOrPrintTerms($log);
-    }
-
-    // Remove all data in study_id_condition table
-    $query = "TRUNCATE `study_id_drugs`";
-    if (!mysqli_query($conn, $query)) {
-        $log = "\r\n Error in mysql query: " . mysqli_error($conn);
-        logOrPrintTerms($log);
-    }
-
-    if (!mysqli_commit($conn)) {
-        $log = "Commit transaction failed";
-        logOrPrintTerms($log);
-    }
+    truncateTable("study_id_conditions");
+    truncateTable("study_id_drugs");
 
     processData();
     saveTerms();
@@ -63,9 +42,25 @@
     if ($logMethodFile) {
         fclose($termsLogFile);
     }
+
     ///////////////////////////////////////////// Functions ///////////////////////////////////////////////////
     $tmpConditions = array();
     $tmpDrugs = array();
+
+    function truncateTable($table)
+    {
+        global $conn;
+        $query = "TRUNCATE TABLE `$table`;";
+        echo $query;
+        if (!mysqli_query($conn, $query)) {
+            $log = "\r\n Error in mysql query: " . mysqli_error($conn);
+            logOrPrintTerms($log);
+        }
+        if (!mysqli_commit($conn)) {
+            $log = "Commit transaction failed";
+            logOrPrintTerms($log);
+        }
+    }
 
     function processData() {
         global $conn;
@@ -122,6 +117,7 @@
             return;
         }
 
+        // Generate main conditions except stop keywords and special caracters.
         $delimiters = array("~", "`", ";", "；" , ",", ".", "|", ":", " ", "/", "\\", "、", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "=", "_", "+", "[", "]", "{", "}", ";", "'", '"', "?", ">", "<", "／", "，");
         $arrCondition = multiexplode($delimiters, $data);
 
@@ -134,6 +130,15 @@
                 continue;
             }
             pushData($val);
+        }
+
+        // Get original condition array. This is used for study_id_condition.
+        $arrCondition = explode("|", $data);
+        foreach($arrCondition as $condition) {
+            $val = getTermValue($condition);
+            if (strlen($val) < 3) {
+                continue;
+            }
             array_push($tmpConditions, [ "val" => $val, "id" => $id ]);
         }
     }

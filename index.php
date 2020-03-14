@@ -1,5 +1,5 @@
 <?php
-    //require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/check_update.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/check_update.php";
 ?>
 
 <html>
