@@ -463,6 +463,8 @@ function updateModifier() {
         success: function(response) {
             if (response == "ok") {
                 loadModifier();
+            } else if(response == "exist") {
+                alert("There exists same modifier already.");
             } else {
                 console.log("Error in update modifier" + response);
             }
