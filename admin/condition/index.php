@@ -26,6 +26,11 @@
 				overflow: auto;
 				height: calc(100vh - 230px);
 			}
+			.modifier-table {
+				overflow: auto;
+				height: calc(100vh - 270px);
+				border: 1px solid #eee;
+			}
 			.small-box {
 				overflow: auto;
 				height: calc(100vh - 400px);
@@ -124,6 +129,15 @@
 				<div class="col-4 col-lg-3 box p-3">
 					<h5 class="tree-title">Modifiers</h5>
 					<div class="row" style="margin: 1.5rem 0">
+						<div class="p-1">
+							<strong style="font-size: 1.25rem">Categories :</strong>
+						</div>
+						<div class="col">
+							<select class="form-control" style="font-size: 1.25rem" id="modifier-category" onchange="loadModifier()">
+							</select>
+						</div>
+					</div>
+					<div class="row" style="margin: 1.5rem 0">
 						<div class="col">
 							<input class="form-control" id="input-modifier">
 						</div>
@@ -139,7 +153,7 @@
 							</button>
 						</div>
 					</div>
-					<div class="big-box" style="overflow: auto">
+					<div class="modifier-table" style="overflow: auto">
 						<table class="table table-striped table-hover table-bordered dt-responsive nowrap" id="table-modifier">
 							<thead>
 								<th>No</th>

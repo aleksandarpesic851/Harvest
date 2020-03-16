@@ -11,45 +11,45 @@
     $action = $_POST["action"];
     switch($action) {
         case "ADD":
-            echo addModifier($_POST["modifier"]);
+            echo addModifier($_POST["modifier"], $_POST["category"]);
         break;
         case "UPDATE":
-            echo updateModifier($_POST["currentId"], $_POST["modifier_name"]);
+            echo updateModifier($_POST["currentId"], $_POST["modifier_name"], $_POST["category"]);
         break;
         case "DELETE":
-            echo deleteModifier($_POST["currentId"]);
+            echo deleteModifier($_POST["currentId"], $_POST["category"]);
         break;
     }
 
-    function addModifier($modifier) {
+    function addModifier($modifier, $category) {
         global $conn;
 
-        $modifiers = readModifierNamesAsKey();
+        $modifiers = readModifierNamesAsKey($category);
         if (isset($modifiers[strtolower($modifier)]))
         {
             return "exist";
         }
         $modifier = strtolower($modifier);
-        $query = "INSERT INTO `modifiers` (`modifier`) VALUES ('$modifier')";
+        $query = "INSERT INTO `modifiers` (`modifier`, `category`) VALUES ('$modifier', $category)";
         mysqli_query($conn, $query);
         mysqli_close($conn);
 
         return "ok";
     }
 
-    function updateModifier($id, $modifier) {
+    function updateModifier($id, $modifier, $category) {
         global $conn;
 
-        $query = "UPDATE `modifiers` SET `modifier` = '$modifier' WHERE `id` = '$id'";
+        $query = "UPDATE `modifiers` SET `modifier` = '$modifier' WHERE `id` = '$id' AND `category` = $category";
         mysqli_query($conn, $query);
         mysqli_close($conn);
         return "ok";
     }
 
-    function deleteModifier($id) {
+    function deleteModifier($id, $category) {
         global $conn;
 
-        $query = "DELETE FROM `modifiers` WHERE `id` = '$id'";
+        $query = "DELETE FROM `modifiers` WHERE `id` = '$id' AND `category` = $category";
         mysqli_query($conn, $query);
         mysqli_close($conn);
         return "ok";

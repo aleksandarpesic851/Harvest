@@ -34,6 +34,18 @@
     
 
     switch($action) {
+        case "ReadAll":
+            $query = "SELECT * FROM condition_categories";
+            $result = mysqli_query($conn, $query);
+            if (mysqli_num_rows($result) < 1) {
+                return;
+            }
+            // Fetch all
+            $arrData = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            // Free result set
+            mysqli_free_result($result);
+            echo json_encode($arrData);
+        break;
         case "Create":
             $newCategory = $_POST["category"];
             if (checkExist($newCategory)) {
@@ -93,19 +105,7 @@
             return true;
         }
         mysqli_free_result($result);
-        // //if same condition is used in other category, return true
-        // $sql = "SELECT * FROM `conditions` WHERE `condition_name` = '$category'";
-        // $result = mysqli_query($conn, $sql);
-        // if (mysqli_num_rows($result) > 0) {
-        //     $row = mysqli_fetch_assoc($result);
-        //     mysqli_free_result($result);
-        //     if ($row["categoryid"] > 0) {
-        //         return true;
-        //     }
-        // }
-
         return false;
-
     }
 
 ?>

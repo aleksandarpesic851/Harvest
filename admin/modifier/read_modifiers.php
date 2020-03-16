@@ -3,7 +3,8 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
     
     if (isset($_POST) && isset($_POST["modifier_table"])) {
-        $modifiers = readModifiers();
+        $category = isset($_POST["category"]) ? $_POST["category"] : 0;
+        $modifiers = readModifiers($category, false);
         $nCnt = 0;
         foreach($modifiers as $modifier)
         {
@@ -13,10 +14,17 @@
     }
 
     ///////////////////////////////////////// Read All Modifiers/////////////////////////////
-    function readModifiers() {
+    // category: category id.
+    // all:      get all modifier or get only speicial modifier for category
+    function readModifiers($category = 0, $all = true) {
         global $conn;
 
-        $query = "SELECT * FROM modifiers WHERE `modifier` != 'NONE'";
+        if ($all) {
+            $query = "SELECT * FROM modifiers WHERE `modifier` != 'NONE' AND ( `category` = 0 OR `category` = $category)";
+        } else {
+            $query = "SELECT * FROM modifiers WHERE `modifier` != 'NONE' AND `category` = $category";
+        }
+
         $result = mysqli_query($conn, $query);
         if (mysqli_num_rows($result) < 1) {
             return array();
@@ -28,8 +36,8 @@
         return isset($data) ? $data : array();
     }
 
-    function readModifierNamesAsKey() {
-        $modifiers = readModifiers();
+    function readModifierNamesAsKey($category = 0, $all = true) {
+        $modifiers = readModifiers($category, $all);
         $arrModifier = array();
     
         foreach($modifiers as $modifier) {
@@ -38,8 +46,8 @@
         return $arrModifier;
     }
 
-    function readModifierNames() {
-        $modifiers = readModifiers();
+    function readModifierNames($category = 0, $all = true) {
+        $modifiers = readModifiers($category, $all);
         $arrModifier = array();
     
         foreach($modifiers as $modifier) {

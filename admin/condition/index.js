@@ -61,15 +61,22 @@ $(function() {
     loadManagedConditions();
     hideWaiting();
 //    createTree("Condtion1", org_data, 1);
+    loadModifierCategory();
     loadModifier();
 });
 
 function loadModifier() {
+    let selectedCategory = $("#modifier-category").children("option:selected").val();
+
+    if (!selectedCategory) {
+        selectedCategory = 0;
+    }
+
     selectedModifier = -1;
     $.ajax({
         type: "POST",
         url: "/admin/modifier/read_modifiers.php",
-        data: {modifier_table: true},
+        data: {modifier_table: true, category: selectedCategory},
         success: function(response) {
             $("#table-modifier tbody").empty().append(response);
             initModifierTable();
@@ -418,10 +425,11 @@ function addModifier() {
         $("#input-modifier").focus();
         return;
     }
+    let selectedCategory = $("#modifier-category").children("option:selected").val();
     $.ajax({
         type: "POST",
         url: "/admin/modifier/update_modifier.php",
-        data: {modifier , action: "ADD"},
+        data: {modifier , action: "ADD", category: selectedCategory},
         success: function(response) {
             if (response == "ok") {
                 alert("Added new modifier successfully.");
@@ -446,10 +454,12 @@ function updateModifier() {
         $("#input-modifier").focus();
         return;
     }
+    let selectedCategory = $("#modifier-category").children("option:selected").val();
+
     $.ajax({
         type: "POST",
         url: "/admin/modifier/update_modifier.php",
-        data: {currentId: selectedModifier, modifier_name: modifier, action: "UPDATE"},
+        data: {currentId: selectedModifier, modifier_name: modifier, action: "UPDATE", category: selectedCategory},
         success: function(response) {
             if (response == "ok") {
                 loadModifier();
@@ -465,11 +475,12 @@ function deleteModifier() {
         alert("Please select modifier to delete!");
         return;
     }
+    let selectedCategory = $("#modifier-category").children("option:selected").val();
     
     $.ajax({
         type: "POST",
         url: "/admin/modifier/update_modifier.php",
-        data: {currentId: selectedModifier, action: "DELETE"},
+        data: {currentId: selectedModifier, action: "DELETE", category: selectedCategory},
         success: function(response) {
             if (response == "ok") {
                 loadModifier();
@@ -478,4 +489,28 @@ function deleteModifier() {
             }
         }
     });
+}
+
+function loadModifierCategory() {
+    let selectedCategory = $("#modifier-category").val();
+    $("#modifier-category").empty();
+    let tmpHtml = '<option value="0">General</option>';
+    $.ajax({
+        type: "POST",
+        url: "manage_category.php",
+        data: {action: "ReadAll"},
+        success: function(response) {
+            if (!response) {
+                return;
+            }
+            response = JSON.parse(response);
+            response.forEach(function(category, idx) {
+                tmpHtml += '<option value="' + category.id + '">' + category.category + '</option>';
+            });
+            $("#modifier-category").html(tmpHtml);
+            if (selectedCategory) {
+                $("#modifier-category").val(selectedCategory);
+            }
+        }
+      });
 }
