@@ -47,10 +47,10 @@
             $totalData = $conditions;
             changeSpecialCaracters();
             mysqlReconnect();
-            calculateStudyIds($modifier["modifier"]);
+            calculateStudyIds($modifier["modifier"], $modifier["category"]);
             mergeIds();
             mysqlReconnect();
-            saveData($modifier["id"]);
+            saveData($modifier["id"], $modifier["category"]);
         }
     }
 
@@ -96,16 +96,23 @@
 
     //Read All conditions in hierarchy
     function readAllHierarchy() {
-        $query = "SELECT `id`, `condition_name`, `synonym`, `parent_id`, `condition_id` FROM condition_hierarchy_view";
+        $query = "SELECT `id`, `condition_name`, `synonym`, `parent_id`, `condition_id`, `category_id` FROM condition_hierarchy_view";
         return mysqlReadAll($query);
     }
 
     // Calculate study ids related with condition name
-    function calculateStudyIds($modifier) {
+    function calculateStudyIds($modifier, $modifier_category_id) {
         global $totalData;
         global $log;
         $nCnt = 0;
         foreach($totalData as $key=>$condition) {
+            
+            $totalData[$key]["study_ids"] = array();
+
+            if ($modifier_category_id != 0 && $condition["category_id"] != $modifier_category_id) {
+                continue;
+            }
+
             $start = time();
             $query = "SELECT `nct_id` FROM study_id_conditions WHERE ( `condition` LIKE '%" . $condition["condition_name"] . "%' ";
             if (isset($condition["synonym"]) && strlen($condition["synonym"]) > 0) {
@@ -118,7 +125,6 @@
             $query .= " GROUP BY `nct_id`";
 
             $nctIds = mysqlReadAll($query);
-            $totalData[$key]["study_ids"] = array();
             
             foreach($nctIds as $id) {
                 array_push($totalData[$key]["study_ids"], $id["nct_id"]);
@@ -228,11 +234,14 @@
         return join(' ', $ret);
     }
     
-    function saveData($modifierID) {
+    function saveData($modifierID, $modifier_category_id) {
         global $totalData;
         global $conn;
 
         foreach($totalData as $data) {
+            if ($modifier_category_id != 0 && $data["category_id"] != $modifier_category_id) {
+                continue;
+            }
             $query = "SELECT `modifier_id` FROM `condition_hierarchy_modifier_stastics` WHERE `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
             $nCnt = mysqlRowCnt($query);
             if ($nCnt < 1) {
