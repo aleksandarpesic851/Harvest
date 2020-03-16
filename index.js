@@ -4,7 +4,7 @@ let conditionSearchTree;            //Condition tree on the left of graph
 let drugTree;                       //Drug tree in search dialog
 let drugSearchTree;                 //Drug tree on the left of graph
 let modifierTree;                   //Modifier tree on the left of graph
-let modifiers;                      // modifier array.
+let modifiers = [];                      // modifier array.
 let searchItems;                    // all Search items of search dialog
 let loadedCnt = 0;                  // the number of loaded data , 1 - graph data, 2 - table data
 let graphSrcData;                   // graph origin data, which is filtered by search.
@@ -445,29 +445,29 @@ function drawGraph(nodes, checkedModifiers) {
     nodes.forEach(node => {
         // if modifier, extract all data for modifiers.
         let id = node.nodeId.substr(10);
-        if (isModifier) {
-            checkedModifiers.forEach( modifier=> {
-                let nCnt = graphSrcData[graphShowKey][id]["count"][modifier];
-                // if (nCnt > 0) {
-                    graphLabels.push(node.nodeText + " - " + modifier);
-                    graphDrawData.push(nCnt);
-                    graphDrawDetails.push({node: node, modifier: modifier, cnt: nCnt});
-                    backgroundColors.push(bgColor[chartCnt % 7]);
-                    borderColors.push(bdColor[chartCnt % 7]);
-                    chartCnt++;
-                // }
-            });
-        } else {    // else, extract all child node data
-            let nCnt = graphSrcData[graphShowKey][id]["count"]["All"];
+        // show all child node data
+        let nCnt = graphSrcData[graphShowKey][id]["count"]["All"];
             // if (nCnt > 0) {
-                graphLabels.push(node.nodeText);
-                graphDrawData.push(nCnt);
-                graphDrawDetails.push({node: node, cnt: nCnt});
-                backgroundColors.push(bgColor[chartCnt % 7]);
-                borderColors.push(bdColor[chartCnt % 7]);
-                chartCnt++;
+            graphLabels.push(node.nodeText);
+            graphDrawData.push(nCnt);
+            graphDrawDetails.push({node: node, cnt: nCnt});
+            backgroundColors.push(bgColor[chartCnt % 7]);
+            borderColors.push(bdColor[chartCnt % 7]);
+            chartCnt++;
             // }
-        }
+            if (isModifier) {
+                checkedModifiers.forEach( modifier=> {
+                    let nCnt = graphSrcData[graphShowKey][id]["count"][modifier];
+                    if (nCnt > 0) {
+                        graphLabels.push(modifier + " - " + node.nodeText);
+                        graphDrawData.push(nCnt);
+                        graphDrawDetails.push({node: node, modifier: modifier, cnt: nCnt});
+                        backgroundColors.push(bgColor[chartCnt % 7]);
+                        borderColors.push(bdColor[chartCnt % 7]);
+                        chartCnt++;
+                    }
+                });
+            }
     });
     chartGraph.data.labels = graphLabels;
     chartGraph.data.datasets[0].data = graphDrawData;
@@ -486,7 +486,7 @@ function initModifiers() {
                     let modifierTreeData = [];
                     let id = 0;
                     modifiers.forEach(modifier => {
-                        modifierTreeData.push({nodeId: "MODIFIERS-" + id, nodeText: modifier});
+                        modifierTreeData.push({nodeId: "MODIFIERS-" + id, nodeText: modifier["modifier"]});
                         id++;
                     });
                     modifierCheckedAuto = true;
