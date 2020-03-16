@@ -248,7 +248,8 @@ function nextPage() {
 function loadUnmanagedConditions() {
     let searchKey = $("#search").val();
     let pageNum = $("#page").val();
-    let data = {page: pageNum, cnt: conditionCnt, search: searchKey};
+    let selectedCategory = $("#modifier-category").children("option:selected").val();
+    let data = {page: pageNum, cnt: conditionCnt, search: searchKey, category: selectedCategory};
     $.ajax({
         type: "POST",
         url: "get_unmanaged_condition.php",

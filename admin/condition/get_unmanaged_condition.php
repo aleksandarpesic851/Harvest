@@ -7,7 +7,9 @@
     $searchKey = isset($_POST["search"]) ? $_POST["search"] : "";
     $conditionCnt = isset($_POST["cnt"]) ? $_POST["cnt"] : 100;
     $arrData = array();
-    $modifiers = readModifierNames();
+    $category = isset($_POST["category"]) ? $_POST["category"] : 0;
+
+    $modifiers = readModifierNames($category);
 
     $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `synonym` FROM conditions WHERE `is_active` = 1 AND  `condition_name` like '%$searchKey%' AND `condition_name` NOT IN ('" . implode("', '", $modifiers) . "') ORDER BY `condition_name` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
     

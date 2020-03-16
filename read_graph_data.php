@@ -38,7 +38,7 @@
 
     searchStudies();
     
-    $modifiers = readModifiers();
+    $modifiers = readAllModifiers();
     calculateCnts();
 
     $response = array();
