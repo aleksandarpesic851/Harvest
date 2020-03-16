@@ -44,7 +44,7 @@
             $arrData = mysqli_fetch_all($result, MYSQLI_ASSOC);
             // Free result set
             mysqli_free_result($result);
-            echo json_encode($arrData);
+            echo json_encode($arrData, JSON_INVALID_UTF8_IGNORE);
         break;
         case "Create":
             $newCategory = $_POST["category"];
@@ -80,7 +80,7 @@
             }
             
             $result = ["category" => $newCategoryId, "condition" => $conditionHierarchyID];
-            echo json_encode($result);
+            echo json_encode($result, JSON_INVALID_UTF8_IGNORE);
         break;
         case "Delete":
             $categoryID = $_POST["id"];

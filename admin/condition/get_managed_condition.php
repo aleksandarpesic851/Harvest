@@ -17,7 +17,7 @@
     }
     
     mysqli_close($conn);
-    echo json_encode($arrData);
+    echo json_encode($arrData, JSON_INVALID_UTF8_IGNORE);
 
     //Read all condition category
     function getCategories() {

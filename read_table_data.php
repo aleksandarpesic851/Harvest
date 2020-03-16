@@ -111,7 +111,7 @@
         "aaData" => $totalData
     );
 
-    echo json_encode($response);
+    echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
 
     // $dt->edit('nct_id', function ($data) {
     //     $nctPattern = "NCT00000000";

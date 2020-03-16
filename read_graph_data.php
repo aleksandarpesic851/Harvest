@@ -45,7 +45,7 @@
     $response["conditions"] = $conditions;
     $response["drugs"] = $drugs;
 
-    echo json_encode($response);
+    echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
 
 
 
