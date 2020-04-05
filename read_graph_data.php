@@ -30,6 +30,7 @@
     $studyIds = array();           // Merged (drug * condition) study Ids
     $studyIdVals = array(); // array of value as study id
     $filteredIds = array(); // array of key as filtered study id
+    $filteredIdVals = array();
 
     getAllStudyIds_Condition();
     getAllStudyIds_Drug();
@@ -44,6 +45,7 @@
     $response = array();
     $response["conditions"] = $conditions;
     $response["drugs"] = $drugs;
+    $response["totalIds"] = $filteredIdVals;
 
     echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
 
@@ -252,6 +254,11 @@
         global $modifiers;
         global $filteredIds;
         global $drugs;
+        global $filteredIdVals;
+         
+        foreach($filteredIds as $key=>$val) {
+            array_push($filteredIdVals, $key);
+        }
 
         // Condition
         foreach($conditions as $key => $condition) {
@@ -262,7 +269,7 @@
                 }
             }
             // $conditions[$key]["count"]["All"] = count($conditions[$key]["studyIds"]);
-            unset($conditions[$key]["studyIds"]);
+            $conditions[$key]["studyIds"] = array_intersect($conditions[$key]["studyIds"], $filteredIdVals);
             $conditions[$key]["count"]["All"] = $nCnt;
             foreach($modifiers as $modifier) {
                 $condition_studyIds = getStudyIds_Condition($key, $modifier["id"]);
@@ -284,7 +291,7 @@
                     $nCnt++;
                 }
             }
-            unset($drugs[$key]["studyIds"]);
+            $drugs[$key]["studyIds"] = array_intersect($drugs[$key]["studyIds"], $filteredIdVals);
             $drugs[$key]["count"]["All"] = $nCnt;
         }
         
