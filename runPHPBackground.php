@@ -13,5 +13,4 @@
             exec($cmd . " > /dev/null &");  
         }
     }
-
 ?>

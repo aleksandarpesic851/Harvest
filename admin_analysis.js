@@ -99,9 +99,6 @@ function initDatatable() {
                 ]
             }
         ],
-        drawCallback: function() {
-            hideWaiting();
-        },
         columns: [
             //{ data: "rank" },
             { data: "nct_id" },
@@ -146,9 +143,6 @@ function initDatatable() {
                 ]
             }
         ],
-        drawCallback: function() {
-            hideWaiting();
-        },
         columns: [
             //{ data: "rank" },
             { data: "nct_id" },
@@ -298,6 +292,7 @@ function initSearchDrugTree() {
 }
 
 function readGraphData() {
+
     // if condition & drug tree nodes are not loaded, don't search.
     if (loadedTreeCnt < 2) {
         return;
@@ -305,6 +300,8 @@ function readGraphData() {
     if (!searchItems) {
         readSearchItems();
     }
+    showWaiting();
+
     // Load search tree from drug tree
     drugCheckedAuto = true;
     drugSearchTree.fields.dataSource = searchItems["drugs"];
@@ -341,7 +338,6 @@ function readGraphData() {
 }
 
 function search() {
-    showWaiting();
     // Get search items
     readSearchItems();
     // Load Graph Data

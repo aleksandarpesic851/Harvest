@@ -226,14 +226,14 @@
             <br>
             <!-- Data table -->
             <div class="row">
-                <div class="col ml-auto">
-                    <button class="btn btn-primary" onclick="updateDataTables()">Update Tables</button>
+                <div class="col">
+                    <button class="btn btn-primary ml-auto" onclick="updateDataTables()">Update Tables</button>
                 </div>
             </div>
             <br>
             <div class="row box">
                 <div class="col-6">
-                    <h4 class="ml-auto mr-auto">Data in graph</h4>
+                    <h4 style="text-align: center">Data in graph</h4>
                     <br><br>
                     <div>
                         <table id="study-table-in" class="table table-striped table-bordered" style="width: 150%">
@@ -255,7 +255,7 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <h4 class="ml-auto mr-auto">Data out graph</h4>
+                    <h4 style="text-align: center">Data out graph</h4>
                     <br><br>
                     <div>
                         <table id="study-table-out" class="table table-striped table-bordered" style="width: 150%">
