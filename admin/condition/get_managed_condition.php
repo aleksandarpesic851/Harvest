@@ -40,7 +40,8 @@
         global $conn;
 
         // Get Category Root IDS
-        $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory`, `synonym` from condition_hierarchy_view WHERE `category_id` = $categoryID AND `parent_id` = 0 ";
+        // $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory`, `synonym` from condition_hierarchy_view WHERE `category_id` = $categoryID AND `parent_id` = 0 ";
+        $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory` from condition_hierarchy_view WHERE `category_id` = $categoryID AND `parent_id` = 0 ";
         $result = mysqli_query($conn, $query);
         
         if (mysqli_num_rows($result) < 1) {
@@ -61,7 +62,8 @@
     function getChildren($parentId) {
         global $conn;
         
-        $sql = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory`, `synonym` FROM `condition_hierarchy_view` WHERE `parent_id` = $parentId";
+        // $sql = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory`, `synonym` FROM `condition_hierarchy_view` WHERE `parent_id` = $parentId";
+        $sql = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `parent_id`, `category_id` AS `nodeCategory` FROM `condition_hierarchy_view` WHERE `parent_id` = $parentId";
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) < 1) {
             return array();

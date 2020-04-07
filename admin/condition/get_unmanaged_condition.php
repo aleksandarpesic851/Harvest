@@ -11,7 +11,8 @@
 
     $modifiers = readModifierNames($category);
 
-    $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `synonym` FROM conditions WHERE `is_active` = 1 AND  `condition_name` like '%$searchKey%' AND `condition_name` NOT IN ('" . implode("', '", $modifiers) . "') ORDER BY `condition_name` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
+    $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText` FROM conditions WHERE `is_active` = 1 AND  `condition_name` like '%$searchKey%' AND `condition_name` NOT IN ('" . implode("', '", $modifiers) . "') ORDER BY `condition_name` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
+    // $query = "SELECT `id` AS `nodeId`, `condition_name` AS `nodeText`, `synonym` FROM conditions WHERE `is_active` = 1 AND  `condition_name` like '%$searchKey%' AND `condition_name` NOT IN ('" . implode("', '", $modifiers) . "') ORDER BY `condition_name` LIMIT $conditionCnt OFFSET " . $conditionCnt * $pageNum;
     
     $stmt = $conn->prepare($query);
 

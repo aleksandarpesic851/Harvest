@@ -116,7 +116,10 @@
             $start = time();
             $query = "SELECT `nct_id` FROM study_id_conditions WHERE ( `condition` LIKE '%" . $condition["condition_name"] . "%' ";
             if (isset($condition["synonym"]) && strlen($condition["synonym"]) > 0) {
-                $query .= " OR  `condition` LIKE '%" . $condition["synonym"] . "%' ";
+                $synonyms = explode(",", $condition["synonym"]);
+                foreach($synonyms as $synonym) {
+                    $query .= " OR  `condition` LIKE '%" . trim($synonym) . "%' ";
+                }
             }
             $query .= ") ";
             if (strlen($modifier) > 0 && $modifier != "NONE") {
