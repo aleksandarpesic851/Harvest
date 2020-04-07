@@ -262,15 +262,7 @@
 
         // Condition
         foreach($conditions as $key => $condition) {
-            $nCnt = 0;
-            foreach($conditions[$key]["studyIds"] as $id) {
-                if ( isset($filteredIds[$id]) ) {
-                    $nCnt++;
-                }
-            }
-            // $conditions[$key]["count"]["All"] = count($conditions[$key]["studyIds"]);
-            $conditions[$key]["studyIds"] = arrayInerection($conditions[$key]["studyIds"], $filteredIdVals);
-            $conditions[$key]["count"]["All"] = $nCnt;
+            $conditions[$key]["count"]["All"] = count($conditions[$key]["studyIds"]);
             foreach($modifiers as $modifier) {
                 $condition_studyIds = getStudyIds_Condition($key, $modifier["id"]);
                 $nCnt = 0;
@@ -285,14 +277,8 @@
         
         // Drug
         foreach($drugs as $key => $drug) {
-            $nCnt = 0;
-            foreach($drugs[$key]["studyIds"] as $id) {
-                if ( isset($filteredIds[$id]) ) {
-                    $nCnt++;
-                }
-            }
             $drugs[$key]["studyIds"] = arrayInerection($drugs[$key]["studyIds"], $filteredIdVals);
-            $drugs[$key]["count"]["All"] = $nCnt;
+            $drugs[$key]["count"]["All"] = count($drugs[$key]["studyIds"]);
         }
         
     }
