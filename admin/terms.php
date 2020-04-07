@@ -184,6 +184,8 @@
         $newData = trim($newData, "''");
         //remove last ()
         $newData = trim(trim($newData, "("), ")");
+        //remove last .
+        $newData = trim($newData, ".");
 
         $newData = trim(strtolower(str_replace("'", "\'", str_replace("\\", "\\\\", $newData))));
 
