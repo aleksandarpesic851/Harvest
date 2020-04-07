@@ -322,7 +322,7 @@ function readGraphData() {
     //load graph data
     $.ajax({
         type: "POST",
-        url: "read_graph_data.php",
+        url: "read_graph_data_admin_analyze.php",
         data: searchItems,
         success: function(response) {
             try {
