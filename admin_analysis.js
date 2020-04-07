@@ -325,7 +325,6 @@ function readGraphData() {
         url: "read_graph_data.php",
         data: searchItems,
         success: function(response) {
-            hideWaiting();
             try {
                 graphSrcData = JSON.parse(response);
                 totalIds = graphSrcData.totalIds;
@@ -333,6 +332,7 @@ function readGraphData() {
             } catch(e) {
                 console.log(e);
             }
+            hideWaiting();
         }
     });
 }
@@ -412,16 +412,10 @@ function getCheckedNodes(id) {
 }
 
 function hideWaiting() {
-    if (loadedCnt >= 1) {
-        $("#waiting").hide();
-        loadedCnt = 0;
-    } else {
-        loadedCnt++;
-    }
+    $("#waiting").hide();
 }
 
 function showWaiting() {
-    loadedCnt=0;
     $("#waiting").show();
 }
 
