@@ -194,9 +194,9 @@
             <div class="row box box-border">
                 <div class="col-12 col-lg-4 col-xl-3">
                     <ul class="nav nav-tabs nav-justified" id="graph-tab">
-                        <li class=" nav-item"><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Condition</a></li>
-                        <li class=" nav-item"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifier</a></li>
-                        <li class=" nav-item"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Drug</a></li>
+                        <li class=" nav-item"><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
+                        <li class=" nav-item"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
+                        <li class=" nav-item"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane container graph-left active" id="graph-tab-condition">
@@ -263,7 +263,7 @@
                     <div class="modal-body">
                         <ul class="nav nav-tabs nav-justified">
                             <li class=" nav-item"><a class="nav-link active" data-toggle="tab" href="#tab-condition">Conditions</a></li>
-                            <li class=" nav-item"><a class="nav-link" data-toggle="tab" href="#tab-drug">Drugs</a></li>
+                            <li class=" nav-item"><a class="nav-link" data-toggle="tab" href="#tab-drug">Treatments</a></li>
                             <li class=" nav-item"><a class="nav-link" data-toggle="tab" href="#tab-other">Others</a></li>
                         </ul>
                         <div class="tab-content" style="margin-top: 10px;">
