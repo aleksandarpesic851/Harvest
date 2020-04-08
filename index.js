@@ -522,3 +522,17 @@ function initModifiers() {
     });
     modifierTree.appendTo("#modifier-tree");
 }
+
+function searchCorona() {
+    conditionTree.uncheckAll();
+    conditionTree.checkedNodes = ["CONDITION-127"];
+    conditionTree.refresh();
+    search();
+}
+
+function searchCancer() {
+    conditionTree.uncheckAll();
+    conditionTree.checkedNodes = ["CONDITION-44"];
+    conditionTree.refresh();
+    search();
+}

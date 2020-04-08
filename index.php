@@ -179,6 +179,8 @@
             <div class="row box">
                 <div class="col-12">
                     <img src="/imgs/clinical_index.png" style="height: auto; max-width: 50%; width: 400px">
+                    <button class="btn btn-outline-danger" style="margin-left: 3rem; padding: 1rem 2rem" onclick="searchCorona()"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19</button>
+                    <button class="btn btn-outline-warning" style="padding: 1rem 2rem" onclick="searchCancer()"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer</button>
                 </div>
             </div>
             <!-- Search -->
