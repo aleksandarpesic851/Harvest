@@ -525,7 +525,7 @@ function initModifiers() {
 
 function searchCorona() {
     conditionTree.uncheckAll();
-    conditionTree.checkedNodes = ["CONDITION-127"];
+    conditionTree.checkedNodes = ["CONDITION-135"];
     conditionTree.refresh();
     search();
 }
