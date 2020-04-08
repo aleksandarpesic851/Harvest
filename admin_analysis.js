@@ -561,3 +561,17 @@ function updateDataTables() {
     studyTableIn.ajax.reload();
     studyTableOut.ajax.reload();
 }
+
+function searchCorona() {
+    conditionTree.uncheckAll();
+    conditionTree.checkedNodes = ["CONDITION-135"];
+    conditionTree.refresh();
+    search();
+}
+
+function searchCancer() {
+    conditionTree.uncheckAll();
+    conditionTree.checkedNodes = ["CONDITION-44"];
+    conditionTree.refresh();
+    search();
+}
