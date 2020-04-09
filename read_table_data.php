@@ -6,42 +6,52 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/generate_query_condition.php";
 
-    $query = "SELECT `nct_id`, `title`, `enrollment`, `status`, `study_types`, `conditions`, `interventions`, `outcome_measures`, `phases`, `study_designs` FROM studies ";
-    $countQuery = "SELECT COUNT(*) AS cnt FROM studies ";
-
-    $manualIds = [];
-    if (isset($_POST) && isset($_POST["manual_ids"])) {
-        $manualIds = json_decode($_POST["manual_ids"]);
+    if (isset($_POST) && isset($_POST["emptyTable"]) && $_POST["emptyTable"]) {
+        $totalData = [];
+        $totalRecords = 0;
+        $draw = $_POST["draw"];
     }
-    $searchQuery = " `nct_id` IN " . "(" . implode(",", $manualIds) . ") ";
-    $query .= " WHERE $searchQuery";
-    $countQuery .= " WHERE $searchQuery";
+    else
+    {
+        $query = "SELECT `nct_id`, `title`, `enrollment`, `status`, `study_types`, `conditions`, `interventions`, `outcome_measures`, `phases`, `study_designs` FROM studies ";
+        $countQuery = "SELECT COUNT(*) AS cnt FROM studies ";
     
-    // if (isset($_POST) && isset($_POST["manual_ids"])) {
-    //     $manualSearch = $_POST["manual_search"];
-    //     $searchQuery = generateOtherSearchQuery($manualSearch);
-    //     $conditionQuery = generateIDListsforTree($manualSearch);
-    //     if (strlen($searchQuery) > 0 && strlen($conditionQuery) > 0) {
-    //         $searchQuery .= " AND ";
-    //     }
-    //     $searchQuery .= $conditionQuery;
-        
-    //     if (strlen($searchQuery) > 0) {
-    //         $query .= " WHERE $searchQuery";
-    //         $countQuery .= " WHERE $searchQuery";
-    //     }
-    // }
-    $result = mysqlReadFirst($countQuery);
-    $totalRecords = $result["cnt"];
-
-    $query .= " ORDER BY nct_id DESC ";
-
-    $start = $_POST["start"];
-    $length = $_POST["length"];
-    $draw = $_POST["draw"];
-    $query .= "LIMIT $length OFFSET $start";
-
-    $totalData = mysqlReadAll($query);
+        $manualIds = [];
+        if (isset($_POST) && isset($_POST["manual_ids"])) {
+            $manualIds = json_decode($_POST["manual_ids"]);
+        }
+        $searchQuery = " `nct_id` IN " . "(" . implode(",", $manualIds) . ") ";
+        if (count($manualIds) > 0) {
+            $query .= " WHERE $searchQuery";
+            $countQuery .= " WHERE $searchQuery";
+        }
+        // if (isset($_POST) && isset($_POST["manual_ids"])) {
+        //     $manualSearch = $_POST["manual_search"];
+        //     $searchQuery = generateOtherSearchQuery($manualSearch);
+        //     $conditionQuery = generateIDListsforTree($manualSearch);
+        //     if (strlen($searchQuery) > 0 && strlen($conditionQuery) > 0) {
+        //         $searchQuery .= " AND ";
+        //     }
+        //     $searchQuery .= $conditionQuery;
+            
+        //     if (strlen($searchQuery) > 0) {
+        //         $query .= " WHERE $searchQuery";
+        //         $countQuery .= " WHERE $searchQuery";
+        //     }
+        // }
+        $result = mysqlReadFirst($countQuery);
+        $totalRecords = $result["cnt"];
+    
+        $query .= " ORDER BY nct_id DESC ";
+    
+        $start = $_POST["start"];
+        $length = $_POST["length"];
+        $draw = $_POST["draw"];
+        $query .= "LIMIT $length OFFSET $start";
+    
+        $totalData = mysqlReadAll($query);
+    }
+    
     // if (count($totalData) < $length) {
     //     $totalRecords = $start + count($totalData);
     // } else {

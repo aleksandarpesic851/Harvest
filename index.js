@@ -34,6 +34,7 @@ let loadedTreeCnt = 0;              // there are 2 main trees. 1 - condition tre
 let graphShowKey = "conditions";    // graph showing key. conditions: draw condition as x axis. drugs: draw drug as x axis.
 
 let graphStudyIds = [];             // displayed graph data study ids
+let emptyTable = false;
 
 $(document).ready(function() {
     ej.base.enableRipple(true);
@@ -79,7 +80,11 @@ function initDatatable() {
             url: "read_table_data.php",
             data: function ( d ) {
                 let searchKeys = {};
-                searchKeys.manual_ids = JSON.stringify(graphStudyIds);
+                if (emptyTable) {
+                    searchKeys.emptyTable = true;    
+                } else {
+                    searchKeys.manual_ids = JSON.stringify(graphStudyIds);
+                }
                 return  $.extend(d, searchKeys);
             },
         },
@@ -423,19 +428,23 @@ function updateGraph() {
 
 function updateDatatable(checkedNodes) {
     if (!checkedNodes || checkedNodes.length < 1) {
-        return;
+        emptyTable = true;
     }
-
-    if (checkedNodes[0].nodeId == "ROOT") {
-        graphStudyIds = graphSrcData["totalIds"];
-    } else {
-        graphStudyIds = [];
-        checkedNodes.forEach(function(node) {
-            let id = node.nodeId.substr(10);
-            graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]["studyIds"]);
-        });
-        graphStudyIds = graphStudyIds.filter((item, idx) => graphStudyIds.indexOf(item) == idx);
-        console.log(graphStudyIds);
+    else {
+        emptyTable = false;
+        if (checkedNodes[0].nodeId == "ROOT") {
+            graphStudyIds = graphSrcData["totalIds"];
+        } else {
+            graphStudyIds = [];
+            checkedNodes.forEach(function(node) {
+                let id = node.nodeId.substr(10);
+                graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]["studyIds"]);
+            });
+            graphStudyIds = graphStudyIds.filter((item, idx) => graphStudyIds.indexOf(item) == idx);
+            if (graphStudyIds.length < 1) {
+                emptyTable = true;
+            }
+        }
     }
     if(studyTable) {
         studyTable.ajax.reload();

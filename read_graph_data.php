@@ -45,7 +45,12 @@
     $response = array();
     $response["conditions"] = $conditions;
     $response["drugs"] = $drugs;
-    $response["totalIds"] = $filteredIdVals;
+    $isAll = $isAllCondition & $isAllDrug & (strlen($otherSearch) < 1);
+    if ($isAll) {
+        $response["totalIds"] = [];    
+    } else {
+        $response["totalIds"] = $filteredIdVals;
+    }
 
     echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
 
@@ -289,7 +294,6 @@
                 $drugs[$key]["studyIds"] = arrayIntersection($drug["studyIds"], $filteredIdVals);
             $drugs[$key]["count"]["All"] = count($drug["studyIds"]);
         }
-        
     }
 
     function arrayIntersection($arr1, $arr2)
