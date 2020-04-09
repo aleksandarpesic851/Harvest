@@ -246,7 +246,7 @@
         if (!$isAllCondition || !$isAllDrug) {
             $query .= " AND  `nct_id` IN " . "(" . implode(",",$studyIdVals) . ") ";
         }
-        
+
         if (!$isAllCondition || !$isAllDrug || strlen($otherSearch) > 0) {
             $searchedRes = mysqlReadAll($query);
 
@@ -295,7 +295,7 @@
 
     function arrayIntersection($arr1, $arr2)
     {
-        return array_intersect($arr1, $arr2);
+        return array_values(array_intersect($arr1, $arr2));
     }
 
     function arrayIntersectByKey($arr1, $arr2)
