@@ -6,36 +6,31 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/generate_query_condition.php";
 
-    // use Ozdemir\Datatables\DB\MySQL;
-    // use Ozdemir\Datatables\Datatables;
-
-    // $ini = parse_ini_file("app.ini");
-
-    // $config = [ 'host'     => $ini["db_host"],
-    //             'port'     => $ini["db_port"],
-    //             'username' => $ini["db_user"],
-    //             'password' => $ini["db_password"],
-    //             'database' => $ini["db_name"] ];
-
-    // $dt = new Datatables( new MySQL($config) );
-
     $query = "SELECT `nct_id`, `title`, `enrollment`, `status`, `study_types`, `conditions`, `interventions`, `outcome_measures`, `phases`, `study_designs` FROM studies ";
     $countQuery = "SELECT COUNT(*) AS cnt FROM studies ";
 
-    if (isset($_POST) && isset($_POST["manual_search"])) {
-        $manualSearch = $_POST["manual_search"];
-        $searchQuery = generateOtherSearchQuery($manualSearch);
-        $conditionQuery = generateIDListsforTree($manualSearch);
-        if (strlen($searchQuery) > 0 && strlen($conditionQuery) > 0) {
-            $searchQuery .= " AND ";
-        }
-        $searchQuery .= $conditionQuery;
-        
-        if (strlen($searchQuery) > 0) {
-            $query .= " WHERE $searchQuery";
-            $countQuery .= " WHERE $searchQuery";
-        }
+    $manualIds = [];
+    if (isset($_POST) && isset($_POST["manual_ids"])) {
+        $manualIds = json_decode($_POST["manual_ids"]);
     }
+    $searchQuery = " `nct_id` IN " . "(" . implode(",", $manualIds) . ") ";
+    $query .= " WHERE $searchQuery";
+    $countQuery .= " WHERE $searchQuery";
+    
+    // if (isset($_POST) && isset($_POST["manual_ids"])) {
+    //     $manualSearch = $_POST["manual_search"];
+    //     $searchQuery = generateOtherSearchQuery($manualSearch);
+    //     $conditionQuery = generateIDListsforTree($manualSearch);
+    //     if (strlen($searchQuery) > 0 && strlen($conditionQuery) > 0) {
+    //         $searchQuery .= " AND ";
+    //     }
+    //     $searchQuery .= $conditionQuery;
+        
+    //     if (strlen($searchQuery) > 0) {
+    //         $query .= " WHERE $searchQuery";
+    //         $countQuery .= " WHERE $searchQuery";
+    //     }
+    // }
     $result = mysqlReadFirst($countQuery);
     $totalRecords = $result["cnt"];
 

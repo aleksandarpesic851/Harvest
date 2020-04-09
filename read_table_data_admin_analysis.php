@@ -20,7 +20,7 @@
     // $dt = new Datatables( new MySQL($config) );
     $manualIds = [];
     if (isset($_POST) && isset($_POST["manual_ids"])) {
-        $manualIds = json_decode($_POST["manual_ids"], 1);
+        $manualIds = json_decode($_POST["manual_ids"]);
     }
 
     if (count($manualIds) > 0) {

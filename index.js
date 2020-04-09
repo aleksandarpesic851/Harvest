@@ -33,10 +33,12 @@ let drugCheckedAuto = false;
 let loadedTreeCnt = 0;              // there are 2 main trees. 1 - condition tree, 2 - drug tree. when all trees are loaded, load graph data.
 let graphShowKey = "conditions";    // graph showing key. conditions: draw condition as x axis. drugs: draw drug as x axis.
 
+let graphStudyIds = [];             // displayed graph data study ids
+
 $(document).ready(function() {
     ej.base.enableRipple(true);
     initChart();
-    initDatatable();
+    //initDatatable();
     initSearchConditionTree();
     initConditionTree();
     initSearchDrugTree();
@@ -65,24 +67,6 @@ function initDateRangePicker() {
 }
 
 function initDatatable() {
-    // jQuery.fn.DataTable.Api.register( 'buttons.exportData()', function ( options ) {
-    //     let searchKeys = {};
-    //     searchKeys.manual_search = searchItems;
-
-    //     if ( this.context.length ) {
-    //         var jsonResult = $.ajax({
-    //             url: 'read_table_data.php?page=all',
-    //             data: searchKeys,
-    //             success: function (result) {
-    //                 //Do nothing
-    //             },
-    //             async: false
-    //         });
-
-    //         return {body: jsonResult.responseJSON.data, header: $("#myTable thead tr th").map(function() { return this.innerHTML; }).get()};
-    //     }
-    // } );
-
     studyTable = $('#study-table').DataTable({
         bFilter: false,
         searching: false,
@@ -95,7 +79,7 @@ function initDatatable() {
             url: "read_table_data.php",
             data: function ( d ) {
                 let searchKeys = {};
-                searchKeys.manual_search = searchItems;
+                searchKeys.manual_ids = JSON.stringify(graphStudyIds);
                 return  $.extend(d, searchKeys);
             },
         },
@@ -308,8 +292,6 @@ function search() {
     showWaiting();
     // Get search items
     readSearchItems();
-    // Load table data
-    studyTable.ajax.reload();
     // Load Graph Data
     readGraphData();
     $("#search-modal").modal("hide");
@@ -427,12 +409,39 @@ function updateGraph() {
             checkedModifiers.push(element.nodeText);
         });
     }
+
+    // Update datatable
+    updateDatatable(checkedNodes);
+
     // if checked only one category and has children, display the children
     if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
         checkedNodes = checkedNodes[0].nodeChild;
     }
 
     drawGraph(checkedNodes, checkedModifiers);
+}
+
+function updateDatatable(checkedNodes) {
+    if (!checkedNodes || checkedNodes.length < 1) {
+        return;
+    }
+
+    if (checkedNodes[0].nodeId == "ROOT") {
+        graphStudyIds = graphSrcData["totalIds"];
+    } else {
+        graphStudyIds = [];
+        checkedNodes.forEach(function(node) {
+            let id = node.nodeId.substr(10);
+            graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]["studyIds"]);
+        });
+        graphStudyIds = graphStudyIds.filter((item, idx) => graphStudyIds.indexOf(item) == idx);
+        console.log(graphStudyIds);
+    }
+    if(studyTable) {
+        studyTable.ajax.reload();
+    } else {
+        initDatatable();
+    }
 }
 
 function drawGraph(nodes, checkedModifiers) {
@@ -506,19 +515,11 @@ function initModifiers() {
         allowDragAndDrop: true,
         allowDropChild: false,
         allowDropSibling: false,
-        nodeDropped: function(args) {
-            updateGraph();
-        },
         nodeChecked: function() {
             if (!modifierCheckedAuto) {
                 updateGraph();
             }
         },
-        nodeDragStop: function(args) {
-            if (args.dropLevel > 1) {
-                args.cancel = true;
-            }
-        }
     });
     modifierTree.appendTo("#modifier-tree");
 }

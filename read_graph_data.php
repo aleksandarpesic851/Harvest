@@ -30,7 +30,7 @@
     $studyIds = array();           // Merged (drug * condition) study Ids
     $studyIdVals = array(); // array of value as study id
     $filteredIds = array(); // array of key as filtered study id
-    //$filteredIdVals = array();
+    $filteredIdVals = array();
 
     getAllStudyIds_Condition();
     getAllStudyIds_Drug();
@@ -45,10 +45,9 @@
     $response = array();
     $response["conditions"] = $conditions;
     $response["drugs"] = $drugs;
-    //$response["totalIds"] = $filteredIdVals;
+    $response["totalIds"] = $filteredIdVals;
 
     echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
-
 
 
     ////////////////////////////////GET ALL CONDITIONS////////////////////////////////////////
@@ -152,7 +151,7 @@
         global $condition_studyIds;
 
         foreach($array as $val) {
-            $condition_studyIds[$val] = $val;
+            $condition_studyIds[$val] = '';
         }
     }
 
@@ -184,7 +183,7 @@
         global $drug_studyIds;
 
         foreach($array as $val) {
-            $drug_studyIds[$val] = $val;
+            $drug_studyIds[$val] = '';
         }
     }
     ///////////////////////////////////////Merge ids and generate val array/////////////////////////////////////////////////
@@ -197,8 +196,8 @@
         if($isAllDrug) {
             if ($isAllCondition) {
                 $studyIds = $drug_studyIds;
-                foreach($condition_studyIds as $val) {
-                    $studyIds[$val] = $val;
+                foreach($condition_studyIds as $key => $val) {
+                    $studyIds[$key] = '';
                 }
             } else {
                 $studyIds = $condition_studyIds;
@@ -207,7 +206,7 @@
             if ($isAllCondition) {
                 $studyIds = $drug_studyIds;
             } else {
-                $studyIds = array_intersect($condition_studyIds, $drug_studyIds);
+                $studyIds = arrayIntersectByKey($condition_studyIds, $drug_studyIds);
             }
         }
         // echo "ok" . count($drug_studyIds) . "," . count($condition_studyIds) . "," . count($studyIds);
@@ -231,21 +230,27 @@
         global $studyIdVals;
         global $otherSearch;
         global $filteredIds;
+        global $isAllCondition, $isAllDrug;
 
         // in this case, there is no reason to search studies table
-        if (count($studyIdVals) < 1 || strlen($otherSearch) < 1) {
+        if (count($studyIdVals) < 1) {
             $filteredIds = $studyIds;
             return;
         }
 
-        $query = "SELECT `nct_id` from studies ";
-        $conditionSearch = " `nct_id` IN " . "(" . implode(",",$studyIdVals) . ") ";
-        $query .= " WHERE $otherSearch AND $conditionSearch";
+        $query = "SELECT `nct_id` from studies WHERE TRUE ";
+        if (strlen($otherSearch) > 0) {
+            $query .= " AND " . $otherSearch;
+        }
+
+        if (!$isAllCondition || !$isAllDrug) {
+            $query .= " AND  `nct_id` IN " . "(" . implode(",",$studyIdVals) . ") ";
+        }
 
         $searchedRes = mysqlReadAll($query);
 
         foreach($searchedRes as $row) {
-            $filteredIds[$row["nct_id"]] = '';
+            $filteredIds[strval($row["nct_id"])] = '';
         }
     }
     
@@ -254,47 +259,46 @@
         global $modifiers;
         global $filteredIds;
         global $drugs;
-        // global $filteredIdVals;
-         
-        // foreach($filteredIds as $key=>$val) {
-        //     array_push($filteredIdVals, $key);
-        // }
+        global $filteredIdVals;
+        global $isAllCondition, $isAllDrug;
+        global $otherSearch;
+        
+        $isAll = $isAllCondition & $isAllDrug & (strlen($otherSearch) < 1);
+
+        foreach($filteredIds as $key=>$val) {
+            array_push($filteredIdVals, $key);
+        }
 
         // Condition
         foreach($conditions as $key => $condition) {
-            $nCnt = 0;
-            foreach($conditions[$key]["studyIds"] as $id) {
-                if ( isset($filteredIds[$id]) ) {
-                    $nCnt++;
-                }
-            }
-            // $conditions[$key]["count"]["All"] = count($conditions[$key]["studyIds"]);
-            // $conditions[$key]["studyIds"] = array_intersect($conditions[$key]["studyIds"], $filteredIdVals);
-            unset($conditions[$key]["studyIds"]);
-            $conditions[$key]["count"]["All"] = $nCnt;
+            if (!$isAll)
+                $conditions[$key]["studyIds"] = arrayIntersection($conditions[$key]["studyIds"], $filteredIdVals);
+            $conditions[$key]["count"]["All"] = count($conditions[$key]["studyIds"]);
             foreach($modifiers as $modifier) {
                 $condition_studyIds = getStudyIds_Condition($key, $modifier["id"]);
-                $nCnt = 0;
-                foreach($condition_studyIds as $id) {
-                    if ( isset($filteredIds[$id]) ) {
-                        $nCnt++;
-                    }
-                }
-                $conditions[$key]["count"][$modifier["modifier"]] = $nCnt;
+                if (!$isAll)
+                    $condition_studyIds = arrayIntersection($condition_studyIds, $filteredIdVals);
+                // $conditions[$key]["modifier"][$modifier["modifier"]]["studyIds"] = arrayIntersection($condition_studyIds, $filteredIdVals);
+                $conditions[$key]["count"][$modifier["modifier"]] = count($condition_studyIds);
             }
         }
         
         // Drug
         foreach($drugs as $key => $drug) {
-            $nCnt = 0;
-            foreach($drugs[$key]["studyIds"] as $id) {
-                if ( isset($filteredIds[$id]) ) {
-                    $nCnt++;
-                }
-            }
-            unset($drugs[$key]["studyIds"]);
-            // $drugs[$key]["studyIds"] = array_intersect($drugs[$key]["studyIds"], $filteredIdVals);
-            $drugs[$key]["count"]["All"] = $nCnt;
+            if (!$isAll)
+                $drugs[$key]["studyIds"] = arrayIntersection($drug["studyIds"], $filteredIdVals);
+            $drugs[$key]["count"]["All"] = count($drug["studyIds"]);
         }
+        
+    }
+
+    function arrayIntersection($arr1, $arr2)
+    {
+        return array_intersect($arr1, $arr2);
+    }
+
+    function arrayIntersectByKey($arr1, $arr2)
+    {
+        return array_intersect_key($arr1, $arr2);
     }
 ?>

@@ -262,28 +262,24 @@
 
         // Condition
         foreach($conditions as $key => $condition) {
+            $conditions[$key]["studyIds"] = arrayIntersection($conditions[$key]["studyIds"], $filteredIdVals);
             $conditions[$key]["count"]["All"] = count($conditions[$key]["studyIds"]);
             foreach($modifiers as $modifier) {
                 $condition_studyIds = getStudyIds_Condition($key, $modifier["id"]);
-                $nCnt = 0;
-                foreach($condition_studyIds as $id) {
-                    if ( isset($filteredIds[$id]) ) {
-                        $nCnt++;
-                    }
-                }
-                $conditions[$key]["count"][$modifier["modifier"]] = $nCnt;
+                // $conditions[$key]["modifier"][$modifier["modifier"]]["studyIds"] = arrayIntersection($condition_studyIds, $filteredIdVals);
+                $conditions[$key]["count"][$modifier["modifier"]] = count(arrayIntersection($condition_studyIds, $filteredIdVals));
             }
         }
         
         // Drug
         foreach($drugs as $key => $drug) {
-            $drugs[$key]["studyIds"] = arrayInerection($drugs[$key]["studyIds"], $filteredIdVals);
+            $drugs[$key]["studyIds"] = arrayIntersection($drugs[$key]["studyIds"], $filteredIdVals);
             $drugs[$key]["count"]["All"] = count($drugs[$key]["studyIds"]);
         }
         
     }
 
-    function arrayInerection($arr1, $arr2)
+    function arrayIntersection($arr1, $arr2)
     {
         $res = [];
         foreach($arr1 as $val)
