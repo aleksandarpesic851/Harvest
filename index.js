@@ -158,15 +158,57 @@ function initChart() {
                         }
                     }
                 }
-            }
+            },
+            onclick: barClicked
         };
-          
-        var ctx = document.getElementById("myChart").getContext("2d");
+
+        let canv = document.getElementById("myChart");
+        canv.addEventListener('click', barClicked, false);
+        let ctx = canv.getContext("2d");
         chartGraph = new Chart(ctx, {
             type: 'bar',
             data: data,
             options: options
         });
+}
+
+function barClicked(e) {
+    let clickedElement = chartGraph.getElementAtEvent(e);
+    if (!clickedElement || clickedElement.length < 1 || clickedElement[0]._index < -1) {
+        return;
+    }
+
+    let clickedBarDetail = graphDrawDetails[clickedElement[0]._index];
+    if(!clickedBarDetail) {
+        return;
+    }
+    conditionCheckedAuto = true;
+    modifierCheckedAuto = true;
+    drugCheckedAuto = true;
+
+    if (graphShowKey == "conditions") {
+        conditionSearchTree.uncheckAll();
+        conditionSearchTree.checkedNodes = [clickedBarDetail.node.nodeId];
+        conditionSearchTree.refresh();
+        if(clickedBarDetail.modifier) {
+            modifierTree.uncheckAll();
+            modifierTree.checkedNodes = [clickedBarDetail.modifier.nodeId];
+            modifierTree.refresh();
+            $('.nav-tabs a[href="#graph-tab-modifier"]').tab('show');
+        } else {
+            modifierTree.checkAll();
+        }
+    } else {
+        drugSearchTree.uncheckAll();
+        drugSearchTree.checkedNodes = [clickedBarDetail.node.nodeId];
+        drugSearchTree.refresh();
+    }
+
+    conditionCheckedAuto = false;
+    modifierCheckedAuto = false;
+    drugCheckedAuto = false;
+    
+    updateGraph();
 }
 
 function initConditionTree() {
@@ -407,26 +449,22 @@ function updateGraph() {
     }
 
     let checkedModifierNodes;
-    let checkedModifiers = [];
     if (isModifier) {
         checkedModifierNodes = getCheckedTreeNodes("modifier-tree", modifierTree);
-        checkedModifierNodes.forEach(element => {
-            checkedModifiers.push(element.nodeText);
-        });
     }
 
     // Update datatable
-    updateDatatable(checkedNodes);
+    updateDatatable(checkedNodes, checkedModifierNodes);
 
     // if checked only one category and has children, display the children
     if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
         checkedNodes = checkedNodes[0].nodeChild;
     }
 
-    drawGraph(checkedNodes, checkedModifiers);
+    drawGraph(checkedNodes, checkedModifierNodes);
 }
 
-function updateDatatable(checkedNodes) {
+function updateDatatable(checkedNodes, checkedModifierNodes) {
     if (!checkedNodes || checkedNodes.length < 1) {
         emptyTable = true;
     }
@@ -438,7 +476,13 @@ function updateDatatable(checkedNodes) {
             graphStudyIds = [];
             checkedNodes.forEach(function(node) {
                 let id = node.nodeId.substr(10);
-                graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]["studyIds"]);
+                if (checkedModifierNodes) {
+                    checkedModifierNodes.forEach(function(modifier) {
+                        graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]['modifier'][modifier.nodeText]["studyIds"]);
+                    });
+                } else {
+                    graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]["studyIds"]);
+                }
             });
             graphStudyIds = graphStudyIds.filter((item, idx) => graphStudyIds.indexOf(item) == idx);
             if (graphStudyIds.length < 1) {
@@ -453,7 +497,7 @@ function updateDatatable(checkedNodes) {
     }
 }
 
-function drawGraph(nodes, checkedModifiers) {
+function drawGraph(nodes, modifierNodes) {
     let graphLabels = [];
     let graphDrawData = [];
     let backgroundColors = [];
@@ -461,10 +505,24 @@ function drawGraph(nodes, checkedModifiers) {
     let chartCnt = 0;
 
     nodes.forEach(node => {
-        // if modifier, extract all data for modifiers.
         let id = node.nodeId.substr(10);
-        // show all child node data
-        let nCnt = graphSrcData[graphShowKey][id]["count"]["All"];
+        // if modifier, extract all data for modifiers.
+        if (isModifier) {
+            modifierNodes.forEach( modifier=> {
+                let modifierName = modifier.nodeText;
+                let nCnt = graphSrcData[graphShowKey][id]["count"][modifierName];
+                if (nCnt > 0) {
+                    graphLabels.push(modifierName + " - " + node.nodeText);
+                    graphDrawData.push(nCnt);
+                    graphDrawDetails.push({node: node, modifier: modifier, cnt: nCnt});
+                    backgroundColors.push(bgColor[chartCnt % 7]);
+                    borderColors.push(bdColor[chartCnt % 7]);
+                    chartCnt++;
+                }
+            });
+        } else {
+            // show all child node data
+            let nCnt = graphSrcData[graphShowKey][id]["count"]["All"];
             // if (nCnt > 0) {
             graphLabels.push(node.nodeText);
             graphDrawData.push(nCnt);
@@ -472,22 +530,10 @@ function drawGraph(nodes, checkedModifiers) {
             backgroundColors.push(bgColor[chartCnt % 7]);
             borderColors.push(bdColor[chartCnt % 7]);
             chartCnt++;
-            // }
-            if (isModifier) {
-                checkedModifiers.forEach( modifier=> {
-                    let nCnt = graphSrcData[graphShowKey][id]["count"][modifier];
-                    if (nCnt > 0) {
-                        graphLabels.push(modifier + " - " + node.nodeText);
-                        graphDrawData.push(nCnt);
-                        graphDrawDetails.push({node: node, modifier: modifier, cnt: nCnt});
-                        backgroundColors.push(bgColor[chartCnt % 7]);
-                        borderColors.push(bdColor[chartCnt % 7]);
-                        chartCnt++;
-                    }
-                });
-            }
+        }
     });
     chartGraph.data.labels = graphLabels;
+    chartGraph.data.datasets[0].data = graphDrawData;
     chartGraph.data.datasets[0].data = graphDrawData;
     chartGraph.data.datasets[0].backgroundColor = backgroundColors;
     chartGraph.data.datasets[0].borderColor = borderColors;

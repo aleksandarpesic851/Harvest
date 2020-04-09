@@ -283,7 +283,7 @@
                 $condition_studyIds = getStudyIds_Condition($key, $modifier["id"]);
                 if (!$isAll)
                     $condition_studyIds = arrayIntersection($condition_studyIds, $filteredIdVals);
-                // $conditions[$key]["modifier"][$modifier["modifier"]]["studyIds"] = arrayIntersection($condition_studyIds, $filteredIdVals);
+                $conditions[$key]["modifier"][$modifier["modifier"]]["studyIds"] = $condition_studyIds;
                 $conditions[$key]["count"][$modifier["modifier"]] = count($condition_studyIds);
             }
         }
