@@ -1,6 +1,7 @@
 app.ini
 .htaccess
 .user.ini
+error_log
 
 /vendor/
 node_modules/
