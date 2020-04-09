@@ -451,6 +451,9 @@ function updateGraph() {
     let checkedModifierNodes;
     if (isModifier) {
         checkedModifierNodes = getCheckedTreeNodes("modifier-tree", modifierTree);
+        if (checkedModifierNodes.length > 0 && checkedModifierNodes[0].nodeId == "ROOT") {
+            checkedModifierNodes = checkedModifierNodes[0].nodeChild;
+        }
     }
 
     // Update datatable
@@ -547,10 +550,14 @@ function initModifiers() {
             if (response) {
                 try {
                     modifiers = JSON.parse(response);
-                    let modifierTreeData = [];
+                    let modifierTreeData = [{
+                        nodeId: "ROOT",
+                        nodeText: "All",
+                        nodeChild: []
+                    }];
                     let id = 0;
                     modifiers.forEach(modifier => {
-                        modifierTreeData.push({nodeId: "MODIFIERS-" + id, nodeText: modifier["modifier"]});
+                        modifierTreeData[0].nodeChild.push({nodeId: "MODIFIERS-" + id, nodeText: modifier["modifier"]});
                         id++;
                     });
                     modifierCheckedAuto = true;
@@ -567,9 +574,6 @@ function initModifiers() {
     modifierTree = new ej.navigations.TreeView({
         fields: { id: 'nodeId', text: 'nodeText', child: 'nodeChild' },
         showCheckBox: true,
-        allowDragAndDrop: true,
-        allowDropChild: false,
-        allowDropSibling: false,
         nodeChecked: function() {
             if (!modifierCheckedAuto) {
                 updateGraph();
