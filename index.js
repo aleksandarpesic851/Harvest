@@ -451,9 +451,6 @@ function updateGraph() {
     let checkedModifierNodes;
     if (isModifier) {
         checkedModifierNodes = getCheckedTreeNodes("modifier-tree", modifierTree);
-        if (checkedModifierNodes.length > 0 && checkedModifierNodes[0].nodeId == "ROOT") {
-            checkedModifierNodes = checkedModifierNodes[0].nodeChild;
-        }
     }
 
     // Update datatable
@@ -463,7 +460,9 @@ function updateGraph() {
     if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
         checkedNodes = checkedNodes[0].nodeChild;
     }
-
+    if (checkedModifierNodes && checkedModifierNodes.length > 0 && checkedModifierNodes[0].nodeId == "ROOT") {
+        checkedModifierNodes = checkedModifierNodes[0].nodeChild;
+    }
     drawGraph(checkedNodes, checkedModifierNodes);
 }
 
@@ -479,7 +478,7 @@ function updateDatatable(checkedNodes, checkedModifierNodes) {
             graphStudyIds = [];
             checkedNodes.forEach(function(node) {
                 let id = node.nodeId.substr(10);
-                if (checkedModifierNodes) {
+                if (checkedModifierNodes && checkedModifierNodes.length != 1 && checkedModifierNodes[0].nodeId != "ROOT") {
                     checkedModifierNodes.forEach(function(modifier) {
                         graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]['modifier'][modifier.nodeText]["studyIds"]);
                     });
