@@ -45,12 +45,7 @@
     $response = array();
     $response["conditions"] = $conditions;
     $response["drugs"] = $drugs;
-    $isAll = $isAllCondition & $isAllDrug & (strlen($otherSearch) < 1);
-    if ($isAll) {
-        $response["totalIds"] = [];    
-    } else {
-        $response["totalIds"] = $filteredIdVals;
-    }
+    $response["totalIds"] = $filteredIdVals;
 
     echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
 
@@ -251,11 +246,13 @@
         if (!$isAllCondition || !$isAllDrug) {
             $query .= " AND  `nct_id` IN " . "(" . implode(",",$studyIdVals) . ") ";
         }
+        
+        if (!$isAllCondition || !$isAllDrug || strlen($otherSearch) > 0) {
+            $searchedRes = mysqlReadAll($query);
 
-        $searchedRes = mysqlReadAll($query);
-
-        foreach($searchedRes as $row) {
-            $filteredIds[strval($row["nct_id"])] = '';
+            foreach($searchedRes as $row) {
+                $filteredIds[strval($row["nct_id"])] = '';
+            }
         }
     }
     
