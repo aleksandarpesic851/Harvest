@@ -21,6 +21,6 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
-app.ini
-.htaccess
-.user.ini
+/app.ini
+/.htaccess
+/.user.ini
