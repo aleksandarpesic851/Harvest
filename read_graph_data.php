@@ -136,15 +136,17 @@
             }
         }
     }
+
     function getStudyIds_Condition($conditionId, $modifierId) {
         $query = "SELECT `study_ids` FROM condition_hierarchy_modifier_stastics WHERE `hierarchy_id` = $conditionId AND `modifier_id` = $modifierId";
         $statistics = mysqlReadFirst($query);
         $ids = array();
-        if (!isset($statistics) || !isset($statistics["study_ids"]) || strlen($statistics["study_ids"]) < 1) {
+        $strIds = trim(trim($statistics["study_ids"]), ",");
+        if (!isset($statistics) || !isset($strIds) || strlen($strIds) < 1) {
             return $ids;
         }
 
-        return explode(",", $statistics["study_ids"]);
+        return explode(",", $strIds);
     }
     
     function mergeStudyIds_Condition($array) {
@@ -172,11 +174,12 @@
         $query = "SELECT `study_ids` FROM drug_hierarchy WHERE `id` = $drugId";
         $statistics = mysqlReadFirst($query);
         $ids = array();
-        if (!isset($statistics) || !isset($statistics["study_ids"]) || strlen($statistics["study_ids"]) < 1) {
+        $strIds = trim(trim($statistics["study_ids"]), ",");
+        if (!isset($statistics) || !isset($strIds) || strlen($strIds) < 1) {
             return $ids;
         }
 
-        return explode(",", $statistics["study_ids"]);
+        return explode(",", $strIds);
     }
     
     function mergeStudyIds_Drug($array) {

@@ -194,6 +194,7 @@ function barClicked(e) {
             modifierTree.uncheckAll();
             modifierTree.checkedNodes = [clickedBarDetail.modifier.nodeId];
             modifierTree.refresh();
+            modifierTree.expandAll();
             $('.nav-tabs a[href="#graph-tab-modifier"]').tab('show');
         } else {
             modifierTree.checkAll();
@@ -478,7 +479,7 @@ function updateDatatable(checkedNodes, checkedModifierNodes) {
             graphStudyIds = [];
             checkedNodes.forEach(function(node) {
                 let id = node.nodeId.substr(10);
-                if (checkedModifierNodes && checkedModifierNodes.length != 1 && checkedModifierNodes[0].nodeId && checkedModifierNodes[0].nodeId != "ROOT") {
+                if (checkedModifierNodes && checkedModifierNodes.length > 0 && checkedModifierNodes[0].nodeId && checkedModifierNodes[0].nodeId != "ROOT") {
                     checkedModifierNodes.forEach(function(modifier) {
                         graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]['modifier'][modifier.nodeText]["studyIds"]);
                     });
@@ -563,6 +564,7 @@ function initModifiers() {
                     modifierTree.fields.dataSource = modifierTreeData;
                     modifierTree.refresh();
                     modifierTree.checkAll();
+                    modifierTree.expandAll();
                     modifierCheckedAuto = false;
                 } catch (e) {
                     console.log(e);
