@@ -47,8 +47,18 @@ $(document).ready(function() {
     initDateRangePicker();
     initModifiers();
     initGraphTab();
+    initTour();
 } );
 
+function initTour() {
+    introJs().setOption("nextLabel", "Next »");
+    introJs().setOption("prevLabel", "« Prev");
+    introJs().setOption("skipLabel", "End Tour");
+    
+    $('#start_tour').click(function(){
+		introJs().start();
+	});
+}
 function initGraphTab() {
     $('#graph-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateGraph();
@@ -329,11 +339,19 @@ function readGraphData() {
             try {
                 graphSrcData = JSON.parse(response);
                 updateGraph();
+                triggerTourEvent();
             } catch(e) {
                 console.log(e);
             }
         }
     });
+}
+
+function triggerTourEvent() {
+    if($('#start_tour').length > 0 && localStorage.getItem("clincaltrials_app_tour_shown") !== 'true'){
+    	$('#start_tour').trigger('click');
+    	localStorage.setItem("clincaltrials_app_tour_shown", 'true');
+    }
 }
 
 function search() {

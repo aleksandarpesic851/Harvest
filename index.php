@@ -12,10 +12,13 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- JQuery -->
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
 		<!-- Bootstrap -->
 		<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"> -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
         <!-- Datatable -->
         <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.css">
         <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script> -->
@@ -48,6 +51,10 @@
         <!-- Page Js -->
         <script src="index.js"></script>
 
+        <!-- Tour -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css" rel="stylesheet"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.min.js"></script>
+        <script src="tour.js"></script>
         <style>
             #chartjs-tooltip {
                 opacity: 1;
@@ -179,24 +186,38 @@
             <div class="row box">
                 <div class="col-12">
                     <img src="/imgs/clinical_index.png" style="height: auto; max-width: 50%; width: 400px">
-                    <button class="btn btn-outline-danger" style="margin-left: 3rem; padding: 1rem 2rem" onclick="searchCorona()"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19</button>
-                    <button class="btn btn-outline-warning" style="padding: 1rem 2rem" onclick="searchCancer()"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer</button>
+                    <button class="btn btn-outline-danger" style="margin-left: 3rem; padding: 1rem 2rem" onclick="searchCorona()" 
+                        data-intro='Search all trials related with COVID-19' data-step='1'>
+                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19
+                    </button>
+                    <button class="btn btn-outline-warning" style="padding: 1rem 2rem" onclick="searchCancer()"
+                        data-intro='Search all trials related with cancer.' data-step='2'>
+                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer
+                    </button>
                 </div>
             </div>
             <!-- Search -->
             <div class="row box">
                 <div class="ml-auto">
-                    <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"><i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom</button>
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search</button>
+                    <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
+                        data-intro='Reset zoom of graph.' data-step='3'>
+                        <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom</button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
+                        data-intro='Search trials.' data-step='4'><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search</button>
+                    <button type="button" id="start_tour" title="Tour Website" data-toggle="tooltip" data-placement="bottom"
+                        class="btn btn-info btn-flat hidden-xs" style="padding: 10px 20px"
+                        data-intro='Tour Website.' data-step='5'>
+                        <strong><i class="fa fa-question-circle fa-lg" aria-hidden="true"></i></strong>
+                    </button>
                 </div>
             </div>
             <!-- Chart Graph -->
             <div class="row box box-border">
                 <div class="col-12 col-lg-4 col-xl-3">
                     <ul class="nav nav-tabs nav-justified" id="graph-tab">
-                        <li class=" nav-item"><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
-                        <li class=" nav-item"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
-                        <li class=" nav-item"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by condition.' data-step='6'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by modifier.' data-step='7'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by treatment.' data-step='8'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane container graph-left active" id="graph-tab-condition">
@@ -219,7 +240,7 @@
                 </div>
                 <!-- Chart Graph -->
                 <div class="col-12 col-lg-8 col-xl-9 enable-scroll">
-                    <div class="chart-container">
+                    <div class="chart-container" data-intro="Graph for filtered data. This graph is zoomed in/out when mouse scroll on this graph. And it's moved horizontally when mouse click and move on it." data-step='9'>
                         <canvas id="myChart"></canvas>
                     </div>
                 </div>
@@ -229,7 +250,7 @@
             <div class="row box">
                 <h4 class="ml-auto mr-auto">Data for graph</h4>
                 <br><br>
-                <div class="col-12">
+                <div class="col-12" data-intro='Data table for filtered data' data-step='10'>
                     <table id="study-table" class="table table-striped table-bordered" style="width: 150%">
                         <thead>
                             <tr>
