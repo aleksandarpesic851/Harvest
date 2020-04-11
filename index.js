@@ -462,10 +462,10 @@ function updateGraph() {
         checkedNodes = getCheckedTreeNodes("condition-search-tree", conditionSearchTree);
     }
     
-    // if only one leaf is checked, draw modifiers.
-    if (activeTabId == "#graph-tab-condition" && checkedNodes.length == 1 && checkedNodes[0].nodeChild.length == 0) {
-        isModifier = true;
-    }
+    // // if only one leaf is checked, draw modifiers.
+    // if (activeTabId == "#graph-tab-condition" && checkedNodes.length == 1 && checkedNodes[0].nodeChild.length == 0) {
+    //     isModifier = true;
+    // }
 
     let checkedModifierNodes;
     if (isModifier) {
