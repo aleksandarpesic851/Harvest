@@ -114,11 +114,11 @@
     {
         $res = ' (';
         $res .= '`' . $column . '` LIKE "%' . $value . ' %"';
-        $res .= ' OR `' . $column . '` LIKE "%' . $value . '|%"';
         $res .= ' OR `' . $column . '` LIKE "%' . $value . ',%"';
         $res .= ' OR `' . $column . '` LIKE "%' . $value . '.%"';
         $res .= ' OR `' . $column . '` LIKE "%' . $value . '"';
         $res .=') ';
+        return $res;
     }
     // merge Study Ids
     function mergeDrugIds() {
