@@ -292,7 +292,7 @@
         foreach($drugs as $key => $drug) {
             if (!$isAll)
                 $drugs[$key]["studyIds"] = arrayIntersection($drug["studyIds"], $filteredIdVals);
-            $drugs[$key]["count"]["All"] = count($drug["studyIds"]);
+            $drugs[$key]["count"]["All"] = count($drugs[$key]["studyIds"]);
         }
     }
 
