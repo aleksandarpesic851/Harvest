@@ -472,15 +472,16 @@ function updateGraph() {
         checkedModifierNodes = getCheckedTreeNodes("modifier-tree", modifierTree);
     }
 
+    if (checkedModifierNodes && checkedModifierNodes.length > 0 && checkedModifierNodes[0].nodeId == "ROOT") {
+        checkedModifierNodes = checkedModifierNodes[0].nodeChild;
+    }
+
     // Update datatable
     updateDatatable(checkedNodes, checkedModifierNodes);
 
     // if checked only one category and has children, display the children
     if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
         checkedNodes = checkedNodes[0].nodeChild;
-    }
-    if (checkedModifierNodes && checkedModifierNodes.length > 0 && checkedModifierNodes[0].nodeId == "ROOT") {
-        checkedModifierNodes = checkedModifierNodes[0].nodeChild;
     }
     drawGraph(checkedNodes, checkedModifierNodes);
 }
