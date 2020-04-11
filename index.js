@@ -604,14 +604,14 @@ function initModifiers() {
 
 function searchCorona() {
     conditionTree.uncheckAll();
-    conditionTree.checkedNodes = ["CONDITION-135"];
+    conditionTree.checkedNodes = ["CONDITION-141"];
     conditionTree.refresh();
     search();
 }
 
 function searchCancer() {
     conditionTree.uncheckAll();
-    conditionTree.checkedNodes = ["CONDITION-44"];
+    conditionTree.checkedNodes = ["CONDITION-44", "CONDITION-81"];
     conditionTree.refresh();
     search();
 }
