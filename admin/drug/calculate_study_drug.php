@@ -88,7 +88,8 @@
         $nCnt = 0;
         foreach($totalData as $key=>$drug) {
             $start = time();
-            $query = "SELECT `nct_id` FROM study_id_drugs WHERE ( `drug` LIKE '%" . $drug["drug_name"] . "%') GROUP BY `nct_id`";
+            $query = "SELECT `nct_id` FROM study_id_drugs WHERE " . generateSearchString_DRUG('drug', $drug["drug_name"]) . " GROUP BY `nct_id`";
+            // $query = "SELECT `nct_id` FROM study_id_drugs WHERE ( `drug` LIKE '%" . $drug["drug_name"] . "%') GROUP BY `nct_id`";
             
             $nctIds = mysqlReadAll_Drug($query);
             $totalData[$key]["study_ids"] = array();
@@ -109,6 +110,16 @@
         }
     }
 
+    function generateSearchString_DRUG($column, $value)
+    {
+        $res = ' (';
+        $res .= '`' . $column . '` LIKE "%' . $value . ' %"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . '|%"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . ',%"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . '.%"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . '"';
+        $res .=') ';
+    }
     // merge Study Ids
     function mergeDrugIds() {
 

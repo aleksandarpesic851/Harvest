@@ -114,11 +114,11 @@
             }
 
             $start = time();
-            $query = "SELECT `nct_id` FROM study_id_conditions WHERE ( `condition` LIKE '%" . $condition["condition_name"] . "%' ";
+            $query = "SELECT `nct_id` FROM study_id_conditions WHERE ( " . generateSearchString('condition', $condition["condition_name"]);
             if (isset($condition["synonym"]) && strlen($condition["synonym"]) > 0) {
                 $synonyms = explode(",", $condition["synonym"]);
                 foreach($synonyms as $synonym) {
-                    $query .= " OR  `condition` LIKE '%" . trim($synonym) . "%' ";
+                    $query .= " OR " . generateSearchString('condition', trim($synonym));
                 }
             }
             $query .= ") ";
@@ -143,6 +143,17 @@
                 mysqlReconnect();
             }
         }
+    }
+
+    function generateSearchString($column, $value)
+    {
+        $res = ' (';
+        $res .= '`' . $column . '` LIKE "%' . $value . ' %"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . '|%"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . ',%"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . '.%"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . '"';
+        $res .=') ';
     }
 
     // merge Study Ids
