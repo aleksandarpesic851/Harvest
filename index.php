@@ -4,9 +4,11 @@
 
 <html>
 	<head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> US Clinical Trials </title>
+        <meta name="description" content="Statistical insights for clinical trials. Supports all clinical trials…">
+        
         <link rel="shortcut icon" href="/imgs/clinical_trial_icon.png">
         <!-- Font -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -185,7 +187,7 @@
         <div class="top-container"> 
             <div class="row box">
                 <div class="col-12">
-                    <img src="/imgs/clinical_index.png" style="height: auto; max-width: 50%; width: 400px">
+                    <img src="/imgs/clinical_index.png" style="height: auto; max-width: 50%; width: 400px" alt="clinical trials">
                     <button class="btn btn-outline-danger" style="margin-left: 3rem; padding: 1rem 2rem" onclick="searchCorona()" 
                         data-intro='Search all trials related with COVID-19' data-step='1'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19
@@ -196,6 +198,7 @@
                     </button>
                 </div>
             </div>
+            <h1 class="text-center"> Clinical Trials Statistic Result </h1>
             <!-- Search -->
             <div class="row box">
                 <div class="ml-auto">
@@ -247,8 +250,8 @@
             </div>
             <br>
             <!-- Data table -->
+            <h2 class="text-center">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
-                <h4 class="ml-auto mr-auto">Data for graph</h4>
                 <br><br>
                 <div class="col-12" data-intro='Data table for filtered data' data-step='10'>
                     <table id="study-table" class="table table-striped table-bordered" style="width: 150%">
@@ -276,7 +279,7 @@
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Search Studies</h5>
+                        <h2 class="modal-title" id="exampleModalLongTitle">Search Studies</h2>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
