@@ -305,6 +305,119 @@
                             <div class="tab-pane container fade" id="tab-other">
                                 <form id="search-other-form" style="margin-bottom: 0">
                                     <div class="row modal-body-content">
+                                        <!-- Status -->
+                                        <div class="col-12 item-box">
+                                            <label>Status: </label>
+                                            <div class="row sub-item-box">
+                                                <div class="col-6">
+                                                    <label> Recruitment: </label>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Not yet recruiting" checked>Not yet recruiting
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Recruiting" checked>Recruiting
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Enrolling by invitation" checked>Enrolling by invitation
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Active, not recruiting" checked>Active, not recruiting
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Suspended" checked>Suspended
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Terminated" checked>Terminated
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Completed" checked>Completed
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Withdrawn" checked>Withdrawn
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Unknown status" checked>Unknown status
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="search-age-from"> Expanded Access: </label>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Available" checked>Available
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="No longer available" checked>No longer available
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Temporarily not available" checked>Temporarily not available
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Approved for marketing" checked>Approved for marketing
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Phase -->
+                                        <div class="col-12 item-box">
+                                            <label>Phase: </label>
+                                            <div class="row sub-item-box">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Early Phase 1" checked>Early Phase 1
+                                                    </label>
+                                                </div>&nbsp;&nbsp;&nbsp;
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Phase 1" checked>Phase 1
+                                                    </label>
+                                                </div>&nbsp;&nbsp;&nbsp;
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Phase 2" checked>Phase 2
+                                                    </label>
+                                                </div>&nbsp;&nbsp;&nbsp;
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Phase 3" checked>Phase 3
+                                                    </label>
+                                                </div>&nbsp;&nbsp;&nbsp;
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Phase 4" checked>Phase 4
+                                                    </label>
+                                                </div>&nbsp;&nbsp;&nbsp;
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Not Applicable" checked>Not Applicable
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-12 col-lg-6 item-box">
                                             <label for="search-title">Title :</label>
                                             <input id="search-title" name="search-title" class="form-control">
@@ -385,119 +498,6 @@
                                                 <div class="form-check-inline">
                                                     <label class="form-check-label">
                                                         <input name="search-age-group" type="checkbox" class="form-check-input" value="Older Adult">Older Adult (65+)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Status -->
-                                        <div class="col-12 item-box">
-                                            <label>Status: </label>
-                                            <div class="row sub-item-box">
-                                                <div class="col-6">
-                                                    <label> Recruitment: </label>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Not yet recruiting">Not yet recruiting
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Recruiting">Recruiting
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Enrolling by invitation">Enrolling by invitation
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Active, not recruiting">Active, not recruiting
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Suspended">Suspended
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Terminated">Terminated
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Completed">Completed
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Withdrawn">Withdrawn
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Unknown status">Unknown status
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <label for="search-age-from"> Expanded Access: </label>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Available">Available
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="No longer available">No longer available
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Temporarily not available">Temporarily not available
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input name="search-status" type="checkbox" class="form-check-input" value="Approved for marketing">Approved for marketing
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Phase -->
-                                        <div class="col-12 item-box">
-                                            <label>Phase: </label>
-                                            <div class="row sub-item-box">
-                                                <div class="form-check">
-                                                    <label class="form-check-label">
-                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Early Phase 1">Early Phase 1
-                                                    </label>
-                                                </div>&nbsp;&nbsp;&nbsp;
-                                                <div class="form-check">
-                                                    <label class="form-check-label">
-                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Phase 1">Phase 1
-                                                    </label>
-                                                </div>&nbsp;&nbsp;&nbsp;
-                                                <div class="form-check">
-                                                    <label class="form-check-label">
-                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Phase 2">Phase 2
-                                                    </label>
-                                                </div>&nbsp;&nbsp;&nbsp;
-                                                <div class="form-check">
-                                                    <label class="form-check-label">
-                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Phase 3">Phase 3
-                                                    </label>
-                                                </div>&nbsp;&nbsp;&nbsp;
-                                                <div class="form-check">
-                                                    <label class="form-check-label">
-                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Phase 4">Phase 4
-                                                    </label>
-                                                </div>&nbsp;&nbsp;&nbsp;
-                                                <div class="form-check">
-                                                    <label class="form-check-label">
-                                                        <input name="search-phase" type="checkbox" class="form-check-input" value="Not Applicable">Not Applicable
                                                     </label>
                                                 </div>
                                             </div>

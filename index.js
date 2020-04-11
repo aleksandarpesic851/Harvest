@@ -387,6 +387,13 @@ function getFormData(form){
         }
     });
 
+    // if all checked, ignore
+    if (indexed_array["search-status"].length == 13) {
+        delete indexed_array["search-status"];
+    }
+    if (indexed_array["search-phase"].length == 6) {
+        delete indexed_array["search-phase"];
+    }
     return indexed_array;
 }
 
