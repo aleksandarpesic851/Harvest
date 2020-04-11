@@ -497,7 +497,7 @@ function updateDatatable(checkedNodes, checkedModifierNodes) {
             graphStudyIds = [];
             checkedNodes.forEach(function(node) {
                 let id = node.nodeId.substr(10);
-                if (checkedModifierNodes && checkedModifierNodes.length > 0 && checkedModifierNodes[0].nodeId && checkedModifierNodes[0].nodeId != "ROOT") {
+                if (checkedModifierNodes) {
                     checkedModifierNodes.forEach(function(modifier) {
                         graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]['modifier'][modifier.nodeText]["studyIds"]);
                     });
