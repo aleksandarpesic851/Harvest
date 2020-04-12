@@ -251,7 +251,7 @@
                 <!-- Chart Graph -->
                 <div class="col-12 col-lg-8 col-xl-9 enable-scroll">
                     <div class="chart-container" 
-                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll. Move horizontally by dragging." data-step='10'>
+                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll." data-step='10'>
                         <canvas id="myChart"></canvas>
                     </div>
                 </div>
@@ -538,13 +538,13 @@
                     </div>
                     <div class="modal-body">
                         <p>
-                            USclinicaltrials.org provide a <strong>graphical interface</strong> for navigating <strong>clinical trials</strong> in the <strong>USA repository</strong>. 
+                            <strong>USclinicaltrials.org</strong> provide a <strong>graphical interface</strong> for navigating <strong>clinical trials</strong> in the <strong>USA repository</strong>. 
                             FDA regulations require that all trials registered in USA to be published on <a href="https://clinicaltrials.gov">ClinicalTrials.Gov</a> website. 
                             There are over one third of a million trials, and it is very difficult to navigate.
                         </p>
                         <p>
-                            USclinicaltrials.org allows the user to graphically select trials by <strong>conditions</striong> and <strong>treatment</strong>.
-                            It’s provides convenient output functions for selected trials in the dynamic bar graph, as well as <strong>export</strong> in several formats.
+                            <strong>USclinicaltrials.org</strong> allows the user to graphically select trials by <strong>conditions</strong> and <strong>treatment</strong>.
+                            It’s provides <strong>convenient output functions for selected trials in the dynamic bar graph</strong>, as well as <strong>export</strong> in several formats.
                         </p>
                         <p>
                             This website uses a <strong>biologist-curated hierarchy of both illness conditions and treatments</strong> to provide the user convenient categories. 
