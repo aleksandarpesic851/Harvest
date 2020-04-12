@@ -215,7 +215,7 @@
                         data-intro='Tour Website.' data-step='5'>
                         <strong><i class="fa fa-question-circle fa-lg" aria-hidden="true"></i></strong>
                     </button>
-                    <button class="btn btn-secondary" data-toggle="modal" data-target="#about-modal"
+                    <button class="btn btn-info" data-toggle="modal" data-target="#about-modal"
                         data-intro='Description about this website' data-step='6'>
                         About Us
                     </button>
