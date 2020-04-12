@@ -186,7 +186,7 @@
         <!-- Main Contents -->
         <div class="top-container"> 
             <div class="row box">
-                <div class="col-12">
+                <div>
                     <img src="/imgs/clinical_index.png" style="height: auto; max-width: 50%; width: 400px" alt="clinical trials">
                     <button class="btn btn-outline-danger" style="margin-left: 3rem; padding: 1rem 2rem" onclick="searchCorona()" 
                         data-intro='Search all trials relate to COVID-19' data-step='1'>
@@ -197,26 +197,32 @@
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer
                     </button>
                 </div>
+                <div class="col text-right">
+                    <a class="btn btn-outline-success" style="padding: 1rem 2rem" href="https://fluidsforlife.com/"
+                        data-intro='External navigation to high-throughput micro-physiological screening systems, which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.' data-step='3'>
+                        <i class="fa fa-external-link-alt" aria-hidden="true"></i>&nbsp;&nbsp;Micro-physiological systems
+                    </a>
+                </div>
             </div>
-            <h1 class="text-center"> Clinical Trials Statistic Result </h1>
+            <h1 class="text-center" id="title_graph"> Clinical Trials By Conditions</h1>
             <!-- Search -->
             <div class="row box">
                 <div class="ml-auto">
                     <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
-                        data-intro='Reset zoom of graph.' data-step='3'>
+                        data-intro='Reset zoom of graph.' data-step='4'>
                         <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom
                     </button>
                     <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
-                        data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='4'>
+                        data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='5'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
                     </button>
                     <button type="button" id="start_tour" title="Tour Website" data-toggle="tooltip" data-placement="bottom"
                         class="btn btn-info btn-flat hidden-xs" style="padding: 10px 20px"
-                        data-intro='Tour Website.' data-step='5'>
+                        data-intro='Tour Website.' data-step='6'>
                         <strong><i class="fa fa-question-circle fa-lg" aria-hidden="true"></i></strong>
                     </button>
                     <button class="btn btn-info" data-toggle="modal" data-target="#about-modal"
-                        data-intro='Description about this website' data-step='6'>
+                        data-intro='Description about this website' data-step='7'>
                         About Us
                     </button>
                 </div>
@@ -225,9 +231,9 @@
             <div class="row box box-border">
                 <div class="col-12 col-lg-4 col-xl-3">
                     <ul class="nav nav-tabs nav-justified" id="graph-tab">
-                        <li class=" nav-item" data-intro='Filter search results by condition only.' data-step='7'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by modifier only.' data-step='8'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='9'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by condition only.' data-step='8'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by modifier only.' data-step='9'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='10'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane container graph-left active" id="graph-tab-condition">
@@ -251,7 +257,7 @@
                 <!-- Chart Graph -->
                 <div class="col-12 col-lg-8 col-xl-9 enable-scroll">
                     <div class="chart-container" 
-                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll." data-step='10'>
+                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll." data-step='11'>
                         <canvas id="myChart"></canvas>
                     </div>
                 </div>
@@ -261,7 +267,7 @@
             <h2 class="text-center">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
                 <br><br>
-                <div class="col-12" data-intro='Data table for filtered data' data-step='11'>
+                <div class="col-12" data-intro='Data table for filtered data' data-step='12'>
                     <table id="study-table" class="table table-striped table-bordered" style="width: 150%">
                         <thead>
                             <tr>

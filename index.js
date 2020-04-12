@@ -57,6 +57,7 @@ function initTour() {
 }
 function initGraphTab() {
     $('#graph-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        $("#title_graph").html("Clinical Trials By " + $(this).html());
         updateGraph();
     });
 }
