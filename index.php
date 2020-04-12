@@ -6,8 +6,8 @@
 	<head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> US Clinical Trials </title>
-        <meta name="description" content="Statistical insights for clinical trials. Supports all clinical trials…">
+        <title> Intelligent navigation of USA clinical trails </title>
+        <meta name="description" content="Provide a graphical interface for navigating clinical trials in the USA repository. Allows the user to graphically select trials by conditions and treatment. This website uses a biologist-curated a hierarchy of both illness conditions and treatments to provide the user convenient categories. This allows comparison of related conditions or treatments.">
         
         <link rel="shortcut icon" href="/imgs/clinical_trial_icon.png">
         <!-- Font -->
@@ -189,11 +189,11 @@
                 <div class="col-12">
                     <img src="/imgs/clinical_index.png" style="height: auto; max-width: 50%; width: 400px" alt="clinical trials">
                     <button class="btn btn-outline-danger" style="margin-left: 3rem; padding: 1rem 2rem" onclick="searchCorona()" 
-                        data-intro='Search all trials related with COVID-19' data-step='1'>
+                        data-intro='Search all trials relate to COVID-19' data-step='1'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19
                     </button>
                     <button class="btn btn-outline-warning" style="padding: 1rem 2rem" onclick="searchCancer()"
-                        data-intro='Search all trials related with cancer.' data-step='2'>
+                        data-intro='Search all trials relate to cancer.' data-step='2'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer
                     </button>
                 </div>
@@ -204,13 +204,20 @@
                 <div class="ml-auto">
                     <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
                         data-intro='Reset zoom of graph.' data-step='3'>
-                        <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom</button>
+                        <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom
+                    </button>
                     <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
-                        data-intro='Search trials.' data-step='4'><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search</button>
+                        data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='4'>
+                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
+                    </button>
                     <button type="button" id="start_tour" title="Tour Website" data-toggle="tooltip" data-placement="bottom"
                         class="btn btn-info btn-flat hidden-xs" style="padding: 10px 20px"
                         data-intro='Tour Website.' data-step='5'>
                         <strong><i class="fa fa-question-circle fa-lg" aria-hidden="true"></i></strong>
+                    </button>
+                    <button class="btn btn-secondary" data-toggle="modal" data-target="#about-modal"
+                        data-intro='Description about this website' data-step='6'>
+                        About Us
                     </button>
                 </div>
             </div>
@@ -218,9 +225,9 @@
             <div class="row box box-border">
                 <div class="col-12 col-lg-4 col-xl-3">
                     <ul class="nav nav-tabs nav-justified" id="graph-tab">
-                        <li class=" nav-item" data-intro='Filter search results by condition.' data-step='6'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by modifier.' data-step='7'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by treatment.' data-step='8'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by condition only.' data-step='7'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by modifier only.' data-step='8'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='9'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane container graph-left active" id="graph-tab-condition">
@@ -243,7 +250,8 @@
                 </div>
                 <!-- Chart Graph -->
                 <div class="col-12 col-lg-8 col-xl-9 enable-scroll">
-                    <div class="chart-container" data-intro="Graph for filtered data. This graph is zoomed in/out when mouse scroll on this graph. And it's moved horizontally when mouse click and move on it." data-step='9'>
+                    <div class="chart-container" 
+                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll. Move horizontally by dragging." data-step='10'>
                         <canvas id="myChart"></canvas>
                     </div>
                 </div>
@@ -253,7 +261,7 @@
             <h2 class="text-center">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
                 <br><br>
-                <div class="col-12" data-intro='Data table for filtered data' data-step='10'>
+                <div class="col-12" data-intro='Data table for filtered data' data-step='11'>
                     <table id="study-table" class="table table-striped table-bordered" style="width: 150%">
                         <thead>
                             <tr>
@@ -518,5 +526,37 @@
             </div>
         </div>
 
+        <!-- About Modal -->
+        <div class="modal fade" id="about-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">About us</h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            USclinicaltrials.org provide a <strong>graphical interface</strong> for navigating <strong>clinical trials</strong> in the <strong>USA repository</strong>. 
+                            FDA regulations require that all trials registered in USA to be published on <a href="https://clinicaltrials.gov">ClinicalTrials.Gov</a> website. 
+                            There are over one third of a million trials, and it is very difficult to navigate.
+                        </p>
+                        <p>
+                            USclinicaltrials.org allows the user to graphically select trials by <strong>conditions</striong> and <strong>treatment</strong>.
+                            It’s provides convenient output functions for selected trials in the dynamic bar graph, as well as <strong>export</strong> in several formats.
+                        </p>
+                        <p>
+                            This website uses a <strong>biologist-curated hierarchy of both illness conditions and treatments</strong> to provide the user convenient categories. 
+                            This allows <strong>comparison of related conditions or treatments</strong>. 
+                            For example, for a given disease-treatment combination a patient might desire to see alternative treatments that fit his disease, while a company might want to see alternative diseases, which might respond to its treatment.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

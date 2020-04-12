@@ -51,10 +51,6 @@ $(document).ready(function() {
 } );
 
 function initTour() {
-    introJs().setOption("nextLabel", "Next »");
-    introJs().setOption("prevLabel", "« Prev");
-    introJs().setOption("skipLabel", "End Tour");
-    
     $('#start_tour').click(function(){
 		introJs().start();
 	});
@@ -614,6 +610,7 @@ function searchCorona() {
     conditionTree.uncheckAll();
     conditionTree.checkedNodes = ["CONDITION-141"];
     conditionTree.refresh();
+    $('.nav-tabs a[href="#graph-tab-drug"]').tab('show');
     search();
 }
 
