@@ -676,16 +676,50 @@ function initModifiers() {
 }
 
 function searchCorona() {
-    conditionTree.uncheckAll();
-    conditionTree.checkedNodes = ["CONDITION-141"];
-    conditionTree.refresh();
+    conditionCheckedAuto = true;
+    modifierCheckedAuto = true;
+    drugCheckedAuto = true;
+
+    conditionSearchTree.uncheckAll();
+    conditionSearchTree.checkedNodes = ["CONDITION-141"];
+    conditionSearchTree.refresh();
+
+    modifierTree.checkAll();
+    modifierTree.refresh();
+    modifierTree.expandAll();
+
+    drugSearchTree.checkAll();
+    drugSearchTree.refresh();
+    drugSearchTree.expandAll();
+
+    conditionCheckedAuto = false;
+    modifierCheckedAuto = false;
+    drugCheckedAuto = false;
+
     $('.nav-tabs a[href="#graph-tab-drug"]').tab('show');
-    search();
+    updateGraph();
 }
 
 function searchCancer() {
-    conditionTree.uncheckAll();
-    conditionTree.checkedNodes = ["CONDITION-44", "CONDITION-81"];
-    conditionTree.refresh();
-    search();
+    conditionCheckedAuto = true;
+    modifierCheckedAuto = true;
+    drugCheckedAuto = true;
+
+    conditionSearchTree.uncheckAll();
+    conditionSearchTree.checkedNodes = ["CONDITION-44", "CONDITION-81"];
+    conditionSearchTree.refresh();
+
+    modifierTree.checkAll();
+    modifierTree.refresh();
+    modifierTree.expandAll();
+
+    drugSearchTree.checkAll();
+    drugSearchTree.refresh();
+    drugSearchTree.expandAll();
+
+    conditionCheckedAuto = false;
+    modifierCheckedAuto = false;
+    drugCheckedAuto = false;
+
+    updateGraph();
 }
