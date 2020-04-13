@@ -9,6 +9,23 @@
         <title> Intelligent navigation of USA clinical trails </title>
         <meta name="description" content="Provide a graphical interface for navigating clinical trials in the USA repository. Allows the user to graphically select trials by conditions and treatment. This website uses a biologist-curated a hierarchy of both illness conditions and treatments to provide the user convenient categories. This allows comparison of related conditions or treatments.">
         
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "ClinicalTrails",
+            "name": "Intelligent navigation of USA clinical trails",
+            "url": "http://usclinicaltrials.org",
+            "description": "USclinicaltrials.org provide a graphical interface for navigating clinical trials in the USA repository. FDA regulations require that all trials registered in USA to be published on ClinicalTrials.Gov website. There are over one third of a million trials, and it is very difficult to navigate. USclinicaltrials.org allows the user to graphically select trials by conditions and treatment. It’s provides convenient output functions for selected trials in the dynamic bar graph, as well as export in several formats.This website uses a biologist-curated a hierarchy of both illness conditions and treatments to provide the user convenient categories. This allows comparison of related conditions or treatments. For example, for a given disease-treatment combination a patient might desire to see alternative treatments that fit his disease, while a company might want to see alternative diseases, which might respond to its treatment.",
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+1-617-775-9778",
+                "email": "info@flowcell.co",
+                "address": "29 Littles Point Rd. Swampscott, MA 01907, USA",
+                "contactType": "Customer service"
+            }
+        }
+        </script>
+
         <link rel="shortcut icon" href="/imgs/clinical_trial_icon.png">
         <!-- Font -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
