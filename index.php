@@ -159,11 +159,11 @@
                 <img src="/imgs/clinical_index.png" style="height: auto; max-width: 80%; width: 400px" alt="clinical trials">
                 <div style="margin-left: 3rem; margin-top: 2rem">
                     <button class="btn btn-outline-danger" style="padding: 1rem 2rem" onclick="searchCorona()" 
-                        data-intro='Search all trials relate to COVID-19' data-step='1'>
+                        data-intro='Search all trials related to COVID-19' data-step='1'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19
                     </button>
                     <button class="btn btn-outline-warning" style="padding: 1rem 2rem" onclick="searchCancer()"
-                        data-intro='Search all trials relate to cancer.' data-step='2'>
+                        data-intro='Search all trials related to cancer.' data-step='2'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer
                     </button>
                 </div>
