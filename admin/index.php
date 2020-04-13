@@ -40,10 +40,10 @@
             <h3 class="title">Scrape Management</h3>
             <div class="row">
                 <div class="ml-auto">
-                    <a href="/admin_analysis.php" class="btn btn-primary"> Admin Home Page </a>
+                    <a href="/admin_analysis.php" class="btn btn-primary"> Admin Analysis </a>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-8 ml-auto mr-auto split"></div>
             </div>
