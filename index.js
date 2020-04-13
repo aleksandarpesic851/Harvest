@@ -60,7 +60,7 @@ function initTour() {
 function initGraphTab() {
     $('#graph-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $("#title_graph").html("Clinical Trials By " + $(this).html());
-        updateGraph();
+        updateGraph(false);
     });
 }
 
@@ -469,7 +469,7 @@ function showWaiting() {
     $("#waiting").show();
 }
 
-function updateGraph() {
+function updateGraph(loadTable = true) {
     graphDrawDetails = [];
     let activeTabId = $("#graph-tab .active").attr("href");
     let checkedNodes;
@@ -501,9 +501,11 @@ function updateGraph() {
         checkedNodes = checkedNodes[0].nodeChild;
     }
 
-    getPossibleStudyIds();
-    // Update datatable
-    updateDatatable();
+    if (loadTable) {
+        getPossibleStudyIds();
+        // Update datatable
+        updateDatatable();
+    }
     
     drawGraph(checkedNodes, checkedModifierNodes);
 }
