@@ -205,8 +205,6 @@ function barClicked(e) {
             modifierTree.refresh();
             modifierTree.expandAll();
             $('.nav-tabs a[href="#graph-tab-modifier"]').tab('show');
-        } else {
-            modifierTree.checkAll();
         }
     } else {
         drugSearchTree.uncheckAll();

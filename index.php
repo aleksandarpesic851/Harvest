@@ -7,7 +7,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> Intelligent navigation of USA clinical trails </title>
-        <meta name="description" content="Provide a graphical interface for navigating clinical trials in the USA repository. Allows the user to graphically select trials by conditions and treatment. This website uses a biologist-curated a hierarchy of both illness conditions and treatments to provide the user convenient categories. This allows comparison of related conditions or treatments.">
+        <meta name="description" content="Provide a graphical interface for navigating clinical trials in the USA repository. This website uses a biologist-curated hierarchy of both illness conditions and treatments to provide the user convenient categories.">
         
         <script type="application/ld+json">
         {
@@ -168,7 +168,7 @@
                     </button>
                 </div>
                 <div class="col text-right" style="margin-top: 2rem">
-                    <a class="btn btn-outline-success" style="padding: 1rem 2rem" href="https://fluidsforlife.com/" target="_blank"
+                    <a class="btn btn-outline-success" style="padding: 1rem 2rem" href="https://fluidsforlife.com/category/system.html" target="_blank"
                         data-intro='External navigation to high-throughput micro-physiological screening systems, which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.' data-step='3'>
                         <i class="fa fa-external-link-alt" aria-hidden="true"></i>&nbsp;&nbsp;Micro-physiological systems
                     </a>
@@ -189,7 +189,7 @@
                     <button type="button" id="start_tour" title="Tour Website" data-toggle="tooltip" data-placement="bottom"
                         class="btn btn-info btn-flat hidden-xs" style="padding: 10px 20px"
                         data-intro='Tour Website.' data-step='6'>
-                        <strong><i class="fa fa-question-circle fa-lg" aria-hidden="true"></i></strong>
+                        <i class="fa fa-question-circle fa-lg" aria-hidden="true"></i>
                     </button>
                     <button class="btn btn-info" data-toggle="modal" data-target="#about-modal"
                         data-intro='Description about this website' data-step='7'>
@@ -208,19 +208,16 @@
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane container graph-left active" id="graph-tab-condition">
                             <!-- Condition Tree -->
-                            <div id="condition-search-tree">
-                            </div>
+                            <div id="condition-search-tree"></div>
                         </div>
                         <!-- Modifier Tree -->
                         <div class="tab-pane container graph-left fade" id="graph-tab-modifier">
                             <!-- Condition Tree -->
-                            <div id="modifier-tree">
-                            </div>
+                            <div id="modifier-tree"></div>
                         </div>
                         <!-- Drug -->
                         <div class="tab-pane container graph-left fade" id="graph-tab-drug">
-                            <div id="drug-search-tree">
-                            </div>
+                            <div id="drug-search-tree"></div>
                         </div>
                     </div>
                 </div>
@@ -232,11 +229,10 @@
                     </div>
                 </div>
             </div>
-            <br>
+            
             <!-- Data table -->
-            <h2 class="text-center">Clinical Trials Data Table For Graph</h2>
+            <h2 class="text-center" style="margin: 1.5rem 0">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
-                <br><br>
                 <div class="col-12" data-intro='Data table for filtered data' data-step='12'>
                     <table id="study-table" class="table table-striped table-bordered" style="width: 150%">
                         <thead>
@@ -265,7 +261,7 @@
                     <div class="modal-header">
                         <h2 class="modal-title" id="exampleModalLongTitle">Search Studies</h2>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -514,13 +510,13 @@
                     </div>
                     <div class="modal-body">
                         <p>
-                            <strong>USclinicaltrials.org</strong> provide a <strong>graphical interface</strong> for navigating <strong>clinical trials</strong> in the <strong>USA repository</strong>. 
+                            <strong>USclinicaltrials.org</strong> provides a <strong>graphical interface</strong> for intelligent navigation of <strong>clinical trials</strong> in the <strong>USA repository</strong>. 
                             FDA regulations require that all trials registered in USA to be published on <a href="https://clinicaltrials.gov">ClinicalTrials.Gov</a> website. 
                             There are over one third of a million trials, and it is very difficult to navigate.
                         </p>
                         <p>
-                            <strong>USclinicaltrials.org</strong> allows the user to graphically select trials by <strong>conditions</strong> and <strong>treatment</strong>.
-                            It’s provides <strong>convenient output functions for selected trials in the dynamic bar graph</strong>, as well as <strong>export</strong> in several formats.
+                            USclinicaltrials.org allows the user to graphically select trials by <strong>conditions</strong> and <strong>treatment</strong>.
+                            It’s provides <strong>convenient output functions</strong> for selected trials in the dynamic bar graph, as well as <strong>export</strong> in several formats.
                         </p>
                         <p>
                             This website uses a <strong>biologist-curated hierarchy of both illness conditions and treatments</strong> to provide the user convenient categories. 
@@ -561,8 +557,7 @@
         <!-- Javascripts -->
 
         <!-- JQuery -->
-        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-        
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -584,14 +579,14 @@
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.4"></script>
         
         <!-- Date RangePicker -->
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <script async type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
         <!-- Treeview -->
-        <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
+        <script async src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
 
         <!-- Tour -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.min.js"></script>
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.min.js"></script>
 
         <!-- Page Js -->
         <script src="index.js"></script>
