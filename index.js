@@ -535,6 +535,9 @@ function getPossibleStudyIds() {
     // merge condition and modifier study ids
     let conditionIds = [];
     if (!isAllCondition || !isAllModifier) {
+        if (isAllCondition) {
+            conditionNodes = conditionNodes[0].nodeChild;
+        }
         conditionNodes.forEach(function(conditionNode) {
             let id = conditionNode.nodeId.substr(10);
             if (isAllModifier) {
