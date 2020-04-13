@@ -534,59 +534,59 @@
 
         <!-- Stylesheets -->
         <!-- Font -->
-        <link async rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link async rel="stylesheet" href="/public/font-awesome/css/font-awesome.min.css">
 
 		<!-- Bootstrap -->
-        <link async rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link async rel="stylesheet" href="/public/css/bootstrap.min.css">
 
         <!-- Datatable -->
-		<link async rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
-		<link async rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+		<link async rel="stylesheet" type="text/css" href="/public/css/dataTables.bootstrap4.min.css">
+		<link async rel="stylesheet" type="text/css" href="/public/css/buttons.dataTables.min.css">
 
         <!-- Date Range Picker -->
-        <link async rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <link async rel="stylesheet" type="text/css" href="/public/css/daterangepicker.css" />
 
         <!-- Tree -->
-        <link async href="//cdn.syncfusion.com/ej2/ej2-base/styles/material.css" rel="stylesheet">
-        <link async href="//cdn.syncfusion.com/ej2/ej2-buttons/styles/material.css" rel="stylesheet">
-        <link async href="//cdn.syncfusion.com/ej2/ej2-navigations/styles/material.css" rel="stylesheet">
+        <link async href="/public/css/ej2-base.min.css" rel="stylesheet">
+        <link async href="/public/css/ej2-buttons.min.css" rel="stylesheet">
+        <link async href="/public/css/ej2-navigations.min.css" rel="stylesheet">
 
         <!-- Tour -->
-        <link async href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css" rel="stylesheet"/>
+        <link async href="/public/css/introjs.min.css" rel="stylesheet"/>
         
         <!-- Javascripts -->
 
         <!-- JQuery -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="/public/js/jquery-3.4.1.min.js" ></script>
         <!-- Bootstrap -->
-        <script async src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script async src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="/public/js/popper.min.js"></script>
+        <script src="/public/js/bootstrap.min.js"></script>
         
         <!-- Datatable -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="/public/js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="/public/js/dataTables.bootstrap4.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="/public/js/dataTables.buttons.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="/public/js/buttons.flash.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="/public/js/jszip.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="/public/js/pdfmake.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="/public/js/vfs_fonts.js"></script>
+		<script type="text/javascript" charset="utf8" src="/public/js/buttons.html5.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="/public/js/buttons.print.min.js"></script>
         
         <!-- Chart -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.4"></script>
+        <script src="/public/js/chart.js"></script>
+        <script src="/public/js/hammer.js"></script>
+        <script src="/public/js/chartjs-plugin-zoom.js"></script>
         
         <!-- Date RangePicker -->
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <script type="text/javascript" src="/public/js/moment.min.js"></script>
+        <script type="text/javascript" src="/public/js/daterangepicker.min.js"></script>
 
         <!-- Treeview -->
-        <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
+        <script src="/public/js/ej2.min.js" type="text/javascript"></script>
 
         <!-- Tour -->
-        <script async src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.min.js"></script>
+        <script src="/public/js/intro.min.js"></script>
 
         <!-- Page Js -->
         <script src="index.js"></script>
