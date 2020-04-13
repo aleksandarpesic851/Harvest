@@ -6,6 +6,7 @@ let drugSearchTree;                 //Drug tree on the left of graph
 let modifierTree;                   //Modifier tree on the left of graph
 let modifiers = [];                      // modifier array.
 let searchItems;                    // all Search items of search dialog
+let searchCheckedIds = [];                    // all Search items of search dialog
 let loadedCnt = 0;                  // the number of loaded data , 1 - graph data, 2 - table data
 let graphSrcData;                   // graph origin data, which is filtered by search.
 let graphDrawDetails;               // the sub data of graphSrcData to be displayed on graph
@@ -35,6 +36,7 @@ let graphShowKey = "conditions";    // graph showing key. conditions: draw condi
 
 let graphStudyIds = [];             // displayed graph data study ids
 let emptyTable = false;
+let allData = false;
 
 $(document).ready(function() {
     ej.base.enableRipple(true);
@@ -231,6 +233,10 @@ function initConditionTree() {
                     conditionTree.checkAll();
                     conditionTree.expandAll();
 
+                    conditionSearchTree.fields.dataSource = data;
+                    conditionSearchTree.refresh();
+                    conditionSearchTree.expandAll();
+
                     loadedTreeCnt++;
                     readGraphData();
                 } catch (e) {
@@ -272,6 +278,10 @@ function initDrugTree() {
                     drugTree.checkAll();
                     drugTree.expandAll();
                     
+                    drugSearchTree.fields.dataSource = data;
+                    drugSearchTree.refresh();
+                    drugSearchTree.expandAll();
+
                     loadedTreeCnt++;
                     readGraphData();
                 } catch (e) {
@@ -311,18 +321,18 @@ function readGraphData() {
     }
     // Load search tree from drug tree
     drugCheckedAuto = true;
-    drugSearchTree.fields.dataSource = searchItems["drugs"];
+    drugSearchTree.uncheckAll();
+    drugSearchTree.checkedNodes = searchCheckedIds["drugs"];
     drugSearchTree.refresh();
-    drugSearchTree.checkAll();
     drugSearchTree.expandAll();
     drugCheckedAuto = false;
     
 
     // Load search tree from condition tree
     conditionCheckedAuto = true;
-    conditionSearchTree.fields.dataSource = searchItems["conditions"];
+    conditionSearchTree.uncheckAll();
+    conditionSearchTree.checkedNodes = searchCheckedIds["conditions"];
     conditionSearchTree.refresh();
-    conditionSearchTree.checkAll();
     conditionSearchTree.expandAll();
     conditionCheckedAuto = false;
 
@@ -362,8 +372,20 @@ function search() {
 
 function readSearchItems() {
     searchItems = getFormData($("#search-other-form"));
-    searchItems["conditions"] = getCheckedTreeNodes("condition-tree", conditionTree);
-    searchItems["drugs"] = getCheckedTreeNodes("drug-tree", drugTree);
+    searchItems["conditions"] = conditionTree.fields.dataSource;
+    searchItems["drugs"] = drugTree.fields.dataSource;
+
+    let checkedConditionNodes = getCheckedTreeNodes("condition-tree", conditionTree);
+    searchCheckedIds["conditions"] = [];
+    checkedConditionNodes.forEach(function(node) {
+        searchCheckedIds["conditions"].push(node.nodeId);
+    });
+
+    let checkedDrugNodes = getCheckedTreeNodes("drug-tree", drugTree);
+    searchCheckedIds["drugs"] = [];
+    checkedDrugNodes.forEach(function(node) {
+        searchCheckedIds["drugs"].push(node.nodeId);
+    });
 }
 
 function getFormData(form){
@@ -466,11 +488,6 @@ function updateGraph() {
         checkedNodes = getCheckedTreeNodes("condition-search-tree", conditionSearchTree);
     }
     
-    // // if only one leaf is checked, draw modifiers.
-    // if (activeTabId == "#graph-tab-condition" && checkedNodes.length == 1 && checkedNodes[0].nodeChild.length == 0) {
-    //     isModifier = true;
-    // }
-
     let checkedModifierNodes;
     if (isModifier) {
         checkedModifierNodes = getCheckedTreeNodes("modifier-tree", modifierTree);
@@ -479,43 +496,82 @@ function updateGraph() {
     if (checkedModifierNodes && checkedModifierNodes.length > 0 && checkedModifierNodes[0].nodeId == "ROOT") {
         checkedModifierNodes = checkedModifierNodes[0].nodeChild;
     }
-
-    // Update datatable
-    updateDatatable(checkedNodes, checkedModifierNodes);
-
     // if checked only one category and has children, display the children
-    if (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
+    while (checkedNodes.length == 1 && checkedNodes[0].nodeChild.length > 0) {
         checkedNodes = checkedNodes[0].nodeChild;
     }
+
+    getPossibleStudyIds();
+    // Update datatable
+    updateDatatable();
+    
     drawGraph(checkedNodes, checkedModifierNodes);
 }
 
-function updateDatatable(checkedNodes, checkedModifierNodes) {
-    if (!checkedNodes || checkedNodes.length < 1) {
-        emptyTable = true;
+function getPossibleStudyIds() {
+    let conditionNodes = getCheckedTreeNodes("condition-search-tree", conditionSearchTree);
+    let modifierNodes = getCheckedTreeNodes("modifier-tree", modifierTree);
+    let drugNodes =getCheckedTreeNodes("drug-search-tree", drugSearchTree);
+    
+    graphStudyIds = [];
+    emptyTable = true;
+    allData = false;
+
+    if(conditionNodes.length < 1 || modifierNodes.length < 1 || drugNodes.length < 1) {
+        return;
     }
-    else {
+
+    let isAllCondition = conditionNodes[0].nodeId == "ROOT";
+    let isAllModifier = modifierNodes[0].nodeId == "ROOT";
+    let isAllDrug = drugNodes[0].nodeId == "ROOT";
+
+    //If all is checked, don't merge.
+    if (isAllCondition && isAllModifier && isAllDrug) {
         emptyTable = false;
-        if (checkedNodes[0].nodeId == "ROOT") {
-            graphStudyIds = graphSrcData["totalIds"];
-        } else {
-            graphStudyIds = [];
-            checkedNodes.forEach(function(node) {
-                let id = node.nodeId.substr(10);
-                if (checkedModifierNodes) {
-                    checkedModifierNodes.forEach(function(modifier) {
-                        graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]['modifier'][modifier.nodeText]["studyIds"]);
-                    });
-                } else {
-                    graphStudyIds = graphStudyIds.concat(graphSrcData[graphShowKey][id]["studyIds"]);
-                }
-            });
-            graphStudyIds = graphStudyIds.filter((item, idx) => graphStudyIds.indexOf(item) == idx);
-            if (graphStudyIds.length < 1) {
-                emptyTable = true;
-            }
-        }
+        allData = true;
+        return;
     }
+
+    // merge condition and modifier study ids
+    let conditionIds = [];
+    if (!isAllCondition || !isAllModifier) {
+        conditionNodes.forEach(function(conditionNode) {
+            let id = conditionNode.nodeId.substr(10);
+            if (isAllModifier) {
+                conditionIds = conditionIds.concat(graphSrcData["conditions"][id]["studyIds"]);
+            } else {
+                modifierNodes.forEach(function(modifierNode) {
+                    conditionIds = conditionIds.concat(graphSrcData["conditions"][id]['modifier'][modifierNode.nodeText]["studyIds"]);
+                });
+            }
+            conditionIds = conditionIds.filter((item, idx) => conditionIds.indexOf(item) == idx);
+        });
+    }
+
+    // merge drug study ids
+    let drugIds = [];
+    if (!isAllDrug) {
+        drugNodes.forEach(function(drugNode) {
+            let id = drugNode.nodeId.substr(10);
+            drugIds = drugIds.concat(graphSrcData["drugs"][id]["studyIds"]);
+            drugIds = drugIds.filter((item, idx) => drugIds.indexOf(item) == idx);
+        });
+    }
+
+    //intersection of condition and drugs
+    if (isAllCondition && isAllModifier) {
+        graphStudyIds = drugIds;
+    } else if (isAllDrug) {
+        graphStudyIds = conditionIds;
+    } else {
+        graphStudyIds = conditionIds.filter( item => drugIds.indexOf(item) != -1 );
+    }
+
+    emptyTable = graphStudyIds.length < 1;
+}
+
+
+function updateDatatable() {
     if(studyTable) {
         studyTable.ajax.reload();
     } else {
@@ -536,7 +592,12 @@ function drawGraph(nodes, modifierNodes) {
         if (isModifier) {
             modifierNodes.forEach( modifier=> {
                 let modifierName = modifier.nodeText;
-                let nCnt = graphSrcData[graphShowKey][id]["count"][modifierName];
+                let nCnt = 0;
+                if (allData) {
+                    nCnt = graphSrcData[graphShowKey][id]["modifier"][modifierName]["studyIds"].length;
+                } else {
+                    nCnt = graphSrcData[graphShowKey][id]["modifier"][modifierName]["studyIds"].filter( item => graphStudyIds.indexOf(item) != -1 ).length;
+                }
                 if (nCnt > 0) {
                     graphLabels.push(modifierName + " - " + node.nodeText);
                     graphDrawData.push(nCnt);
@@ -547,8 +608,13 @@ function drawGraph(nodes, modifierNodes) {
                 }
             });
         } else {
+            let nCnt = 0;
             // show all child node data
-            let nCnt = graphSrcData[graphShowKey][id]["count"]["All"];
+            if (allData) {
+                nCnt = graphSrcData[graphShowKey][id]["studyIds"].length;
+            } else {
+                nCnt = graphSrcData[graphShowKey][id]["studyIds"].filter( item => graphStudyIds.indexOf(item) != -1 ).length;
+            }
             // if (nCnt > 0) {
             graphLabels.push(node.nodeText);
             graphDrawData.push(nCnt);

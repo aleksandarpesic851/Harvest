@@ -186,9 +186,9 @@
         <!-- Main Contents -->
         <div class="top-container"> 
             <div class="row box">
-                <div>
-                    <img src="/imgs/clinical_index.png" style="height: auto; max-width: 50%; width: 400px" alt="clinical trials">
-                    <button class="btn btn-outline-danger" style="margin-left: 3rem; padding: 1rem 2rem" onclick="searchCorona()" 
+                <img src="/imgs/clinical_index.png" style="height: auto; max-width: 80%; width: 400px" alt="clinical trials">
+                <div style="margin-left: 3rem; margin-top: 2rem">
+                    <button class="btn btn-outline-danger" style="padding: 1rem 2rem" onclick="searchCorona()" 
                         data-intro='Search all trials relate to COVID-19' data-step='1'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19
                     </button>
@@ -197,8 +197,8 @@
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer
                     </button>
                 </div>
-                <div class="col text-right">
-                    <a class="btn btn-outline-success" style="padding: 1rem 2rem" href="https://fluidsforlife.com/"
+                <div class="col text-right" style="margin-top: 2rem">
+                    <a class="btn btn-outline-success" style="padding: 1rem 2rem" href="https://fluidsforlife.com/" target="_blank"
                         data-intro='External navigation to high-throughput micro-physiological screening systems, which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.' data-step='3'>
                         <i class="fa fa-external-link-alt" aria-hidden="true"></i>&nbsp;&nbsp;Micro-physiological systems
                     </a>
