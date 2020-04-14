@@ -66,7 +66,7 @@
         global $conn;
         
         $result = mysqli_query($conn, $query);
-        if (mysqli_num_rows($result) < 1) {
+        if (!$result || mysqli_num_rows($result) < 1) {
             return array();
         }
         // Fetch all
