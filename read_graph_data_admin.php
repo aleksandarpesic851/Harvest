@@ -15,13 +15,28 @@
     $drugTree = $_POST["drugs"];
 
     $conditions = array();
+    $parentConditions = array();// this is used to calculate total study Ids
     getAllConditions($conditionTree);
     
     $drugs = array();
+    $parentDrugs = array();
     getAllDrugs($drugTree);
 
+    $isAllCondition = ($conditionTree[0]["nodeId"] == "ROOT");
+    $isAllDrug = ($drugTree[0]["nodeId"] == "ROOT");
+
+    $condition_studyIds = array();    // array of key as study id
+    $drug_studyIds = array();    // array of key as study id
+    $studyIds = array();           // Merged (drug * condition) study Ids
+    $studyIdVals = array(); // array of value as study id
     $filteredIds = array(); // array of key as filtered study id
     $filteredIdVals = array();
+
+    getAllStudyIds_Condition();
+    getAllStudyIds_Drug();
+    mergeDrugConditionIds();
+    createValArray();
+
     searchStudies();
     
     $modifiers = readAllModifiers();
@@ -38,6 +53,7 @@
     ////////////////////////////////GET ALL CONDITIONS////////////////////////////////////////
     function getAllConditions($conditionTree) {
         global $conditions;
+        global $parentConditions;
 
         if (!isset($conditionTree) || count($conditionTree) < 1) {
             return array();
@@ -53,6 +69,7 @@
         foreach($conditionTree as $node) {
             $key = substr($node["nodeId"], 10);
             $conditions[$key]["condition_name"] = $node["nodeText"];
+            array_push($parentConditions, $key);
             addChildNode($node);
         }
     }
@@ -88,6 +105,7 @@
         foreach($drugTree as $node) {
             $key = substr($node["nodeId"], 10);
             $drugs[$key]["drug_name"] = $node["nodeText"];
+            array_push($parentDrugs, $key);
             addChildNode_Drug($node);
         }
     }
@@ -106,6 +124,19 @@
 
     ////////////////////////////EXTRACT study IDs related with condition///////////////////////////////////
     ///////Condition///////
+    function getAllStudyIds_Condition() {
+        global $conditions;
+        global $parentConditions;
+        global $condition_studyIds;
+        $i=0;
+        foreach($conditions as $key=>$condition) {
+            $conditions[$key]["studyIds"] = getStudyIds_Condition($key, 1);
+            if (in_array($key, $parentConditions)) {
+                mergeStudyIds_Condition($conditions[$key]["studyIds"]);
+            }
+        }
+    }
+
     function getStudyIds_Condition($conditionId, $modifierId) {
         $query = "SELECT `study_ids` FROM condition_hierarchy_modifier_stastics WHERE `hierarchy_id` = $conditionId AND `modifier_id` = $modifierId";
         $statistics = mysqlReadFirst($query);
@@ -117,8 +148,28 @@
 
         return explode(",", $strIds);
     }
+    
+    function mergeStudyIds_Condition($array) {
+        global $condition_studyIds;
+
+        foreach($array as $val) {
+            $condition_studyIds[$val] = '';
+        }
+    }
 
     ///////Drugs///////
+    function getAllStudyIds_Drug() {
+        global $drugs;
+        global $parentDrugs;
+        global $drug_studyIds;
+        $i=0;
+        foreach($drugs as $key=>$drug) {
+            $drugs[$key]["studyIds"] = getStudyIds_Drug($key);
+            if (in_array($key, $parentDrugs)) {
+                mergeStudyIds_Drug($drugs[$key]["studyIds"]);
+            }
+        }
+    }
     function getStudyIds_Drug($drugId) {
         $query = "SELECT `study_ids` FROM drug_hierarchy WHERE `id` = $drugId";
         $statistics = mysqlReadFirst($query);
@@ -130,22 +181,80 @@
 
         return explode(",", $strIds);
     }
- 
+    
+    function mergeStudyIds_Drug($array) {
+        global $drug_studyIds;
+
+        foreach($array as $val) {
+            $drug_studyIds[$val] = '';
+        }
+    }
+    ///////////////////////////////////////Merge ids and generate val array/////////////////////////////////////////////////
+    function mergeDrugConditionIds() {
+        global $drug_studyIds;
+        global $condition_studyIds;
+        global $studyIds;
+        global $isAllCondition, $isAllDrug;
+
+        if($isAllDrug) {
+            if ($isAllCondition) {
+                $studyIds = $drug_studyIds;
+                foreach($condition_studyIds as $key => $val) {
+                    $studyIds[$key] = '';
+                }
+            } else {
+                $studyIds = $condition_studyIds;
+            }
+        } else {
+            if ($isAllCondition) {
+                $studyIds = $drug_studyIds;
+            } else {
+                $studyIds = arrayIntersectByKey($condition_studyIds, $drug_studyIds);
+            }
+        }
+        // echo "ok" . count($drug_studyIds) . "," . count($condition_studyIds) . "," . count($studyIds);
+        // var_dump($condition_studyIds);
+        // echo "<br>" . json_encode($drug_studyIds) . "<br>";
+        // echo json_encode($condition_studyIds) . "<br>";
+        // echo json_encode($studyIds) . "<br>";
+    }
+
+    function createValArray() {
+        global $studyIds;
+        global $studyIdVals;
+
+        foreach($studyIds as $key=>$val) {
+            array_push($studyIdVals, $key);
+        }
+    }
     //////////////////////////////////EXTRACT STUDY IDS IN search terms////////////////////////////////////////////
     function searchStudies() {
+        global $studyIds;
+        global $studyIdVals;
         global $otherSearch;
-        global $filteredIdVals;
+        global $filteredIds;
+        global $isAllCondition, $isAllDrug;
+
+        // in this case, there is no reason to search studies table
+        if (count($studyIdVals) < 1) {
+            $filteredIds = $studyIds;
+            return;
+        }
 
         $query = "SELECT `nct_id` from studies WHERE TRUE ";
         if (strlen($otherSearch) > 0) {
             $query .= " AND " . $otherSearch;
         }
 
-        if (strlen($otherSearch) > 0) {
+        if (!$isAllCondition || !$isAllDrug) {
+            $query .= " AND  `nct_id` IN " . "(" . implode(",",$studyIdVals) . ") ";
+        }
+
+        if (!$isAllCondition || !$isAllDrug || strlen($otherSearch) > 0) {
             $searchedRes = mysqlReadAll($query);
 
             foreach($searchedRes as $row) {
-                $filteredIdVals[] = strval($row["nct_id"]);
+                $filteredIds[strval($row["nct_id"])] = '';
             }
         }
     }
@@ -153,30 +262,37 @@
     function calculateCnts() {
         global $conditions;
         global $modifiers;
+        global $filteredIds;
         global $drugs;
         global $filteredIdVals;
+        global $isAllCondition, $isAllDrug;
         global $otherSearch;
         
-        $isAll = strlen($otherSearch) < 1;
+        $isAll = $isAllCondition & $isAllDrug & (strlen($otherSearch) < 1);
+
+        foreach($filteredIds as $key=>$val) {
+            array_push($filteredIdVals, $key);
+        }
 
         // Condition
         foreach($conditions as $key => $condition) {
-            $conditions[$key]["studyIds"] = getStudyIds_Condition($key, 1);
             if (!$isAll)
                 $conditions[$key]["studyIds"] = arrayIntersection($conditions[$key]["studyIds"], $filteredIdVals);
+            $conditions[$key]["count"]["All"] = count($conditions[$key]["studyIds"]);
             foreach($modifiers as $modifier) {
                 $condition_studyIds = getStudyIds_Condition($key, $modifier["id"]);
                 if (!$isAll)
                     $condition_studyIds = arrayIntersection($condition_studyIds, $filteredIdVals);
                 $conditions[$key]["modifier"][$modifier["modifier"]]["studyIds"] = $condition_studyIds;
+                $conditions[$key]["count"][$modifier["modifier"]] = count($condition_studyIds);
             }
         }
         
         // Drug
         foreach($drugs as $key => $drug) {
-            $drugs[$key]["studyIds"] = getStudyIds_Drug($key);
             if (!$isAll)
-                $drugs[$key]["studyIds"] = arrayIntersection($drugs[$key]["studyIds"], $filteredIdVals);
+                $drugs[$key]["studyIds"] = arrayIntersection($drug["studyIds"], $filteredIdVals);
+            $drugs[$key]["count"]["All"] = count($drugs[$key]["studyIds"]);
         }
     }
 
