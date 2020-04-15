@@ -60,7 +60,7 @@
             }
             .box {
                 padding: 5px;
-                margin: 10px 0;
+                margin-top: 10px;
             }
             .box-border {
                 border: 1px solid #eee;
