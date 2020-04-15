@@ -360,7 +360,7 @@ function readGraphData() {
     //load graph data
     $.ajax({
         type: "POST",
-        url: "get_graph_data.php",
+        url: "read_graph_data.php",
         data: searchItems,
         success: function(response) {
             hideWaiting();
