@@ -206,7 +206,7 @@
             <!-- Search -->
             <div class="row">
                 <div class="col">
-                    <h1 class="text-center" id="title_graph" style="font-size: 30px"> Clinical Trials By Conditions</h1>
+                    <h1 class="text-center" id="title_graph" style="font-size: 30px"> Clinical Trials Grouped by Conditions</h1>
                 </div>
                 <div class="ml-auto">
                     <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
