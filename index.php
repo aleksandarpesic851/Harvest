@@ -3,7 +3,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/check_update.php";
 ?>
 
-<html>
+<html lang="en">
 	<head>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163542949-1"></script>
