@@ -41,6 +41,7 @@
             <div class="row">
                 <div class="ml-auto">
                     <a href="/admin_analysis.php" class="btn btn-primary" target="_blank"> Admin Analysis </a>
+                    <a href="/admin/feedback.php" class="btn btn-primary" target="_blank" title="Check customers' feedback"> Feedback </a>
                 </div>
             </div>
 
