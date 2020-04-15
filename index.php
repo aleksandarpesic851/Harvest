@@ -207,19 +207,24 @@
                         data-intro='Search all trials related to cancer.' data-step='2'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
                     </button>
+                    <a style="padding: 0.5rem 1rem" title="Write Feedback for this website."
+                        class="btn btn-outline-info btn-flat hidden-xs" href="#feedback"
+                        data-intro='Write Feedback for this website.' data-step='3'>
+                        <i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
+                    </a>
                     <button type="button" id="start_tour" style="padding: 0.5rem 1rem"
                         title="Tour Website" data-toggle="tooltip" data-placement="bottom"
                         class="btn btn-outline-info btn-flat hidden-xs"
-                        data-intro='Tour Website.' data-step='3'>
+                        data-intro='Tour Website.' data-step='4'>
                         &nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;
                     </button>
                     <button class="btn btn-outline-primary" style="padding: 0.5rem 1rem"
                         data-toggle="modal" data-target="#about-modal"
-                        data-intro='Description about this website' data-step='4'>
+                        data-intro='Description about this website' data-step='5'>
                         <i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp; About Us
                     </button>
                     <a class="btn btn-outline-success" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank"
-                        data-intro='External navigation to high-throughput micro-physiological screening systems, which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.' data-step='5'>
+                        data-intro='External navigation to high-throughput micro-physiological screening systems, which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.' data-step='6'>
                         <i class="fa fa-external-link" aria-hidden="true"></i>&nbsp;&nbsp; Micro-physiological systems
                     </a>
                 </div>
@@ -232,11 +237,11 @@
             </div>
             <div class="text-right">
                 <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
-                    data-intro='Reset zoom of graph.' data-step='6'>
+                    data-intro='Reset zoom of graph.' data-step='7'>
                     <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom
                 </button>
                 <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
-                    data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='7'>
+                    data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='8'>
                     <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
                 </button>
             </div>
@@ -244,9 +249,9 @@
             <div class="row box box-border">
                 <div class="col-12 col-lg-4 col-xl-3">
                     <ul class="nav nav-tabs nav-justified" id="graph-tab">
-                        <li class=" nav-item" data-intro='Filter search results by condition only.' data-step='8'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by modifier only.' data-step='9'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='10'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by condition only.' data-step='9'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by modifier only.' data-step='10'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='11'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane graph-left active" id="graph-tab-condition">
@@ -267,7 +272,7 @@
                 <!-- Chart Graph -->
                 <div class="col-12 col-lg-8 col-xl-9 enable-scroll">
                     <div class="chart-container" 
-                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll." data-step='11'>
+                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll." data-step='12'>
                         <canvas id="myChart"></canvas>
                     </div>
                 </div>
@@ -276,7 +281,7 @@
             <!-- Data table -->
             <h2 class="text-center" style="margin-top: 2rem; font-size: 30px">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
-                <div class="col-12" data-intro='Data table for filtered data' data-step='12'>
+                <div class="col-12" data-intro='Data table for filtered data' data-step='13'>
                     <table id="study-table" class="table table-striped table-bordered" style="width: 150%">
                         <thead>
                             <tr>
@@ -293,6 +298,17 @@
                             </tr>
                         </thead>
                     </table>
+                </div>
+            </div>
+
+            <!-- Feedback -->
+            <div class="row box" data-intro='Feedbacks for this website' data-step='14'>
+                <div class="col-12">
+                    <label for="feedback">Write your feedback for this site.</label>
+                    <textarea rows="5" class="form-control" id="feedback" name="feedback"></textarea>
+                </div>
+                <div class="col-12 text-right" style="margin-top: 10px">
+                    <button class="btn btn-primary" onclick="submitFeedback()">Submit</button>
                 </div>
             </div>
         </div>

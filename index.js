@@ -129,7 +129,7 @@ function initDatatable() {
         order: [[ 0, 'desc' ]]
     });
     $('button.dt-button').attr("data-intro", "Export data into Excel and CSV");
-    $('button.dt-button').attr("data-step", "13");
+    $('button.dt-button').attr("data-step", "14");
 }
 
 function initChart() {
@@ -746,4 +746,18 @@ function searchCancer() {
     drugCheckedAuto = false;
 
     updateGraph();
+}
+
+function submitFeedback() {
+    if (!$("#feedback").val()) {
+        alert("Please add feedback contents.");
+    }
+    $.ajax({
+        type: "POST",
+        url: "/feedback/add.php",
+        data: {content: $("#feedback").val()},
+        success: function(response) {
+            alert("Thank you for your feedback!");
+        }
+    });
 }
