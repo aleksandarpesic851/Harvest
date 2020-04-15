@@ -171,6 +171,15 @@
             .dt-buttons {
                 float: right !important;
             }
+            .menu-btns {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            @media (min-width: 992px) {
+                .menu-btns {
+                    text-align: right;
+                }
+            }
         </style>
     </head>
     <body>
@@ -185,46 +194,50 @@
         <!-- Main Contents -->
         <div class="top-container"> 
             <div class="row box">
-                <img src="/imgs/clinical_index.png" style="height: 80px; width: auto" alt="clinical trials">
-                <div class="col text-right" style="margin-top: 1rem">
+                <div class="col-12 col-lg-3">
+                    <img src="/imgs/clinical_index.png" style="height: auto; width: 100%; max-width: 250px;" alt="clinical trials">
+                </div>
+                <div class="col-12 col-lg-9 menu-btns" style="margin-top: 1rem">
                     <button class="btn btn-outline-danger" style="padding: 0.5rem 1rem" onclick="searchCorona()" 
                         data-intro='Search all trials related to COVID-19' data-step='1'>
-                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19
+                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; COVID-19
                     </button>
                     <button class="btn btn-outline-warning" style="padding: 0.5rem 1rem" onclick="searchCancer()"
                         data-intro='Search all trials related to cancer.' data-step='2'>
-                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer
+                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
                     </button>
-                    <button type="button" id="start_tour" title="Tour Website" data-toggle="tooltip" data-placement="bottom"
-                        class="btn btn-outline-info btn-flat hidden-xs" style="padding: 10px 20px"
+                    <button type="button" id="start_tour" style="padding: 0.5rem 1rem"
+                        title="Tour Website" data-toggle="tooltip" data-placement="bottom"
+                        class="btn btn-outline-info btn-flat hidden-xs"
                         data-intro='Tour Website.' data-step='3'>
-                        <i class="fa fa-paper-plane fa-lg" aria-hidden="true"></i>
+                        &nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;
                     </button>
-                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#about-modal"
+                    <button class="btn btn-outline-primary" style="padding: 0.5rem 1rem"
+                        data-toggle="modal" data-target="#about-modal"
                         data-intro='Description about this website' data-step='4'>
-                        <i class="fa fa-question-circle fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;About Us
+                        <i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp; About Us
                     </button>
                     <a class="btn btn-outline-success" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank"
                         data-intro='External navigation to high-throughput micro-physiological screening systems, which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.' data-step='5'>
-                        <i class="fa fa-external-link" aria-hidden="true"></i>&nbsp;&nbsp;Micro-physiological systems
+                        <i class="fa fa-external-link" aria-hidden="true"></i>&nbsp;&nbsp; Micro-physiological systems
                     </a>
                 </div>
             </div>
             <!-- Search -->
             <div class="row">
-                <div class="col">
+                <div class="col-12">
                     <h1 class="text-center" id="title_graph" style="font-size: 30px"> Clinical Trials Grouped by Conditions</h1>
                 </div>
-                <div class="ml-auto">
-                    <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
-                        data-intro='Reset zoom of graph.' data-step='4'>
-                        <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom
-                    </button>
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
-                        data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='5'>
-                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
-                    </button>
-                </div>
+            </div>
+            <div class="text-right">
+                <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
+                    data-intro='Reset zoom of graph.' data-step='6'>
+                    <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom
+                </button>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
+                    data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='7'>
+                    <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
+                </button>
             </div>
             <!-- Chart Graph -->
             <div class="row box box-border">
@@ -235,17 +248,17 @@
                         <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='10'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top: 10px;">
-                        <div class="tab-pane container graph-left active" id="graph-tab-condition">
+                        <div class="tab-pane graph-left active" id="graph-tab-condition">
                             <!-- Condition Tree -->
                             <div id="condition-search-tree"></div>
                         </div>
                         <!-- Modifier Tree -->
-                        <div class="tab-pane container graph-left fade" id="graph-tab-modifier">
+                        <div class="tab-pane graph-left fade" id="graph-tab-modifier">
                             <!-- Condition Tree -->
                             <div id="modifier-tree"></div>
                         </div>
                         <!-- Drug -->
-                        <div class="tab-pane container graph-left fade" id="graph-tab-drug">
+                        <div class="tab-pane graph-left fade" id="graph-tab-drug">
                             <div id="drug-search-tree"></div>
                         </div>
                     </div>
