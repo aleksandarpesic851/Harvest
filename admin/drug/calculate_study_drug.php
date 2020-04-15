@@ -78,7 +78,7 @@
 
     //Read All drugs in hierarchy
     function readAllDrugHierarchy() {
-        $query = "SELECT `id`, `drug_name`, `parent_id`, `drug_id` FROM drug_hierarchy_view";
+        $query = "SELECT `id`, `drug_name`, `synonym`, `parent_id`, `drug_id` FROM drug_hierarchy_view";
         return mysqlReadAll_Drug($query);
     }
 
@@ -88,9 +88,16 @@
         $nCnt = 0;
         foreach($totalData as $key=>$drug) {
             $start = time();
-            $query = "SELECT `nct_id` FROM study_id_drugs WHERE " . generateSearchString_DRUG('drug', $drug["drug_name"]) . " GROUP BY `nct_id`";
+            $query = "SELECT `nct_id` FROM study_id_drugs WHERE " . generateSearchString_DRUG('drug', $drug["drug_name"]);
             // $query = "SELECT `nct_id` FROM study_id_drugs WHERE ( `drug` LIKE '%" . $drug["drug_name"] . "%') GROUP BY `nct_id`";
-            
+            if (isset($drug["synonym"]) && strlen($drug["synonym"]) > 0) {
+                $synonyms = explode(",", $drug["synonym"]);
+                foreach($synonyms as $synonym) {
+                    $query .= " OR " . generateSearchString_DRUG('drug', trim($synonym));
+                }
+            }
+
+            $query .=  " GROUP BY `nct_id`";
             $nctIds = mysqlReadAll_Drug($query);
             $totalData[$key]["study_ids"] = array();
             
