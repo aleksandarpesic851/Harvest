@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title> US Clinical Trials Treatment Synomym</title>
+		<title> US Clinical Trials Drug/Treatment Synomym</title>
         <link rel="shortcut icon" href="/imgs/clinical_trial_icon.png">
 
 		<!-- Bootstrap Datatable -->
@@ -15,7 +15,7 @@
 	
 	<body>
 		<div class="container">
-			<h4 class="title" style="margin: 20px 0; text-align: center">Manage Treatment Synonyms</h4>
+			<h4 class="title" style="margin: 20px 0; text-align: center">Manage Drug/Treatment Synonyms</h4>
 			<div class="row">
 				<div class="col-12">
 					<table id="synonym-table" class="table table-striped table-bordered">
