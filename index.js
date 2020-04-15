@@ -59,7 +59,8 @@ function initTour() {
 }
 function initGraphTab() {
     $('#graph-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        $("#title_graph").html("Clinical Trials By " + $(this).html());
+        $("#title_graph").html("Clinical Trials Grouped by " + $(this).html());
+        chartGraph.options.scales.xAxes[0].scaleLabel.labelString = $(this).html();
         updateGraph(false);
     });
 }
@@ -127,6 +128,8 @@ function initDatatable() {
         ],
         order: [[ 0, 'desc' ]]
     });
+    $('button.dt-button').attr("data-intro", "Export data into Excel and CSV");
+    $('button.dt-button').attr("data-step", "13");
 }
 
 function initChart() {
@@ -147,8 +150,28 @@ function initChart() {
                 yAxes: [{
                     ticks: {
                         beginAtZero: true
+                    }, 
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'The number of trials',
+                        fontSize: 16,
+                        fontStyle: 'bold',
+                        padding: 10,
+                        fontColor: '#007bff'
                     }
-                }]
+                }],
+                xAxes: [
+                    {
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Conditions',
+                            fontSize: 16,
+                            fontStyle: 'bold',
+                            padding: 10,
+                            fontColor: '#007bff'
+                        }
+                    }
+                ]
             },
             responsiveAnimationDuration: 200,
             plugins: {

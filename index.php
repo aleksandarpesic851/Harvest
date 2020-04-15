@@ -165,6 +165,12 @@
             .font-12 {
                 font-size: 12px;
             }
+            .dataTables_length {
+                float: left;
+            }
+            .dt-buttons {
+                float: right !important;
+            }
         </style>
     </head>
     <body>
@@ -179,27 +185,29 @@
         <!-- Main Contents -->
         <div class="top-container"> 
             <div class="row box">
-                <img src="/imgs/clinical_index.png" style="height: auto; max-width: 80%; width: 400px" alt="clinical trials">
-                <div style="margin-left: 3rem; margin-top: 2rem">
-                    <button class="btn btn-outline-danger" style="padding: 1rem 2rem" onclick="searchCorona()" 
+                <img src="/imgs/clinical_index.png" style="height: 80px; width: auto" alt="clinical trials">
+                <div style="margin-left: 3rem; margin-top: 1rem">
+                    <button class="btn btn-outline-danger" style="padding: 0.5rem 1rem" onclick="searchCorona()" 
                         data-intro='Search all trials related to COVID-19' data-step='1'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;COVID-19
                     </button>
-                    <button class="btn btn-outline-warning" style="padding: 1rem 2rem" onclick="searchCancer()"
+                    <button class="btn btn-outline-warning" style="padding: 0.5rem 1rem" onclick="searchCancer()"
                         data-intro='Search all trials related to cancer.' data-step='2'>
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Cancer
                     </button>
                 </div>
-                <div class="col text-right" style="margin-top: 2rem">
-                    <a class="btn btn-outline-success" style="padding: 1rem 2rem" href="https://fluidsforlife.com/category/system.html" target="_blank"
+                <div class="col text-right" style="margin-top: 1rem">
+                    <a class="btn btn-outline-success" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank"
                         data-intro='External navigation to high-throughput micro-physiological screening systems, which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.' data-step='3'>
                         <i class="fa fa-external-link-alt" aria-hidden="true"></i>&nbsp;&nbsp;Micro-physiological systems
                     </a>
                 </div>
             </div>
-            <h1 class="text-center" id="title_graph"> Clinical Trials By Conditions</h1>
             <!-- Search -->
-            <div class="row box">
+            <div class="row">
+                <div class="col">
+                    <h1 class="text-center" id="title_graph" style="font-size: 30px"> Clinical Trials By Conditions</h1>
+                </div>
                 <div class="ml-auto">
                     <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
                         data-intro='Reset zoom of graph.' data-step='4'>
@@ -254,7 +262,7 @@
             </div>
             
             <!-- Data table -->
-            <h2 class="text-center" style="margin: 1.5rem 0">Clinical Trials Data Table For Graph</h2>
+            <h2 class="text-center" style="margin-top: 2rem; font-size: 30px">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
                 <div class="col-12" data-intro='Data table for filtered data' data-step='12'>
                     <table id="study-table" class="table table-striped table-bordered" style="width: 150%">
