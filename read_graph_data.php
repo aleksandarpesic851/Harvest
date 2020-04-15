@@ -25,6 +25,10 @@
     searchStudies();
     
     $modifiers = readAllModifiers();
+
+    $conditionStatistics = getConditionStatistic();
+    $drugStatistics = getDrugStatistic();
+
     calculateCnts();
 
     $response = array();
@@ -106,29 +110,46 @@
 
     ////////////////////////////EXTRACT study IDs related with condition///////////////////////////////////
     ///////Condition///////
-    function getStudyIds_Condition($conditionId, $modifierId) {
-        $query = "SELECT `study_ids` FROM condition_hierarchy_modifier_stastics WHERE `hierarchy_id` = $conditionId AND `modifier_id` = $modifierId";
-        $statistics = mysqlReadFirst($query);
-        $ids = array();
-        $strIds = trim(trim($statistics["study_ids"]), ",");
-        if (!isset($statistics) || !isset($strIds) || strlen($strIds) < 1) {
-            return $ids;
-        }
+    function getConditionStatistic() {
+        $query = "SELECT `modifier_id`, `hierarchy_id`, `study_ids` FROM condition_hierarchy_modifier_stastics";
+        return mysqlReadAll($query);
+    }
 
-        return explode(",", $strIds);
+    
+    function getDrugStatistic() {
+        $query = "SELECT `id`, `study_ids` FROM drug_hierarchy";
+        return mysqlReadAll($query);
+    }
+
+    function getStudyIds_Condition($conditionId, $modifierId) {
+        global $conditionStatistics;
+        foreach($conditionStatistics as $conditionStatistic) {
+            if ($conditionStatistic['hierarchy_id'] == $conditionId && $conditionStatistic["modifier_id"] == $modifierId) {
+                $strIds = trim($conditionStatistic["study_ids"], ",");
+                if (!isset($strIds) || strlen($strIds) < 1) {
+                    return [];
+                }
+                return explode(",", $strIds);
+            }
+        }
+        
+        return [];
     }
 
     ///////Drugs///////
     function getStudyIds_Drug($drugId) {
-        $query = "SELECT `study_ids` FROM drug_hierarchy WHERE `id` = $drugId";
-        $statistics = mysqlReadFirst($query);
-        $ids = array();
-        $strIds = trim(trim($statistics["study_ids"]), ",");
-        if (!isset($statistics) || !isset($strIds) || strlen($strIds) < 1) {
-            return $ids;
+        global $drugStatistics;
+        foreach($drugStatistics as $drugStatistic) {
+            if ($drugStatistic['id'] == $drugId) {
+                $strIds = trim($drugStatistic["study_ids"], ",");
+                if (!isset($strIds) || strlen($strIds) < 1) {
+                    return [];
+                }
+                return explode(",", $strIds);
+            }
         }
-
-        return explode(",", $strIds);
+        
+        return [];
     }
  
     //////////////////////////////////EXTRACT STUDY IDS IN search terms////////////////////////////////////////////
@@ -183,10 +204,5 @@
     function arrayIntersection($arr1, $arr2)
     {
         return array_values(array_intersect($arr1, $arr2));
-    }
-
-    function arrayIntersectByKey($arr1, $arr2)
-    {
-        return array_intersect_key($arr1, $arr2);
     }
 ?>
