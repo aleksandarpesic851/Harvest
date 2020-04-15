@@ -40,7 +40,7 @@
             <h3 class="title">Scrape Management</h3>
             <div class="row">
                 <div class="ml-auto">
-                    <a href="/admin_analysis.php" class="btn btn-primary"> Admin Analysis </a>
+                    <a href="/admin_analysis.php" class="btn btn-primary" target="_blank"> Admin Analysis </a>
                 </div>
             </div>
 
@@ -52,15 +52,15 @@
                     <img class="image" src="img/tree.png">
                 </div>
                 <div class="col-4">
-                    <h5> Diseases Hierarchy Management</h5>
-                    There are almost 30, 000 Diseases in extracted data.
+                    <h5> Conditions Hierarchy Management</h5>
+                    There are almost 30, 000 Conditions in extracted data.
                     <br>
-                    In order to manage disease effectively, you can create diseases hierarchy by clicking bellow button.
+                    In order to manage trials effectively, you can create conditions hierarchy by clicking bellow button.
                     <br>
                     Here you can manage modifiers too.
                     <br>
                     <div class="row">
-                        <a class="ml-auto mr-auto btn btn-primary" href="condition">Disease Modifier & Hierarchy</a>
+                        <a class="ml-auto mr-auto btn btn-primary" href="condition" target="_blank">Disease Modifier & Hierarchy</a>
                     </div>
                 </div>
             </div>
@@ -69,11 +69,11 @@
             </div>
             <div class="row">
                 <div class="col-4">
-                    <h5> Disease Synonym Management </h5>
-                    You can insert synonyms for diseases. For every diseases can be searched by origin name and synonym.
+                    <h5> Condition Synonym Management </h5>
+                    You can insert synonyms for conditions. For every conditions can be searched by origin name and synonym.
                     <br><br>
                     <div class="row">
-                        <a class="ml-auto mr-auto btn btn-primary" href="condition/synonym">Synonym</a>
+                        <a class="ml-auto mr-auto btn btn-primary" href="condition/synonym" target="_blank">Condition Synonym</a>
                     </div>
                 </div>
                 <div class="col-8">
@@ -88,13 +88,13 @@
                     <img class="image" src="img/drug.png">
                 </div>
                 <div class="col-4">
-                    <h5> Drug Hierarchy Management</h5>
+                    <h5> Drug/Treatment Hierarchy Management</h5>
                     There are many drugs in extracted data.
                     <br>
-                    In order to manage disease effectively, you can create diseases hierarchy by clicking bellow button.
+                    In order to manage trials effectively, you can create drug/treatment hierarchy by clicking bellow button.
                     <br><br>
                     <div class="row">
-                        <a class="ml-auto mr-auto btn btn-primary" href="drug">Drug Hierarchy</a>
+                        <a class="ml-auto mr-auto btn btn-primary" href="drug" target="_blank">Drug/Treatment Hierarchy</a>
                     </div>
                 </div>
             </div>
@@ -103,8 +103,27 @@
             </div>
             <div class="row">
                 <div class="col-4">
+                    <h5> Drug/Treatment Synonym Management </h5>
+                    You can insert synonyms for drug/yreatment. For every drug/treatment can be searched by origin name and synonym.
+                    <br><br>
+                    <div class="row">
+                        <a class="ml-auto mr-auto btn btn-primary" href="drug/synonym" target="_blank">Drug/Treatment Synonym</a>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <img class="image" src="img/synonym.png">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8 ml-auto mr-auto split"></div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <img class="image" src="img/terms.png">
+                </div>
+                <div class="col-4">
                     <h5> Extract Terms From Scraped Data </h5>
-                    As scraped data will change for every scraping, it's needed to extract terms (age groups, conditions - diseases, phases, intervention types, study design types, statuses, study types).
+                    As scraped data will change for every scraping, it's needed to extract terms (age groups, conditions - conditions, phases, intervention types, study design types, statuses, study types).
                     The extracted terms will be saved on each table of database. 
                     <br>
                     In order to speed up "Condition" search, it extracts study nct_id and conditions in separated table.
@@ -112,20 +131,14 @@
                     It will take a few ten minutes to complete this task.
                     <br><br>
                     <div class="row">
-                        <a class="ml-auto mr-auto btn btn-primary" onclick="window.open('terms_control.php')">Extract</a>
+                        <a class="ml-auto mr-auto btn btn-primary" href="terms_control.php" target="_blank">Extract</a>
                     </div>
-                </div>
-                <div class="col-8">
-                    <img class="image" src="img/terms.png">
                 </div>
             </div>
             <div class="row">
                 <div class="col-8 ml-auto mr-auto split"></div>
             </div>
 			<div class="row">
-                <div class="col-8">
-                    <img class="image" src="img/scrape.png">
-                </div>
                 <div class="col-4">
                     <h5>Scrape Data</h5>
                     Scrape data from <a href="https://clinicaltrials.gov">https://clinicaltrials.gov</a> into database. In backend, scrape data automatically every 7 days.
@@ -137,24 +150,9 @@
                         <button class="ml-auto mr-auto btn btn-primary" onclick="scrape()">Scrape Manually</button>
                     </div>
                 </div>
-            </div>
-
-            <!-- <div class="row">
-                <div class="col-8 ml-auto mr-auto split"></div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <h5> Test Scrape Result </h5>
-                    Test all data were scraped successfully. If there is an error, it will show the index of missed data.
-                    <br><br><br>
-                    <div class="row">
-                        <a class="ml-auto mr-auto btn btn-primary" href="test.php">Run Test</a>
-                    </div>
-                </div>
                 <div class="col-8">
-                    <img class="image" src="img/test.png">
+                    <img class="image" src="img/scrape.png">
                 </div>
-            </div> -->
-            <br><br><br>
+            </div>
 		</div>
 </html>
