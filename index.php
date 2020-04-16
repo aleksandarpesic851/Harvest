@@ -235,9 +235,9 @@
                     <h1 class="text-center" id="title_graph" style="font-size: 30px"> Clinical Trials Grouped by Conditions</h1>
                 </div>
             </div>
-            <div class="text-right">
+            <div class="d-flex justify-content-center justify-content-lg-end">
                 <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
-                    data-intro='Reset zoom of graph.' data-step='7'>
+                    data-intro='Reset zoom of graph.' data-step='7' style="margin-right: 10px">
                     <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom
                 </button>
                 <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"

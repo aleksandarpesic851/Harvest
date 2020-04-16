@@ -22,6 +22,7 @@
 
     $filteredIds = array(); // array of key as filtered study id
     $filteredIdVals = array();
+    $observationalIds = array();
     searchStudies();
     
     $modifiers = readAllModifiers();
@@ -35,7 +36,7 @@
     $response["conditions"] = $conditions;
     $response["drugs"] = $drugs;
     $response["totalIds"] = $filteredIdVals;
-
+    $response["observationalIds"] = $observationalIds;
     echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
 
 
@@ -156,6 +157,7 @@
     function searchStudies() {
         global $otherSearch;
         global $filteredIdVals;
+        global $observationalIds;
 
         $query = "SELECT `nct_id` from studies WHERE TRUE ";
         if (strlen($otherSearch) > 0) {
@@ -169,6 +171,15 @@
                 $filteredIdVals[] = strval($row["nct_id"]);
             }
         }
+
+        //Observational ID
+        $query .= " AND `interventions` = '' ";
+        $searchedRes = mysqlReadAll($query);
+
+        foreach($searchedRes as $row) {
+            $observationalIds[] = strval($row["nct_id"]);
+        }
+        
     }
     
     function calculateCnts() {

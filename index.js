@@ -38,6 +38,9 @@ let graphStudyIds = [];             // displayed graph data study ids
 let emptyTable = false;
 let allData = false;
 
+let otherIds = [];
+let observationIds = [];
+
 $(document).ready(function() {
     ej.base.enableRipple(true);
     initChart();
@@ -522,16 +525,17 @@ function updateGraph(loadTable = true) {
         checkedNodes = checkedNodes[0].nodeChild;
     }
 
+    getPossibleStudyIds(graphShowKey);
+
+    // Update datatable
     if (loadTable) {
-        getPossibleStudyIds();
-        // Update datatable
         updateDatatable();
     }
     
     drawGraph(checkedNodes, checkedModifierNodes);
 }
 
-function getPossibleStudyIds() {
+function getPossibleStudyIds(graphShowKey) {
     let conditionNodes = getCheckedTreeNodes("condition-search-tree", conditionSearchTree);
     let modifierNodes = getCheckedTreeNodes("modifier-tree", modifierTree);
     let drugNodes =getCheckedTreeNodes("drug-search-tree", drugSearchTree);
@@ -593,6 +597,39 @@ function getPossibleStudyIds() {
         graphStudyIds = conditionIds.filter( item => drugIds.indexOf(item) != -1 );
     }
 
+    otherIds = [];
+    observationIds = [];
+
+    if (graphShowKey == "conditions") {
+        if (isAllModifier) {
+            modifierNodes = modifierNodes[0].nodeChild;
+            let modifierIds = [];
+            conditionNodes.forEach(function(conditionNode) {
+                let id = conditionNode.nodeId.substr(10);
+                modifierNodes.forEach(function(modifierNode) {
+                    modifierIds = modifierIds.concat(graphSrcData["conditions"][id]['modifier'][modifierNode.nodeText]["studyIds"]);
+                });
+            });
+            otherIds = graphStudyIds.filter(item => modifierIds.indexOf(item) == -1);
+        }
+    } else if (isAllDrug) {
+        let drugIds = [];
+        drugNodes = drugNodes[0].nodeChild;
+        drugNodes.forEach(function(drugNode) {
+            let id = drugNode.nodeId.substr(10);
+            drugIds = drugIds.concat(graphSrcData["drugs"][id]["studyIds"]);
+            drugIds = drugIds.filter((item, idx) => drugIds.indexOf(item) == idx);
+        });
+        // Get all other ids not in treatment hiearhcy
+        otherIds = graphStudyIds.filter(item => drugIds.indexOf(item) == -1);
+
+        // get observation ids from otherids & observation ids.
+        observationIds = otherIds.filter(item => graphSrcData["observationalIds"].indexOf(item) != -1);
+
+        // get remained other ids.
+        otherIds = otherIds.filter(item => observationIds.indexOf(item) == -1);
+    }
+ console.log(otherIds, observationIds);
     emptyTable = graphStudyIds.length < 1;
 }
 
