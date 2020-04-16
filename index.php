@@ -281,8 +281,8 @@
             <!-- Data table -->
             <h2 class="text-center" style="margin-top: 2rem; font-size: 30px">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
-                <div class="col-12" data-intro='Data table for filtered data' data-step='13'>
-                    <table id="study-table" class="table table-striped table-bordered" style="width: 150%">
+                <div class="col-12" data-intro='Data table for filtered data' data-step='13' style="overflow: auto;">
+                    <table id="study-table" class="table table-striped table-bordered" style="width: 100%; max-width: 100%">
                         <thead>
                             <tr>
                                 <th>NCT ID</th>
