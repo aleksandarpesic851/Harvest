@@ -40,6 +40,8 @@ let allData = false;
 
 let otherIds = [];
 let observationIds = [];
+let isAbnormalData = false;
+let isObservation = false;
 
 $(document).ready(function() {
     ej.base.enableRipple(true);
@@ -96,7 +98,15 @@ function initDatatable() {
                 if (emptyTable) {
                     searchKeys.emptyTable = true;    
                 } else {
-                    searchKeys.manual_ids = JSON.stringify(graphStudyIds);
+                    if (isAbnormalData) {
+                        if (isObservation) {
+                            searchKeys.manual_ids = JSON.stringify(observationIds);
+                        } else {
+                            searchKeys.manual_ids = JSON.stringify(otherIds);
+                        }
+                    } else {
+                        searchKeys.manual_ids = JSON.stringify(graphStudyIds);
+                    }
                 }
                 return  $.extend(d, searchKeys);
             },
@@ -217,32 +227,43 @@ function barClicked(e) {
     if(!clickedBarDetail) {
         return;
     }
-    conditionCheckedAuto = true;
-    modifierCheckedAuto = true;
-    drugCheckedAuto = true;
-
-    if (graphShowKey == "conditions") {
-        conditionSearchTree.uncheckAll();
-        conditionSearchTree.checkedNodes = [clickedBarDetail.node.nodeId];
-        conditionSearchTree.refresh();
-        if(clickedBarDetail.modifier) {
-            modifierTree.uncheckAll();
-            modifierTree.checkedNodes = [clickedBarDetail.modifier.nodeId];
-            modifierTree.refresh();
-            modifierTree.expandAll();
-            $('.nav-tabs a[href="#graph-tab-modifier"]').tab('show');
+    if (clickedBarDetail.node == "other") {
+        isAbnormalData = true;
+        isObservation = false;
+        if (clickedBarDetail.nodeType == "observation") {
+            isObservation = true;
         }
     } else {
-        drugSearchTree.uncheckAll();
-        drugSearchTree.checkedNodes = [clickedBarDetail.node.nodeId];
-        drugSearchTree.refresh();
+        conditionCheckedAuto = true;
+        modifierCheckedAuto = true;
+        drugCheckedAuto = true;
+    
+        if (graphShowKey == "conditions") {
+            conditionSearchTree.uncheckAll();
+            conditionSearchTree.checkedNodes = [clickedBarDetail.node.nodeId];
+            conditionSearchTree.refresh();
+            if(clickedBarDetail.modifier) {
+                modifierTree.uncheckAll();
+                modifierTree.checkedNodes = [clickedBarDetail.modifier.nodeId];
+                modifierTree.refresh();
+                modifierTree.expandAll();
+                $('.nav-tabs a[href="#graph-tab-modifier"]').tab('show');
+            }
+        } else {
+            drugSearchTree.uncheckAll();
+            drugSearchTree.checkedNodes = [clickedBarDetail.node.nodeId];
+            drugSearchTree.refresh();
+        }
+    
+        conditionCheckedAuto = false;
+        modifierCheckedAuto = false;
+        drugCheckedAuto = false;
     }
-
-    conditionCheckedAuto = false;
-    modifierCheckedAuto = false;
-    drugCheckedAuto = false;
     
     updateGraph();
+
+    isAbnormalData = false;
+    isObservation = false;
 }
 
 function initConditionTree() {
@@ -494,7 +515,6 @@ function showWaiting() {
 }
 
 function updateGraph(loadTable = true) {
-    graphDrawDetails = [];
     let activeTabId = $("#graph-tab .active").attr("href");
     let checkedNodes;
 
@@ -525,10 +545,12 @@ function updateGraph(loadTable = true) {
         checkedNodes = checkedNodes[0].nodeChild;
     }
 
-    getPossibleStudyIds(graphShowKey);
+    if (!isAbnormalData) {
+        getPossibleStudyIds(graphShowKey);
+    }
 
     // Update datatable
-    if (loadTable) {
+    if (loadTable || isAbnormalData) {
         updateDatatable();
     }
     
@@ -543,6 +565,8 @@ function getPossibleStudyIds(graphShowKey) {
     graphStudyIds = [];
     emptyTable = true;
     allData = false;
+    otherIds = [];
+    observationIds = [];
 
     if(conditionNodes.length < 1 || modifierNodes.length < 1 || drugNodes.length < 1) {
         return;
@@ -597,11 +621,9 @@ function getPossibleStudyIds(graphShowKey) {
         graphStudyIds = conditionIds.filter( item => drugIds.indexOf(item) != -1 );
     }
 
-    otherIds = [];
-    observationIds = [];
-
+    let isConditionActive = $("#graph-tab .active").attr("href") == "#graph-tab-condition";
     if (graphShowKey == "conditions") {
-        if (isAllModifier) {
+        if (isAllModifier && !isConditionActive) {
             modifierNodes = modifierNodes[0].nodeChild;
             let modifierIds = [];
             conditionNodes.forEach(function(conditionNode) {
@@ -629,7 +651,7 @@ function getPossibleStudyIds(graphShowKey) {
         // get remained other ids.
         otherIds = otherIds.filter(item => observationIds.indexOf(item) == -1);
     }
- console.log(otherIds, observationIds);
+ 
     emptyTable = graphStudyIds.length < 1;
 }
 
@@ -648,47 +670,80 @@ function drawGraph(nodes, modifierNodes) {
     let backgroundColors = [];
     let borderColors = [];
     let chartCnt = 0;
-
-    nodes.forEach(node => {
-        let id = node.nodeId.substr(10);
-        // if modifier, extract all data for modifiers.
-        if (isModifier) {
-            modifierNodes.forEach( modifier=> {
-                let modifierName = modifier.nodeText;
-                let nCnt = 0;
-                if (allData) {
-                    nCnt = graphSrcData[graphShowKey][id]["modifier"][modifierName]["studyIds"].length;
-                } else {
-                    nCnt = graphSrcData[graphShowKey][id]["modifier"][modifierName]["studyIds"].filter( item => graphStudyIds.indexOf(item) != -1 ).length;
-                }
-                if (nCnt > 0) {
-                    graphLabels.push(modifierName + " - " + node.nodeText);
-                    graphDrawData.push(nCnt);
-                    graphDrawDetails.push({node: node, modifier: modifier, cnt: nCnt});
-                    backgroundColors.push(bgColor[chartCnt % 7]);
-                    borderColors.push(bdColor[chartCnt % 7]);
-                    chartCnt++;
-                }
-            });
+    
+    
+    
+    if (isAbnormalData) {
+        if (isObservation) {
+            graphDrawDetails = [{node: "other", nodeType: "observation", cnt: observationIds.length}];
+            graphLabels = ["Observational"];
+            graphDrawData = [observationIds.length];
         } else {
-            let nCnt = 0;
-            // show all child node data
-            if (allData) {
-                nCnt = graphSrcData[graphShowKey][id]["studyIds"].length;
+            graphDrawDetails = [{node: "other", nodeType: "other", cnt: otherIds.length}];
+            graphLabels = ["Other"];
+            graphDrawData = [otherIds.length];
+        }
+        borderColors = [bdColor[0]];
+        backgroundColors = [bdColor[0]];
+    } else {
+        graphDrawDetails = [];
+        nodes.forEach(node => {
+            let id = node.nodeId.substr(10);
+            // if modifier, extract all data for modifiers.
+            if (isModifier) {
+                modifierNodes.forEach( modifier=> {
+                    let modifierName = modifier.nodeText;
+                    let nCnt = 0;
+                    if (allData) {
+                        nCnt = graphSrcData[graphShowKey][id]["modifier"][modifierName]["studyIds"].length;
+                    } else {
+                        nCnt = graphSrcData[graphShowKey][id]["modifier"][modifierName]["studyIds"].filter( item => graphStudyIds.indexOf(item) != -1 ).length;
+                    }
+                    if (nCnt > 0) {
+                        graphLabels.push(modifierName + " - " + node.nodeText);
+                        graphDrawData.push(nCnt);
+                        graphDrawDetails.push({node: node, modifier: modifier, cnt: nCnt});
+                        backgroundColors.push(bgColor[chartCnt % 7]);
+                        borderColors.push(bdColor[chartCnt % 7]);
+                        chartCnt++;
+                    }
+                });
             } else {
-                nCnt = graphSrcData[graphShowKey][id]["studyIds"].filter( item => graphStudyIds.indexOf(item) != -1 ).length;
+                let nCnt = 0;
+                // show all child node data
+                if (allData) {
+                    nCnt = graphSrcData[graphShowKey][id]["studyIds"].length;
+                } else {
+                    nCnt = graphSrcData[graphShowKey][id]["studyIds"].filter( item => graphStudyIds.indexOf(item) != -1 ).length;
+                }
+                // if (nCnt > 0) {
+                graphLabels.push(node.nodeText);
+                graphDrawData.push(nCnt);
+                graphDrawDetails.push({node: node, cnt: nCnt});
+                backgroundColors.push(bgColor[chartCnt % 7]);
+                borderColors.push(bdColor[chartCnt % 7]);
+                chartCnt++;
             }
-            // if (nCnt > 0) {
-            graphLabels.push(node.nodeText);
-            graphDrawData.push(nCnt);
-            graphDrawDetails.push({node: node, cnt: nCnt});
+        });
+
+        if (observationIds.length > 0) {
+            graphLabels.push("Observational");
+            graphDrawData.push(observationIds.length);
+            graphDrawDetails.push({node: "other", nodeType: "observation", cnt: observationIds.length});
             backgroundColors.push(bgColor[chartCnt % 7]);
             borderColors.push(bdColor[chartCnt % 7]);
             chartCnt++;
         }
-    });
+        if (otherIds.length > 0) {
+            graphLabels.push("Other");
+            graphDrawData.push(otherIds.length);
+            graphDrawDetails.push({node: "other", nodeType: "other", cnt: otherIds.length});
+            backgroundColors.push(bgColor[chartCnt % 7]);
+            borderColors.push(bdColor[chartCnt % 7]);
+            chartCnt++;
+        }
+    }
     chartGraph.data.labels = graphLabels;
-    chartGraph.data.datasets[0].data = graphDrawData;
     chartGraph.data.datasets[0].data = graphDrawData;
     chartGraph.data.datasets[0].backgroundColor = backgroundColors;
     chartGraph.data.datasets[0].borderColor = borderColors;
