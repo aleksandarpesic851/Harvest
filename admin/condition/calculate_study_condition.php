@@ -151,7 +151,11 @@
         $res .= '`' . $column . '` LIKE "%' . $value . ' %"';
         $res .= ' OR `' . $column . '` LIKE "%' . $value . ',%"';
         $res .= ' OR `' . $column . '` LIKE "%' . $value . '.%"';
+        $res .= ' OR `' . $column . '` LIKE "%' . $value . ')%"';
         $res .= ' OR `' . $column . '` LIKE "%' . $value . '"';
+		$res .= ' OR `' . $column . '` LIKE "%' . $value . '|%"';
+		$res .= ' OR `' . $column . '` LIKE "%' . $value . 's %"';
+		$res .= ' OR `' . $column . '` LIKE "%' . $value . 's"';
         $res .=') ';
         return $res;
     }

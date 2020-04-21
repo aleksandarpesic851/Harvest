@@ -8,6 +8,7 @@
         echo "Invalid Parameters";
         exit;
     }
+    $start = time();
 
     $otherSearch = generateOtherSearchQuery($_POST);
 
@@ -19,19 +20,35 @@
     
     $drugs = array();
     getAllDrugs($drugTree);
+    
+    // echo "Get all C & D : ";
+    // printTime();
 
     $filteredIds = array(); // array of key as filtered study id
     $filteredIdVals = array();
     $observationalIds = array();
     searchStudies();
     
+    // echo "Search studies : ";
+    // printTime();
+
     $modifiers = readAllModifiers();
+
+    // echo "read all modifier : ";
+    // printTime();
 
     $conditionStatistics = getConditionStatistic();
     $drugStatistics = getDrugStatistic();
 
-    calculateCnts();
+    // echo "Get statistic : ";
+    // printTime();
 
+    calculateCnts();
+    
+    // echo "Calculate CNT : ";
+    // printTime();
+    // echo json_encode($observationalIds);
+    // exit;
     $response = array();
     $response["conditions"] = $conditions;
     $response["drugs"] = $drugs;
@@ -39,6 +56,11 @@
     $response["observationalIds"] = $observationalIds;
     echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
 
+    function printTime() {
+        global $start;
+        echo time() - $start;
+        $start = time();
+    }
 
     ////////////////////////////////GET ALL CONDITIONS////////////////////////////////////////
     function getAllConditions($conditionTree) {
@@ -173,12 +195,9 @@
         }
 
         //Observational ID
-        $query .= " AND `interventions` = '' ";
-        $searchedRes = mysqlReadAll($query);
-
-        foreach($searchedRes as $row) {
-            $observationalIds[] = strval($row["nct_id"]);
-        }
+        $query = "SELECT * FROM ovbservation_studies";
+        $ids = mysqlReadFirst($query);
+        $observationalIds = explode(",", $ids['nct_ids']);
         
     }
     
