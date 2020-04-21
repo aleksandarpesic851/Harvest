@@ -1,6 +1,8 @@
 <?php
-require_once $rootPath . "/db_connect.php";
 $rootPath = $_SERVER['DOCUMENT_ROOT'];
+
+require_once $rootPath . "/db_connect.php";
+
 $runningCLI = false;
 if (!isset($rootPath) || strlen($rootPath) < 1) {
     $rootPath = __DIR__ . "/../";
