@@ -206,7 +206,7 @@
 
         $html = '';
         foreach($arrRes as $key => $items) {
-            $html = '<label class="font-bold">' . $key . '</label>';
+            $html .= '<label class="font-bold">' . $key . '</label>';
             $html .= '<ul>';
             foreach($items as $item) {
                 $html .= '<li>' . $item . '</li>';
