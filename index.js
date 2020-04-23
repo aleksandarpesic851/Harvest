@@ -487,7 +487,8 @@ function search() {
 }
 
 function readSearchItems() {
-    searchItems = getFormData($("#search-other-form"));
+    searchItems = {};
+    searchItems['others'] = getFormData($("#search-other-form"));
     searchItems["conditions"] = conditionTree.fields.dataSource;
     searchItems["drugs"] = drugTree.fields.dataSource;
 
@@ -696,7 +697,7 @@ function getPossibleStudyIds(graphShowKey) {
             conditionNodes.forEach(function(conditionNode) {
                 let id = conditionNode.nodeId.substr(10);
                 modifierNodes.forEach(function(modifierNode) {
-                    modifierIds = modifierIds.concat(graphSrcData["conditions"][id]['modifier'][modifierNode.nodeText]["studyIds"]);
+                    modifierIds.push(...graphSrcData["conditions"][id]['modifier'][modifierNode.nodeText]["studyIds"]);
                 });
             });
             otherIds = graphStudyIds.filter(item => modifierIds.indexOf(item) == -1);
@@ -706,8 +707,7 @@ function getPossibleStudyIds(graphShowKey) {
         drugNodes = drugNodes[0].nodeChild;
         drugNodes.forEach(function(drugNode) {
             let id = drugNode.nodeId.substr(10);
-            drugIds = drugIds.concat(graphSrcData["drugs"][id]["studyIds"]);
-            drugIds = drugIds.filter((item, idx) => drugIds.indexOf(item) == idx);
+            drugIds.push(...graphSrcData["drugs"][id]["studyIds"]);
         });
         // Get all other ids not in treatment hiearhcy
         otherIds = graphStudyIds.filter(item => drugIds.indexOf(item) == -1);

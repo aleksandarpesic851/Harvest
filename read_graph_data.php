@@ -9,14 +9,15 @@
         echo "Invalid Parameters";
         exit;
     }
-    $request = json_decode($_POST["data"]);
+    $request = json_decode($_POST["data"], true);
     $start = time();
-
-    $otherSearch = generateOtherSearchQuery($request);
-
+    
     $conditionTree = $request["conditions"];
     $drugTree = $request["drugs"];
 
+    $otherSearch = generateOtherSearchQuery($request["others"]);
+
+    
     $conditions = array();
     getAllConditions($conditionTree);
     
