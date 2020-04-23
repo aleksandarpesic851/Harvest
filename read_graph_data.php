@@ -4,7 +4,8 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/generate_query_condition.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/modifier/read_modifiers.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/graph_history.php";
-    
+    echo json_encode($_POST["drugs"]);
+    exit;
     if (!isset($_POST) || !isset($_POST["conditions"])) {
         echo "Invalid Parameters";
         exit;
