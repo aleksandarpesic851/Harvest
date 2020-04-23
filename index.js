@@ -105,7 +105,7 @@ function initGraphTab() {
 }
 
 function resetZoom() {
-    chartGraph.resetZoom();
+    // chartGraph.resetZoom();
 }
 
 function initDateRangePicker() {
@@ -173,7 +173,7 @@ function initDatatable() {
         order: [[ 0, 'desc' ]]
     });
     $('button.dt-button').attr("data-intro", "Export data into Excel and CSV");
-    $('button.dt-button').attr("data-step", "14");
+    $('button.dt-button').attr("data-step", "13");
 }
 
 function initChart() {

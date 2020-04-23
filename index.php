@@ -27,7 +27,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> Intelligent navigation of USA clinical trails </title>
         <meta name="description" content="Provide a graphical interface for navigating clinical trials in the USA repository. This website uses a biologist-curated hierarchy of both illness conditions and treatments to provide the user convenient categories.">
-        
+        <meta name="keywords" content="clinical trials, medical research, usa, disease hierarchy, drug, condition, navigation, graph" />
+        <meta name="author" content="Max, Guang">
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -236,12 +237,8 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center justify-content-lg-end">
-                <button id="btn-zoom-in" class="btn btn-success" title="Reset Zoom & Pan" onclick="resetZoom()"
-                    data-intro='Reset zoom of graph.' data-step='7' style="margin-right: 10px">
-                    <i class="fa fa-refresh"></i>&nbsp;&nbsp; Reset Zoom
-                </button>
                 <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
-                    data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='8'>
+                    data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='7'>
                     <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
                 </button>
             </div>
@@ -249,9 +246,9 @@
             <div class="row box box-border">
                 <div class="col-12 col-lg-4 col-xl-3">
                     <ul class="nav nav-tabs nav-justified" id="graph-tab">
-                        <li class=" nav-item" data-intro='Filter search results by condition only.' data-step='9'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by modifier only.' data-step='10'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='11'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by condition only.' data-step='8'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by modifier only.' data-step='9'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
+                        <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='10'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane graph-left active" id="graph-tab-condition">
@@ -272,7 +269,7 @@
                 <!-- Chart Graph -->
                 <div class="col-12 col-lg-8 col-xl-9 enable-scroll">
                     <div class="chart-container" 
-                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll." data-step='12'>
+                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll." data-step='11'>
                         <canvas id="myChart"></canvas>
                     </div>
                 </div>
@@ -281,7 +278,7 @@
             <!-- Data table -->
             <h2 class="text-center" style="margin-top: 2rem; font-size: 30px">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
-                <div class="col-12" data-intro='Data table for filtered data' data-step='13' style="overflow: auto;">
+                <div class="col-12" data-intro='Data table for filtered data' data-step='12' style="overflow: auto;">
                     <table id="study-table" class="table table-striped table-bordered" style="width: 100%; max-width: 100%">
                         <thead>
                             <tr>
@@ -625,17 +622,14 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
 		<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
         
         <!-- Chart -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.4"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.4"></script> -->
         
         <!-- Date RangePicker -->
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
