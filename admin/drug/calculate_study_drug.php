@@ -14,6 +14,7 @@
     if (!isset($isScraping)) {
         require_once $rootPath . "/db_connect.php";
         require_once $rootPath . "/enable_error_report.php";
+        require_once $rootPath . "/admin/graph_history.php";
     }
 
     $log = "\r\n-----------------------Calculate Study Ids Related with Drug Hierarchy----------------------------";
@@ -23,6 +24,8 @@
     mysqli_autocommit($conn,FALSE);
 
     calculateStudyDrugs();
+
+    updateGraphHistory();
 
     if (!mysqli_commit($conn)) {
         $log = "Commit transaction failed";

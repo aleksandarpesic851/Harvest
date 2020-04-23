@@ -3,6 +3,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/generate_query_condition.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/modifier/read_modifiers.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/graph_history.php";
     
     if (!isset($_POST) || !isset($_POST["conditions"])) {
         echo "Invalid Parameters";
@@ -54,6 +55,7 @@
     $response["drugs"] = $drugs;
     $response["totalIds"] = $filteredIdVals;
     $response["observationalIds"] = $observationalIds;
+    $response['date'] = getLatestGraphHistory();
     echo json_encode($response, JSON_INVALID_UTF8_IGNORE);
 
     function printTime() {

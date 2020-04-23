@@ -43,6 +43,11 @@ let observationIds = [];
 let isAbnormalData = false;
 let isObservation = false;
 
+let isAllSearch = true;
+let localGraphData;
+
+initIndexedDB();
+
 $(document).ready(function() {
     ej.base.enableRipple(true);
     initChart();
@@ -56,6 +61,35 @@ $(document).ready(function() {
     initGraphTab();
     initTour();
 } );
+
+function initIndexedDB() {
+    window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    // DON'T use "var indexedDB = ..." if you're not in a function.
+    // Moreover, you may need references to some window.IDB* objects:
+    window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
+    window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+    if (!window.indexedDB) {
+        console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+    }
+    var request = window.indexedDB.open("graph_db", 3);
+    request.onupgradeneeded = function() {
+        let db = request.result;
+        if (!db.objectStoreNames.contains('graph_data')) { // if there's no "books" store
+          db.createObjectStore('graph_data'); // create it
+        }
+    };
+    request.onsuccess = function() {
+        let db = request.result;
+        let transaction = db.transaction("graph_data", "readwrite"); // (1)
+        let graphDB = transaction.objectStore('graph_data');
+        let objectStore = graphDB.get('data');
+        objectStore.onsuccess = function() {
+            if (objectStore.result) {
+                localGraphData = JSON.parse(objectStore.result);
+            }
+        }
+    };
+}
 
 function initTour() {
     $('#start_tour').click(function(){
@@ -381,7 +415,34 @@ function readGraphData() {
     conditionSearchTree.expandAll();
     conditionCheckedAuto = false;
 
-    //load graph data
+    if (!isAllSearch) {
+        loadGraphData();
+    } else {
+        // if there isn't loaded graph data, load data.
+        if (!localGraphData) {
+            loadGraphData();
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "check_latest_graph.php",
+                data: {date: localGraphData.date},
+                success: function(response) {
+                    // if it's latest version, don't load data
+                    if (response == "latest") {
+                        hideWaiting();
+                        graphSrcData = localGraphData;
+                        updateGraph();
+                        triggerTourEvent();
+                    } else {
+                        loadGraphData();
+                    }
+                }
+            });
+        }
+    }
+}
+
+function loadGraphData() {
     $.ajax({
         type: "POST",
         url: "read_graph_data.php",
@@ -390,6 +451,9 @@ function readGraphData() {
             hideWaiting();
             try {
                 graphSrcData = JSON.parse(response);
+                if (isAllSearch) {
+                    saveAllDataOnLocalDB();
+                }
                 updateGraph();
                 triggerTourEvent();
             } catch(e) {
@@ -397,6 +461,16 @@ function readGraphData() {
             }
         }
     });
+}
+
+function saveAllDataOnLocalDB() {
+    let request = window.indexedDB.open("graph_db", 3);
+    request.onsuccess = function() {
+        let db = request.result;
+        let transaction = db.transaction("graph_data", "readwrite"); // (1)
+        let graphDB = transaction.objectStore('graph_data');
+        graphDB.put(JSON.stringify(graphSrcData), 'data');
+    };
 }
 
 function triggerTourEvent() {
@@ -458,6 +532,7 @@ function getFormData(form){
     if (indexed_array["search-phase"].length == 6) {
         delete indexed_array["search-phase"];
     }
+    isAllSearch = Object.keys(indexed_array).length < 1;
     return indexed_array;
 }
 
