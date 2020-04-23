@@ -21,4 +21,4 @@
         
         mysqli_query($conn, $query);
         mysqli_commit($conn);
-    }
+    }updateGraphHistory();
