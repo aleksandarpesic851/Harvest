@@ -157,9 +157,6 @@ function initDatatable() {
                 ]
             }
         ],
-        drawCallback: function() {
-            hideWaiting();
-        },
         columns: [
             //{ data: "rank" },
             { data: "nct_id" },
@@ -576,12 +573,7 @@ function getCheckedNodes(id) {
 }
 
 function hideWaiting() {
-    if (loadedCnt >= 1) {
-        $("#waiting").hide();
-        loadedCnt = 0;
-    } else {
-        loadedCnt++;
-    }
+    $("#waiting").hide();
 }
 
 function showWaiting() {
