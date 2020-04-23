@@ -4,18 +4,18 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/generate_query_condition.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/modifier/read_modifiers.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/graph_history.php";
-    echo json_encode($_POST["drugs"]);
-    exit;
-    if (!isset($_POST) || !isset($_POST["conditions"])) {
+
+    if (!isset($_POST) || !isset($_POST["data"])) {
         echo "Invalid Parameters";
         exit;
     }
+    $request = json_decode($_POST["data"]);
     $start = time();
 
-    $otherSearch = generateOtherSearchQuery($_POST);
+    $otherSearch = generateOtherSearchQuery($request);
 
-    $conditionTree = $_POST["conditions"];
-    $drugTree = $_POST["drugs"];
+    $conditionTree = $request["conditions"];
+    $drugTree = $request["drugs"];
 
     $conditions = array();
     getAllConditions($conditionTree);

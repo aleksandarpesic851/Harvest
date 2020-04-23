@@ -443,7 +443,7 @@ function loadGraphData() {
     $.ajax({
         type: "POST",
         url: "read_graph_data.php",
-        data: searchItems,
+        data: {data: JSON.stringify(searchItems)},
         success: function(response) {
             hideWaiting();
             try {
