@@ -81,7 +81,7 @@
 
         foreach($conditionTree as $node) {
             $key = substr($node["nodeId"], 10);
-            $conditions[$key]["condition_name"] = $node["nodeText"];
+            $conditions[$key] = array();
             addChildNode($node);
         }
     }
@@ -116,7 +116,7 @@
 
         foreach($drugTree as $node) {
             $key = substr($node["nodeId"], 10);
-            $drugs[$key]["drug_name"] = $node["nodeText"];
+            $drugs[$key] = array();
             addChildNode_Drug($node);
         }
     }
