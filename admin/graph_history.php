@@ -1,6 +1,13 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
+    $rootPath = $_SERVER['DOCUMENT_ROOT'];
+
+    $runningCLI = false;
+    if (!isset($rootPath) || strlen($rootPath) < 1) {
+        $rootPath = __DIR__ . "/../";
+        $runningCLI = true;
+    }
+    require_once $rootPath . "/db_connect.php";
+    require_once $rootPath . "/enable_error_report.php";
 
     function getLatestGraphHistory() {
         global $conn;
