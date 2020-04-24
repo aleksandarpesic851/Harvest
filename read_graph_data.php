@@ -52,6 +52,7 @@
     // printTime();
     // echo json_encode($observationalIds);
     // exit;
+    
     $response = array();
     $response["conditions"] = $conditions;
     $response["drugs"] = $drugs;

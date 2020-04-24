@@ -31,7 +31,7 @@ ExtractObservationsals();
         $data = mysqli_fetch_all($result);
         // Free result set
         mysqli_free_result($result);
-        
+        echo count($data);
         $resIDs = "";
         foreach($data as $row)
         {
