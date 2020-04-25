@@ -29,6 +29,13 @@
         <meta name="description" content="Provide a graphical interface for navigating clinical trials in the USA repository. This website uses a biologist-curated hierarchy of both illness conditions and treatments to provide the user convenient categories.">
         <meta name="keywords" content="clinical trials, medical research, usa, disease hierarchy, drug, condition, navigation, graph" />
         <meta name="author" content="Max, Guang">
+
+        <meta property="og:image" content="https://usclinicaltrials.org/imgs/clinical_trial_icon.png" />
+        <meta property="og:url" content="https://usclinicaltrials.org" />
+        <meta property="og:type" content="Website" />
+        <meta property="og:title" content="Intelligent navigation of USA clinical trails" />
+        <meta property="og:description" content="Provide a graphical interface for navigating clinical trials in the USA repository. This website uses a biologist-curated hierarchy of both illness conditions and treatments to provide the user convenient categories." />
+
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -46,7 +53,15 @@
         }
         </script>
 
-        <link rel="shortcut icon" href="/imgs/clinical_trial_icon.png">
+        <link rel="shortcut icon" href="/clinical_trial_icon.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
+        <link rel="manifest" href="/imgs/site.webmanifest">
+        <link rel="mask-icon" href="/imgs/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+
         <style>
             #chartjs-tooltip {
                 opacity: 1;
