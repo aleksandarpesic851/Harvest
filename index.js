@@ -97,9 +97,23 @@ function initIndexedDB() {
 
 function initTour() {
     $('#start_tour').click(function(){
-        introJs().setOptions({
+        let tour = introJs().setOptions({
             exitOnOverlayClick: false
-          }).start();
+          });
+
+        tour.start();
+        if (hastoDisplayTour) {
+            $('.introjs-skipbutton').hide();
+        }
+        tour.onafterchange(function() {
+            if (hastoDisplayTour) {
+                if (this._introItems.length - 1 == this._currentStep || this._introItems.length == 1) {
+                    $('.introjs-skipbutton').show();
+                } else {
+                    $('.introjs-skipbutton').hide();
+                } 
+            }
+        });
     	localStorage.setItem("clincaltrials_app_tour_shown", 'true');
 	});
 }

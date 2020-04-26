@@ -196,6 +196,9 @@
                     text-align: right;
                 }
             }
+            .not-show {
+                display: none !important;
+            }
         </style>
     </head>
     <body>
