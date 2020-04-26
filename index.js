@@ -46,6 +46,8 @@ let isObservation = false;
 let isAllSearch = true;
 let localGraphData;
 
+let hastoDisplayTour = false;
+
 initIndexedDB();
 
 $(document).ready(function() {
@@ -95,7 +97,10 @@ function initIndexedDB() {
 
 function initTour() {
     $('#start_tour').click(function(){
-		introJs().start();
+        introJs().setOptions({
+            exitOnOverlayClick: false
+          }).start();
+    	localStorage.setItem("clincaltrials_app_tour_shown", 'true');
 	});
 }
 function initGraphTab() {
@@ -419,6 +424,7 @@ function readGraphData() {
     } else {
         // if there isn't loaded graph data, load data.
         if (!localGraphData) {
+            hastoDisplayTour = true;
             loadGraphData();
         } else {
             $.ajax({
@@ -431,8 +437,8 @@ function readGraphData() {
                         hideWaiting();
                         graphSrcData = localGraphData;
                         updateGraph();
-                        triggerTourEvent();
                     } else {
+                        hastoDisplayTour = true;
                         loadGraphData();
                     }
                 }
@@ -442,6 +448,7 @@ function readGraphData() {
 }
 
 function loadGraphData() {
+    triggerTourEvent();
     $.ajax({
         type: "POST",
         url: "read_graph_data.php",
@@ -454,7 +461,6 @@ function loadGraphData() {
                     saveAllDataOnLocalDB();
                 }
                 updateGraph();
-                triggerTourEvent();
             } catch(e) {
                 console.log(e);
             }
@@ -473,7 +479,7 @@ function saveAllDataOnLocalDB() {
 }
 
 function triggerTourEvent() {
-    if($('#start_tour').length > 0 && localStorage.getItem("clincaltrials_app_tour_shown") !== 'true'){
+    if($('#start_tour').length > 0 && (localStorage.getItem("clincaltrials_app_tour_shown") !== 'true' || hastoDisplayTour) ){
     	$('#start_tour').trigger('click');
     	localStorage.setItem("clincaltrials_app_tour_shown", 'true');
     }

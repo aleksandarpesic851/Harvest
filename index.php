@@ -30,7 +30,7 @@
         <meta name="keywords" content="clinical trials, medical research, usa, disease hierarchy, drug, condition, navigation, graph" />
         <meta name="author" content="Max, Guang">
 
-        <meta property="og:image" content="https://usclinicaltrials.org/imgs/clinical_trial_icon.png" />
+        <meta property="og:image" content="https://usclinicaltrials.org/imgs/clinical_index.png" />
         <meta property="og:url" content="https://usclinicaltrials.org" />
         <meta property="og:type" content="Website" />
         <meta property="og:title" content="Intelligent navigation of USA clinical trails" />
@@ -53,7 +53,6 @@
         }
         </script>
 
-        <link rel="shortcut icon" href="/clinical_trial_icon.png">
         <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
