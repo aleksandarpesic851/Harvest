@@ -84,9 +84,11 @@ function initIndexedDB() {
         let graphDB = transaction.objectStore('graph_data');
         let objectStore = graphDB.get('data');
         objectStore.onsuccess = function() {
+            loadedTreeCnt++;
             if (objectStore.result) {
                 localGraphData = JSON.parse(objectStore.result);
             }
+            readGraphData();
         }
     };
 }
@@ -389,7 +391,7 @@ function initSearchDrugTree() {
 
 function readGraphData() {
     // if condition & drug tree nodes are not loaded, don't search.
-    if (loadedTreeCnt < 2) {
+    if (loadedTreeCnt < 3) {
         return;
     }
     if (!searchItems) {
