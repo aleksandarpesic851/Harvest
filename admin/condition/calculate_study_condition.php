@@ -27,7 +27,7 @@
 
     calculateStudyConditions();
 
-    updateGraphHistory()();
+    updateGraphHistory();
     
     if (!mysqli_commit($conn)) {
         $log = "Commit transaction failed";
