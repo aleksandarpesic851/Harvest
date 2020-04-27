@@ -157,7 +157,7 @@
         //         mergeParentChild_Drug($key);
         //     }
         // }
-        
+        $start = time();
         foreach($totalData as $key => $drug) {
             if (isset($drug["leaf"]) && $drug["leaf"]) {
                 mergeChildParent_Drug($key);
