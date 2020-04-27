@@ -254,7 +254,8 @@
         global $conn;
 
         foreach($totalData as $data) {
-            $query = "UPDATE `drug_hierarchy` SET `study_ids` = '" . implode(",", $data["study_ids"]) . "' WHERE `id` = " . $data["id"];
+            $studyIds = array_keys($data["study_ids"]);
+            $query = "UPDATE `drug_hierarchy` SET `study_ids` = '" . implode(",", $studyIds) . "' WHERE `id` = " . $data["id"];
             mysqli_query($conn, $query);
         }
     }
