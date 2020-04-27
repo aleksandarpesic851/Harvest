@@ -82,7 +82,17 @@
     //Read All drugs in hierarchy
     function readAllDrugHierarchy() {
         $query = "SELECT `id`, `drug_name`, `synonym`, `parent_id`, `drug_id` FROM drug_hierarchy_view";
-        return mysqlReadAll_Drug($query);
+        $hierarchyData = mysqlReadAll_Drug($query);
+        foreach($hierarchyData as $key => $element) {
+            $hierarchyData[$key]["leaf"] = true;
+            foreach($hierarchyData as $subKey => $subElement) {
+                if ($element["id"] == $subElement["parent_id"]) {
+                    $hierarchyData[$key]["leaf"] = false;
+                    break;
+                }
+            }
+        }
+        return $hierarchyData;
     }
 
     // Calculate study ids related with drug name
@@ -105,7 +115,7 @@
             $totalData[$key]["study_ids"] = array();
             
             foreach($nctIds as $id) {
-                array_push($totalData[$key]["study_ids"], $id["nct_id"]);
+                $totalData[$key]["study_ids"][$id["nct_id"]] = '';
             }
             
             $end = time();
@@ -183,7 +193,14 @@
         // Get Parent Node
         foreach($totalData as $key => $drug) {
             if ($drug["id"] == $totalData[$childKey]["parent_id"])  {
-                $totalData[$key]["study_ids"] = mergeArray_Drug($totalData[$key]["study_ids"], $totalData[$childKey]["study_ids"]);
+                //$totalData[$key]["study_ids"] = mergeArray_Drug($totalData[$key]["study_ids"], $totalData[$childKey]["study_ids"]);
+                if (count($totalData[$key]["study_ids"]) < 1) {
+                    $totalData[$key]["study_ids"] = $totalData[$childKey]["study_ids"];
+                } else {
+                    foreach($totalData[$childKey]["study_ids"] as $studyIdKey => $val) {
+                        $totalData[$key]["study_ids"][$studyIdKey] = '';
+                    }
+                }
                 mergeChildParent_Drug($key);
                 break;
             }

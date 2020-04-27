@@ -100,7 +100,17 @@
     //Read All conditions in hierarchy
     function readAllHierarchy() {
         $query = "SELECT `id`, `condition_name`, `synonym`, `parent_id`, `condition_id`, `category_id` FROM condition_hierarchy_view";
-        return mysqlReadAll($query);
+        $hierarchyData = mysqlReadAll($query);
+        foreach($hierarchyData as $key => $element) {
+            $hierarchyData[$key]["leaf"] = true;
+            foreach($hierarchyData as $subKey => $subElement) {
+                if ($element["id"] == $subElement["parent_id"]) {
+                    $hierarchyData[$key]["leaf"] = false;
+                    break;
+                }
+            }
+        }
+        return $hierarchyData;
     }
 
     // Calculate study ids related with condition name
@@ -133,7 +143,7 @@
             $nctIds = mysqlReadAll($query);
             
             foreach($nctIds as $id) {
-                array_push($totalData[$key]["study_ids"], $id["nct_id"]);
+                $totalData[$key]["study_ids"][$id["nct_id"]] = '';
             }
             
             $end = time();
@@ -166,7 +176,7 @@
     // merge Study Ids
     function mergeIds() {
         
-        $log = "Merging...";
+        $log = "\r\nMerging...";
         logOrPrintConditions($log);
         
         global $totalData;
@@ -176,14 +186,19 @@
         //         mergeParentChild($key);
         //     }
         // }
-
+        $start = time();
         foreach($totalData as $key => $condition) {
             if (isset($condition["leaf"]) && $condition["leaf"]) {
                 mergeChildParent($key);
             }
         }
+
+        foreach($totalData as $key => $condition) {
+            $log = "\r\nCalculate Study Id - ". $condition["condition_name"] . " : "  . count($condition['study_ids']);
+            logOrPrintConditions($log);
+        }
         
-        $log = "Merge complete";
+        $log = time_elapsed_string($end-$start) . "\r\nMerge complete";
         logOrPrintConditions($log);
         
     }
@@ -212,7 +227,13 @@
         // Get Parent Node
         foreach($totalData as $key => $condition) {
             if ($condition["id"] == $totalData[$childKey]["parent_id"])  {
-                $totalData[$key]["study_ids"] = mergeArray($totalData[$key]["study_ids"], $totalData[$childKey]["study_ids"]);
+                if (count($totalData[$key]["study_ids"]) < 1) {
+                    $totalData[$key]["study_ids"] = $totalData[$childKey]["study_ids"];
+                } else {
+                    foreach($totalData[$childKey]["study_ids"] as $studyIdKey => $val) {
+                        $totalData[$key]["study_ids"][$studyIdKey] = '';
+                    }
+                }
                 mergeChildParent($key);
                 break;
             }
@@ -263,13 +284,14 @@
             if ($modifier_category_id != 0 && $data["category_id"] != $modifier_category_id) {
                 continue;
             }
+            $studyIds = array_keys($data["study_ids"]);
             $query = "SELECT `modifier_id` FROM `condition_hierarchy_modifier_stastics` WHERE `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
             $nCnt = mysqlRowCnt($query);
             if ($nCnt < 1) {
                 $query = "INSERT INTO `condition_hierarchy_modifier_stastics` (`hierarchy_id`, `modifier_id`, `condition_id`, `condition_name`, `study_ids`)";
-                $query .= "VALUES ('" . $data["id"] . "', '$modifierID', '" . $data["condition_id"] . "', '" . $data["condition_name"] . "', '" . implode(",", $data["study_ids"]) . "'); ";
+                $query .= "VALUES ('" . $data["id"] . "', '$modifierID', '" . $data["condition_id"] . "', '" . $data["condition_name"] . "', '" . implode(",", $studyIds) . "'); ";
             } else {
-                $query = "UPDATE `condition_hierarchy_modifier_stastics` SET `study_ids` = '" . implode(",", $data["study_ids"]) . "' WHERE  `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
+                $query = "UPDATE `condition_hierarchy_modifier_stastics` SET `study_ids` = '" . implode(",", $studyIds) . "' WHERE  `modifier_id` = $modifierID AND `hierarchy_id` = " . $data["id"];
             }
             mysqli_query($conn, $query);
         }
