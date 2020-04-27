@@ -11,6 +11,7 @@ fwrite($logFile, date("Y-m-d h:i:sa"));
 
     require_once $rootPath . "/db_connect.php";
 	require_once $rootPath . "/enable_error_report.php";
+    require_once $rootPath . "/admin/graph_history.php";
     
     //Replace ', " character with \', \"
     function getValue($item) {
