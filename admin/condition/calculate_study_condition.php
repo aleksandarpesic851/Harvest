@@ -198,7 +198,7 @@
             logOrPrintConditions($log);
         }
         
-        $log = time_elapsed_string($end-$start) . "\r\nMerge complete";
+        $log ="\r\n" . time_elapsed_string(time()-$start) . "\r\nMerge complete";
         logOrPrintConditions($log);
         
     }

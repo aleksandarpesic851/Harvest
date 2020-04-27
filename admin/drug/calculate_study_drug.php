@@ -164,6 +164,12 @@
             }
         }
 
+        foreach($totalData as $key => $drug) {
+            $log = "\r\nCalculate Study Id - ". $drug["drug_name"] . " : "  . count($drug['study_ids']);
+            logOrPrintConditions($log);
+        }
+        
+        $log ="\r\n" . time_elapsed_string(time()-$start) . "\r\nMerge complete";
         $log = "Merge complete";
         logOrPrintDrugs($log);
 
