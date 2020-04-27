@@ -146,7 +146,7 @@
     // merge Study Ids
     function mergeDrugIds() {
 
-        $log = "Merging...";
+        $log = "\r\nMerging...";
         logOrPrintDrugs($log);
 
         global $totalData;
