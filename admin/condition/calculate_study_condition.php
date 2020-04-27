@@ -171,11 +171,11 @@
         
         global $totalData;
 
-        foreach($totalData as $key=>$condition) {
-            if ($condition["parent_id"] == 0) {
-                mergeParentChild($key);
-            }
-        }
+        // foreach($totalData as $key=>$condition) {
+        //     if ($condition["parent_id"] == 0) {
+        //         mergeParentChild($key);
+        //     }
+        // }
 
         foreach($totalData as $key => $condition) {
             if (isset($condition["leaf"]) && $condition["leaf"]) {

@@ -141,12 +141,12 @@
 
         global $totalData;
 
-        $start = time();
-        foreach($totalData as $key=>$drug) {
-            if ($drug["parent_id"] == 0) {
-                mergeParentChild_Drug($key);
-            }
-        }
+        // $start = time();
+        // foreach($totalData as $key=>$drug) {
+        //     if ($drug["parent_id"] == 0) {
+        //         mergeParentChild_Drug($key);
+        //     }
+        // }
         
         foreach($totalData as $key => $drug) {
             if (isset($drug["leaf"]) && $drug["leaf"]) {
