@@ -169,7 +169,7 @@
             logOrPrintDrugs($log);
         }
         
-        $log ="\r\n" . time_elapsed_string(time()-$start) . "\r\nMerge complete";
+        $log ="\r\n" . time_elapsed_string_Drug(time()-$start) . "\r\nMerge complete";
         $log = "Merge complete";
         logOrPrintDrugs($log);
 
