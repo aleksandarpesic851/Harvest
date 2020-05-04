@@ -97,23 +97,92 @@ function initIndexedDB() {
 
 function initTour() {
     $('#start_tour').click(function(){
-        let tour = introJs().setOptions({
-            exitOnOverlayClick: false
-          });
+        var enjoyhint_instance = new EnjoyHint({});
+        var enjoyhint_script_steps = [
+            {
+                showSkip: false,
+                'next #btn-corona': 'Search all trials related to COVID-19'
+            },
+            {
+                showSkip: false,
+                'next #btn-cancer': 'Search all trials related to cancer.'
+            },
+            {
+                showSkip: false,
+                'next #btn-feedback': 'Write Feedback for this website.'
+            },
+            {
+                showSkip: false,
+                'next #start_tour': 'Tour Website.'
+            },
+            {
+                showSkip: false,
+                'next #btn-aboutus': 'Description about this website'
+            },
+            {
+                showSkip: false,
+                'next #btn-ffl': 'External navigation to high-throughput micro-physiological screening systems, <br> which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.'
+            },
+            {
+                showSkip: false,
+                'next #btn-search': 'Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, <br> such as trials status can be set under "Other".'
+            },
+            {
+                showSkip: false,
+                'next #btn-condition': 'Filter search results by condition only.'
+            },
+            {
+                showSkip: false,
+                'next #btn-modifier': 'Filter search results by modifier only.'
+            },
+            {
+                showSkip: false,
+                'next #btn-treatment': 'Filter search results by treatment only.'
+            },
+            {
+                showSkip: false,
+                'next #myChart': 'Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll.'
+            },
+            // {
+            //     showSkip: false,
+            //     'next #datatable-container': 'Data table for filtered data',
+            //     scrollAnimationSpeed: 200
+            // },
+            {
+                showSkip: false,
+                'next .dt-button': 'Export data into Excel and CSV',
+                scrollAnimationSpeed: 200
+            },
+            {
+                'click #feedback-container': 'Feedbacks for this website',
+                skipButton : {text: "End Tour!"},
+                scrollAnimationSpeed: 200,
+                showNext: false
+            },
 
-        tour.start();
-        if (hastoDisplayTour) {
-            $('.introjs-skipbutton').hide();
-        }
-        tour.onafterchange(function() {
-            if (hastoDisplayTour) {
-                if (this._introItems.length - 1 == this._currentStep || this._introItems.length == 1) {
-                    $('.introjs-skipbutton').show();
-                } else {
-                    $('.introjs-skipbutton').hide();
-                } 
-            }
-        });
+        ];
+        enjoyhint_instance.set(enjoyhint_script_steps);
+        enjoyhint_instance.run();
+        
+
+
+        // let tour = introJs().setOptions({
+        //     exitOnOverlayClick: false
+        //   });
+
+        // tour.start();
+        // if (hastoDisplayTour) {
+        //     $('.introjs-skipbutton').hide();
+        // }
+        // tour.onafterchange(function() {
+        //     if (hastoDisplayTour) {
+        //         if (this._introItems.length - 1 == this._currentStep || this._introItems.length == 1) {
+        //             $('.introjs-skipbutton').show();
+        //         } else {
+        //             $('.introjs-skipbutton').hide();
+        //         } 
+        //     }
+        // });
     	localStorage.setItem("clincaltrials_app_tour_shown", 'true');
 	});
 }
@@ -193,8 +262,6 @@ function initDatatable() {
         ],
         order: [[ 0, 'desc' ]]
     });
-    $('button.dt-button').attr("data-intro", "Export data into Excel and CSV");
-    $('button.dt-button').attr("data-step", "13");
 }
 
 function initChart() {
@@ -214,11 +281,12 @@ function initChart() {
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        callback: function(value) {if (value % 1 === 0) {return value;}}
                     }, 
                     scaleLabel: {
                         display: true,
-                        labelString: 'The number of trials',
+                        labelString: 'Number of Trials',
                         fontSize: 16,
                         fontStyle: 'bold',
                         padding: 10,

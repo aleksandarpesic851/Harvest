@@ -199,6 +199,14 @@
             .not-show {
                 display: none !important;
             }
+
+            .introjs-tooltip {
+                position: fixed !important;
+                left: calc(50vw - 60px) !important;
+                top: calc(50vh - 50px) !important;
+                box-shadow: 0 1px 10px rgba(0,0,0,.8);
+                background-color: white;
+            }
         </style>
     </head>
     <body>
@@ -217,32 +225,26 @@
                     <img src="/imgs/clinical_index.png" style="height: auto; width: 100%; max-width: 250px;" alt="clinical trials">
                 </div>
                 <div class="col-12 col-lg-9 menu-btns" style="margin-top: 1rem">
-                    <button class="btn btn-outline-danger" style="padding: 0.5rem 1rem" onclick="searchCorona()" 
-                        data-intro='Search all trials related to COVID-19' data-step='1'>
+                    <button id="btn-corona" class="btn btn-outline-danger" style="padding: 0.5rem 1rem" onclick="searchCorona()">
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; COVID-19
                     </button>
-                    <button class="btn btn-outline-warning" style="padding: 0.5rem 1rem" onclick="searchCancer()"
-                        data-intro='Search all trials related to cancer.' data-step='2'>
+                    <button id="btn-cancer" class="btn btn-outline-warning" style="padding: 0.5rem 1rem" onclick="searchCancer()">
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
                     </button>
-                    <a style="padding: 0.5rem 1rem" title="Write Feedback for this website."
-                        class="btn btn-outline-info btn-flat hidden-xs" href="#feedback"
-                        data-intro='Write Feedback for this website.' data-step='3'>
+                    <a id="btn-feedback" style="padding: 0.5rem 1rem" title="Write Feedback for this website."
+                        class="btn btn-outline-info btn-flat hidden-xs" href="#feedback">
                         <i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
                     </a>
                     <button type="button" id="start_tour" style="padding: 0.5rem 1rem"
                         title="Tour Website" data-toggle="tooltip" data-placement="bottom"
-                        class="btn btn-outline-info btn-flat hidden-xs"
-                        data-intro='Tour Website.' data-step='4'>
+                        class="btn btn-outline-info btn-flat hidden-xs">
                         &nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;
                     </button>
-                    <button class="btn btn-outline-primary" style="padding: 0.5rem 1rem"
-                        data-toggle="modal" data-target="#about-modal"
-                        data-intro='Description about this website' data-step='5'>
+                    <button id="btn-aboutus" class="btn btn-outline-primary" style="padding: 0.5rem 1rem"
+                        data-toggle="modal" data-target="#about-modal">
                         <i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp; About Us
                     </button>
-                    <a class="btn btn-outline-success" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank"
-                        data-intro='External navigation to high-throughput micro-physiological screening systems, which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.' data-step='6'>
+                    <a id="btn-ffl" class="btn btn-outline-success" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank">
                         <i class="fa fa-external-link" aria-hidden="true"></i>&nbsp;&nbsp; Micro-physiological systems
                     </a>
                 </div>
@@ -254,8 +256,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center justify-content-lg-end">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#search-modal"
-                    data-intro='Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, such as trials status can be set under "Other".' data-step='7'>
+                <button id="btn-search" class="btn btn-primary" data-toggle="modal" data-target="#search-modal">
                     <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
                 </button>
             </div>
@@ -263,9 +264,9 @@
             <div class="row box box-border">
                 <div class="col-12 col-lg-4 col-xl-3">
                     <ul class="nav nav-tabs nav-justified" id="graph-tab">
-                        <li class=" nav-item" data-intro='Filter search results by condition only.' data-step='8'><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by modifier only.' data-step='9'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
-                        <li class=" nav-item" data-intro='Filter search results by treatment only.' data-step='10'><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
+                        <li class=" nav-item" id="btn-condition"><a class="nav-link font-12 active" data-toggle="tab" href="#graph-tab-condition">Conditions</a></li>
+                        <li class=" nav-item" id="btn-modifier"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
+                        <li class=" nav-item" id="btn-treatment"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top: 10px;">
                         <div class="tab-pane graph-left active" id="graph-tab-condition">
@@ -285,8 +286,7 @@
                 </div>
                 <!-- Chart Graph -->
                 <div class="col-12 col-lg-8 col-xl-9 enable-scroll">
-                    <div class="chart-container" 
-                        data-intro="Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll." data-step='11'>
+                    <div class="chart-container">
                         <canvas id="myChart"></canvas>
                     </div>
                 </div>
@@ -295,7 +295,7 @@
             <!-- Data table -->
             <h2 class="text-center" style="margin-top: 2rem; font-size: 30px">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
-                <div class="col-12" data-intro='Data table for filtered data' data-step='12' style="overflow: auto;">
+                <div class="col-12" id="datatable-container" style="overflow: auto;">
                     <table id="study-table" class="table table-striped table-bordered" style="width: 100%; max-width: 100%">
                         <thead>
                             <tr>
@@ -316,7 +316,7 @@
             </div>
 
             <!-- Feedback -->
-            <div class="row box" data-intro='Feedbacks for this website' data-step='14'>
+            <div class="row box" id="feedback-container">
                 <div class="col-12">
                     <label for="feedback">Write your feedback for this site.</label>
                     <textarea rows="5" class="form-control" id="feedback" name="feedback"></textarea>
@@ -625,7 +625,7 @@
         <link async href="//cdn.syncfusion.com/ej2/ej2-navigations/styles/material.css" rel="stylesheet">
 
         <!-- Tour -->
-        <link async href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css" rel="stylesheet"/>
+        <link async href="/enjoyhint/enjoyhint.css" rel="stylesheet"/>
         
         <!-- Javascripts -->
 
@@ -656,8 +656,7 @@
         <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
 
         <!-- Tour -->
-        <script async src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.min.js"></script>
-
+        <script src="/enjoyhint/enjoyhint.js"></script>
         <!-- Page Js -->
         <script src="index.js"></script>
 
