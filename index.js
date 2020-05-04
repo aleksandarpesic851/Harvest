@@ -100,65 +100,71 @@ function initTour() {
         var enjoyhint_instance = new EnjoyHint({});
         var enjoyhint_script_steps = [
             {
-                showSkip: false,
-                'next #btn-corona': 'Search all trials related to COVID-19'
+                showSkip: !hastoDisplayTour,
+                'next #btn-corona': 'Search all trials related to COVID-19',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #btn-cancer': 'Search all trials related to cancer.'
+                showSkip: !hastoDisplayTour,
+                'next #btn-cancer': 'Search all trials related to cancer.',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #btn-feedback': 'Write Feedback for this website.'
+                showSkip: !hastoDisplayTour,
+                'next #btn-feedback': 'Write Feedback for this website.',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #start_tour': 'Tour Website.'
+                showSkip: !hastoDisplayTour,
+                'next #start_tour': 'Tour Website.',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #btn-aboutus': 'Description about this website'
+                showSkip: !hastoDisplayTour,
+                'next #btn-aboutus': 'Description about this website',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #btn-ffl': 'External navigation to high-throughput micro-physiological screening systems, <br> which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.'
+                showSkip: !hastoDisplayTour,
+                'next #btn-ffl': 'External navigation to high-throughput micro-physiological screening systems, <br> which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #btn-search': 'Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, <br> such as trials status can be set under "Other".'
+                showSkip: !hastoDisplayTour,
+                'next #btn-search': 'Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, <br> such as trials status can be set under "Other".',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #btn-condition': 'Filter search results by condition only.'
+                showSkip: !hastoDisplayTour,
+                'next #btn-condition': 'Filter search results by condition only.',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #btn-modifier': 'Filter search results by modifier only.'
+                showSkip: !hastoDisplayTour,
+                'next #btn-modifier': 'Filter search results by modifier only.',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #btn-treatment': 'Filter search results by treatment only.'
+                showSkip: !hastoDisplayTour,
+                'next #btn-treatment': 'Filter search results by treatment only.',
+                skipButton : {text: "End Tour!"}
             },
             {
-                showSkip: false,
-                'next #myChart': 'Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll.'
+                showSkip: !hastoDisplayTour,
+                'next #myChart': 'Graph for filtered data. Zoom in and out of this graph using mouse wheel scroll.',
+                skipButton : {text: "End Tour!"}
             },
-            // {
-            //     showSkip: false,
-            //     'next #datatable-container': 'Data table for filtered data',
-            //     scrollAnimationSpeed: 200
-            // },
             {
-                showSkip: false,
-                'next .dt-button': 'Export data into Excel and CSV',
+                showSkip: !hastoDisplayTour,
+                'next #datatable-container': 'Data table for filtered data',
+                skipButton : {text: "End Tour!"},
                 scrollAnimationSpeed: 200
             },
             {
-                'click #feedback-container': 'Feedbacks for this website',
+                'next .dt-button': 'Export data into Excel and CSV',
                 skipButton : {text: "End Tour!"},
-                scrollAnimationSpeed: 200,
                 showNext: false
-            },
+            }
 
         ];
         enjoyhint_instance.set(enjoyhint_script_steps);
