@@ -142,6 +142,7 @@ fwrite($logFile, date("Y-m-d h:i:sa"));
             $values = "";
             $updates = "";
             $status_open = 1;
+            $now = date('Y-m-d H:i:s');
 
             foreach($study->children() as $studyItem) {
                 $field = $studyItem->getName();
@@ -163,8 +164,8 @@ fwrite($logFile, date("Y-m-d h:i:sa"));
                     $status_open = 0;
                 }
             }
-            $values .= ", '" . $status_open . "'";
-            $fields .= ",  `status_open`";
+            $values .= ", '" . $status_open . "', '" . $now . "'";
+            $fields .= ",  `status_open`,  `created_at`";
             $updates = "ON DUPLICATE KEY UPDATE " . $updates . ", `status_open`='" . $status_open . "'";
             $query = " INSERT INTO studies ($fields) VALUES ($values) $updates; ";
             if (!mysqli_query($conn, $query)) {
