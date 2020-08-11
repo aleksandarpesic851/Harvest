@@ -241,7 +241,9 @@
         $nUnit = 1000;
         $subData = array_slice($valData, 0, $nUnit);
         while(count($subData) > 0) {
-            $query = "INSERT INTO `$table` (`$columnName`) VALUES ('" . implode("'), ('", $subData) . "')";
+            $now = date('Y-m-d H:i:s');
+            $query = "INSERT INTO `$table` (`$columnName`, `created_at`) VALUES ('" . implode("', '$now'), ('", $subData) . "', '$now')";
+            
             if (!mysqli_query($conn, $query)) {
                 $log = "\r\n Error in mysql query: " . mysqli_error($conn);
                 logOrPrintTerms($log);
