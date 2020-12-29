@@ -1,1 +1,3 @@
-
+	# Force non-www - apex domain
+    RewriteCond %{HTTP_HOST} ^www\.usclinicaltrials\.org$ [NC]
+    RewriteRule ^(.*)$ https://usclinicaltrials.org/$1 [R=301,L]
