@@ -3,6 +3,8 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/check_update.php";
 ?>
 
+<?php if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start(); ?>
+
 <html lang="en">
 	<head>
         <!-- Global site tag (gtag.js) - Google Analytics -->
