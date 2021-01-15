@@ -25,7 +25,7 @@
 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> Intelligent navigation of USA clinical trails </title>
+        <title> Intelligent navigation of USA clinical trials </title>
         <meta name="description" content="Provide a graphical interface for navigating clinical trials in the USA repository. This website uses a biologist-curated hierarchy of both illness conditions and treatments to provide the user convenient categories.">
         <meta name="keywords" content="clinical trials, medical research, usa, disease hierarchy, drug, condition, navigation, graph" />
         <meta name="author" content="Max, Guang">
@@ -33,14 +33,14 @@
         <meta property="og:image" content="https://usclinicaltrials.org/imgs/clinical_index.png" />
         <meta property="og:url" content="https://usclinicaltrials.org" />
         <meta property="og:type" content="Website" />
-        <meta property="og:title" content="Intelligent navigation of USA clinical trails" />
+        <meta property="og:title" content="Intelligent navigation of USA clinical trials" />
         <meta property="og:description" content="Provide a graphical interface for navigating clinical trials in the USA repository. This website uses a biologist-curated hierarchy of both illness conditions and treatments to provide the user convenient categories." />
 
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "ClinicalTrails",
-            "name": "Intelligent navigation of USA clinical trails",
+            "@type": "ClinicalTrials",
+            "name": "Intelligent navigation of USA clinical trials",
             "url": "http://usclinicaltrials.org",
             "description": "USclinicaltrials.org provide a graphical interface for navigating clinical trials in the USA repository. FDA regulations require that all trials registered in USA to be published on ClinicalTrials.Gov website. There are over one third of a million trials, and it is very difficult to navigate. USclinicaltrials.org allows the user to graphically select trials by conditions and treatment. It’s provides convenient output functions for selected trials in the dynamic bar graph, as well as export in several formats.This website uses a biologist-curated a hierarchy of both illness conditions and treatments to provide the user convenient categories. This allows comparison of related conditions or treatments. For example, for a given disease-treatment combination a patient might desire to see alternative treatments that fit his disease, while a company might want to see alternative diseases, which might respond to its treatment.",
             "contactPoint": {
