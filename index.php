@@ -225,6 +225,11 @@
                     <img src="/imgs/clinical_index.png" style="height: auto; width: 100%; max-width: 250px;" alt="clinical trials">
                 </div>
                 <div class="col-12 col-lg-9 menu-btns" style="margin-top: 1rem">
+				    <button type="button" id="start_tour" style="padding: 0.5rem 1rem"
+                       title="Tour Website" data-toggle="tooltip" data-placement="bottom"
+                       class="btn btn-outline-info btn-flat hidden-xs">
+                       &nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;
+                    </button>
                     <button id="btn-corona" class="btn btn-outline-danger" style="padding: 0.5rem 1rem" onclick="searchCorona()">
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; COVID-19
                     </button>
@@ -235,11 +240,6 @@
                         class="btn btn-outline-info btn-flat hidden-xs" href="#feedback">
                         <i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
                     </a>
-                    <button type="button" id="start_tour" style="padding: 0.5rem 1rem"
-                        title="Tour Website" data-toggle="tooltip" data-placement="bottom"
-                        class="btn btn-outline-info btn-flat hidden-xs">
-                        &nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;
-                    </button>
                     <button id="btn-aboutus" class="btn btn-outline-primary" style="padding: 0.5rem 1rem"
                         data-toggle="modal" data-target="#about-modal">
                         <i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp; About Us
