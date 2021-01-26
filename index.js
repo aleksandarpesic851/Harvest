@@ -94,10 +94,10 @@ function initIndexedDB() {
     };
 }
 
-    $('#start_tour').click(function(){
+    $('#start_tour').click(function() {
         var enjoyhint_instance = new EnjoyHint({});
         var enjoyhint_script_steps = [
-		    {
+	    {
                 showSkip: !hastoDisplayTour,
                 'next #start_tour': 'Tour Website.',
                 skipButton : {text: "End Tour!"}
