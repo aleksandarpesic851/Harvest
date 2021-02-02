@@ -61,7 +61,6 @@ $(document).ready(function() {
     initDateRangePicker();
     initModifiers();
     initGraphTab();
-    initTour();
 } );
 
 function initIndexedDB() {
@@ -95,10 +94,14 @@ function initIndexedDB() {
     };
 }
 
-function initTour() {
-    $('#start_tour').click(function(){
+    $('#start_tour').click(function() {
         var enjoyhint_instance = new EnjoyHint({});
         var enjoyhint_script_steps = [
+	    {
+                showSkip: !hastoDisplayTour,
+                'next #start_tour': 'Tour Website.',
+                skipButton : {text: "End Tour!"}
+            },
             {
                 showSkip: !hastoDisplayTour,
                 'next #btn-corona': 'Search all trials related to COVID-19',
@@ -112,11 +115,6 @@ function initTour() {
             {
                 showSkip: !hastoDisplayTour,
                 'next #btn-feedback': 'Write Feedback for this website.',
-                skipButton : {text: "End Tour!"}
-            },
-            {
-                showSkip: !hastoDisplayTour,
-                'next #start_tour': 'Tour Website.',
                 skipButton : {text: "End Tour!"}
             },
             {
@@ -191,7 +189,7 @@ function initTour() {
         // });
     	localStorage.setItem("clincaltrials_app_tour_shown", 'true');
 	});
-}
+
 function initGraphTab() {
     $('#graph-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $("#title_graph").html("Clinical Trials Grouped by " + $(this).html());
