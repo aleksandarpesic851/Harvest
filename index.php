@@ -62,6 +62,10 @@
         <meta name="theme-color" content="#ffffff">
 
         <style>
+		
+			div#feedback-container {
+				display: none;
+			}
 			div#feedback-container .btn.btn-primary {
 				float: left;
 			}
