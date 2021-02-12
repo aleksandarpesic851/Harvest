@@ -62,6 +62,9 @@
         <meta name="theme-color" content="#ffffff">
 
         <style>
+			div#feedback-container .btn.btn-primary {
+				float: left;
+			}
             #chartjs-tooltip {
                 opacity: 1;
                 position: absolute;
@@ -236,10 +239,9 @@
                     <button id="btn-cancer" class="btn btn-outline-warning" style="padding: 0.5rem 1rem" onclick="searchCancer()">
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
                     </button>
-                    <a id="btn-feedback" style="padding: 0.5rem 1rem" title="Write Feedback for this website."
-                        class="btn btn-outline-info btn-flat hidden-xs" href="#feedback">
-                        <i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
-                    </a>
+					<button id="btn-feedback" style="padding: 0.5rem 1rem" title="Write Feedback for this website." data-toggle="modal" data-target="#feedback-container" class="btn btn-outline-info btn-flat hidden-xs">
+					<i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
+					</button>
                     <button id="btn-aboutus" class="btn btn-outline-primary" style="padding: 0.5rem 1rem"
                         data-toggle="modal" data-target="#about-modal">
                         <i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp; About Us
@@ -316,16 +318,31 @@
             </div>
 
             <!-- Feedback -->
-            <div class="row box" id="feedback-container">
-                <div class="col-12">
-                    <label for="feedback">Write your feedback for this site.</label>
-                    <textarea rows="5" class="form-control" id="feedback" name="feedback"></textarea>
-                </div>
-                <div class="col-12 text-right" style="margin-top: 10px">
-                    <button class="btn btn-primary" onclick="submitFeedback()">Submit</button>
-                </div>
-            </div>
-        </div>
+        <div class="modal fade show" id="feedback-container" tabindex="-1" role="dialog" style="display: block; padding-right: 17px;" aria-modal="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Send Feedback</h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+							<div class="col-12">
+							<label for="feedback">Share your comments, questions, and concerns</label>
+							<textarea rows="5" class="form-control" id="feedback" name="feedback"></textarea>
+							</div>
+							<div class="col-12 text-right" style="margin-top: 10px">
+							<button class="btn btn-primary" onclick="submitFeedback()">Send Message</button>
+							</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+				</div>
+			</div>
+		</div>
+    </div>
 
         <!-- Search Modal -->
         <div class="modal fade" id="search-modal" tabindex="-1" role="dialog">
