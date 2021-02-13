@@ -237,12 +237,12 @@
                        class="btn btn-outline-info btn-flat hidden-xs">
                        &nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;
                     </button>
-                    <button id="btn-corona" class="btn btn-outline-danger" style="padding: 0.5rem 1rem" onclick="searchCorona()">
+                    <a title="IN DEVELOPMENT" href="javascript:void(0);" id="btn-corona" class="btn btn-outline-danger" style="padding: 0.5rem 1rem">
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; COVID-19
-                    </button>
-                    <button id="btn-cancer" class="btn btn-outline-warning" style="padding: 0.5rem 1rem" onclick="searchCancer()">
+                    </a>
+                    <a title="IN DEVELOPMENT" href="javascript:void(0);" id="btn-cancer" class="btn btn-outline-warning" style="padding: 0.5rem 1rem">
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
-                    </button>
+                    </a>
 					<button id="btn-feedback" style="padding: 0.5rem 1rem" title="Write Feedback for this website." data-toggle="modal" data-target="#feedback-container" class="btn btn-outline-info btn-flat hidden-xs">
 					<i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
 					</button>
