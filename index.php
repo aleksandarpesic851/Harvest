@@ -229,7 +229,7 @@
         <div class="top-container"> 
             <div class="row box">
                 <div class="col-12 col-lg-3">
-                    <img src="/imgs/clinical_index.png" style="height: auto; width: 100%; max-width: 250px;" alt="clinical trials">
+                    <img src="/imgs/clinical_index.png" style="height: auto; width: 100%; max-width: 350px;" alt="clinical trials">
                 </div>
                 <div class="col-12 col-lg-9 menu-btns" style="margin-top: 1rem">
 				    <button type="button" id="start_tour" style="padding: 0.5rem 1rem"
