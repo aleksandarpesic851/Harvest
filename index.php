@@ -322,7 +322,7 @@
             </div>
 
             <!-- Feedback -->
-        <div class="modal fade show" id="feedback-container" tabindex="-1" role="dialog" style="display: block; padding-right: 17px;" aria-modal="true">
+        <div class="modal fade show" id="feedback-container" tabindex="-1" role="dialog" style="padding-right: 17px;" aria-modal="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 				<div class="modal-content">
                     <div class="modal-header">
