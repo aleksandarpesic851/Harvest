@@ -1001,16 +1001,17 @@ function searchCancer() {
     updateGraph();
 }
 
-function submitFeedback() {
-    if (!$("#feedback").val()) {
-        alert("Please add feedback contents.");
-    }
-    $.ajax({
-        type: "POST",
-        url: "/feedback/add.php",
-        data: {content: $("#feedback").val()},
-        success: function(response) {
-            alert("Thank you for your feedback!");
-        }
-    });
-}
+     $(function() {
+       // bind 'Feedback Form' and provide a simple callback function
+       $('#feedForm').ajaxForm(function() {
+		   var commentfield = $("#feedback");
+		    if (!commentfield.val() || commentfield.val().length > 250 ) {
+			 alert("Either :\n You left the field blank \n OR you reached the character limit");
+			 return false;
+		 } else {
+           alert("Thanks for the feedback!");
+		   $("#feedForm").resetForm();
+		   $(".close-feed").trigger("click");
+         }
+	   });
+     });
