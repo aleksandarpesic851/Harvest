@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/check_update.php";
+   require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/check_update.php";
 ?>
 
 <html lang="en">
@@ -156,12 +156,13 @@
 				display: flex;
 			}
 			.lds-dual-ring {
+				color: #fff;
 				display: inline-block;
 				width: 80px;
 				height: 80px;
 				margin: auto;
 			}
-			.lds-dual-ring:after {
+			.lds-dual-ring::after {
 				content: " ";
 				display: block;
 				width: 64px;
@@ -223,7 +224,7 @@
         <!-- End Google Tag Manager (noscript) -->
 
         <div class="lds-container" id="waiting">
-			<div class="lds-dual-ring"></div>
+			<div class="lds-dual-ring">Loading data, please standby...</div>
 		</div>
         <!-- Main Contents -->
         <div class="top-container"> 
