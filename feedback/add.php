@@ -2,12 +2,14 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/db_connect.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/enable_error_report.php";
 
-    if(!empty($_POST["comment"])) {
-        $feedback = validate_input($_POST["comment"]);
-        $query = "INSERT INTO `feedbacks` (`feedback`, `created_at`) VALUES ('$feedback', now())";
-        mysqli_query($conn, $query);
-        mysqli_close($conn);
-        echo "ok";
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if(!empty($_POST["comment"])) {
+            $feedback = validate_input($_POST["comment"]);
+            $query = "INSERT INTO `feedbacks` (`feedback`, `created_at`) VALUES ('$feedback', now())";
+            mysqli_query($conn, $query);
+            mysqli_close($conn);
+            echo "ok";
+        }
     }
 
     function validate_input($data) {       
