@@ -533,6 +533,7 @@ function readGraphData() {
     }
 }
 
+//Reads data from database and then updates Graph
 function loadGraphData() {
     triggerTourEvent();
     $.ajax({
@@ -973,8 +974,8 @@ function searchCorona() {
     modifierCheckedAuto = false;
     drugCheckedAuto = false;
 
-    $('.nav-tabs a[href="#graph-tab-drug"]').tab('show');
-    updateGraph();
+    // $('.nav-tabs a[href="#graph-tab-drug"]').tab('show');
+    loadGraphData();
 }
 
 function searchCancer() {
@@ -998,7 +999,7 @@ function searchCancer() {
     modifierCheckedAuto = false;
     drugCheckedAuto = false;
 
-    updateGraph();
+    loadGraphData();
 }
 
      $(function() {
@@ -1013,5 +1014,9 @@ function searchCancer() {
 		   $("#feedForm").resetForm();
 		   $(".close-feed").trigger("click");
          }
-	   });
+       });
+       
+       //bind Cancer/Corona Search buttons
+       $('#btn-cancer').click(searchCancer);
+       $('#btn-corona').click(searchCorona);
      });
