@@ -535,7 +535,6 @@ function readGraphData() {
 
 //Reads data from database and then updates Graph
 function loadGraphData() {
-    triggerTourEvent();
     $.ajax({
         type: "POST",
         url: "read_graph_data.php",
@@ -1017,6 +1016,6 @@ function searchCancer() {
        });
        
        //bind Cancer/Corona Search buttons
-       $('#btn-cancer').click(searchCancer);
-       $('#btn-corona').click(searchCorona);
+       //$('#btn-cancer').click(searchCancer);
+       //$('#btn-corona').click(searchCorona);
      });
