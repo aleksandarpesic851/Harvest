@@ -579,6 +579,8 @@ function search() {
     readGraphData();
     $("#search-modal").modal("hide");
 }
+//bind Search button
+$('#search-btn-main').click(search)
 
 function readSearchItems() {
     searchItems = {};
