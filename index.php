@@ -238,12 +238,17 @@
                        class="btn btn-outline-info btn-flat hidden-xs">
                        &nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;
                     </button>
+                    <button id="btn-search" class="btn btn-outline-primary" style="padding: 0.5rem 1rem" data-toggle="modal" data-target="#search-modal">
+                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
+                    </button>
+                    <!-- Corona/Cancer button hidden
                     <button id="btn-corona" title="IN DEVELOPMENT" class="btn btn-outline-danger" style="padding: 0.5rem 1rem">
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; COVID-19
                     </button>
                     <button id="btn-cancer" title="IN DEVELOPMENT" class="btn btn-outline-warning" style="padding: 0.5rem 1rem">
                         <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
                     </button>
+                    -->
 					<button id="btn-feedback" style="padding: 0.5rem 1rem" title="Write Feedback for this website." data-toggle="modal" data-target="#feedback-container" class="btn btn-outline-info btn-flat hidden-xs">
 					<i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
 					</button>
@@ -251,21 +256,15 @@
                         data-toggle="modal" data-target="#about-modal">
                         <i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp; About Us
                     </button>
-                    <a id="btn-ffl" class="btn btn-outline-success" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank">
+                    <a id="btn-ffl" class="btn btn-outline-info" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank">
                         <i class="fa fa-external-link" aria-hidden="true"></i>&nbsp;&nbsp; Micro-physiological systems
                     </a>
                 </div>
             </div>
-            <!-- Search -->
             <div class="row">
                 <div class="col-12">
                     <h1 class="text-center" id="title_graph" style="font-size: 30px"> Clinical Trials Grouped by Conditions</h1>
                 </div>
-            </div>
-            <div class="d-flex justify-content-center justify-content-lg-end">
-                <button id="btn-search" class="btn btn-primary" data-toggle="modal" data-target="#search-modal">
-                    <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
-                </button>
             </div>
             <!-- Chart Graph -->
             <div class="row box box-border">

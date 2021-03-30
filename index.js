@@ -104,6 +104,12 @@ function initIndexedDB() {
             },
             {
                 showSkip: !hastoDisplayTour,
+                'next #btn-search': 'Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, <br> such as trials status can be set under "Other".',
+                skipButton : {text: "End Tour!"}
+            },
+            /* Corona/Cancer Search Button Disabled
+            {
+                showSkip: !hastoDisplayTour,
                 'next #btn-corona': 'Search all trials related to COVID-19',
                 skipButton : {text: "End Tour!"}
             },
@@ -112,6 +118,7 @@ function initIndexedDB() {
                 'next #btn-cancer': 'Search all trials related to cancer.',
                 skipButton : {text: "End Tour!"}
             },
+            */
             {
                 showSkip: !hastoDisplayTour,
                 'next #btn-feedback': 'Write Feedback for this website.',
@@ -125,11 +132,6 @@ function initIndexedDB() {
             {
                 showSkip: !hastoDisplayTour,
                 'next #btn-ffl': 'External navigation to high-throughput micro-physiological screening systems, <br> which provide efficient means for evaluating treatments for COVID-19, and other diseases, such as cancer.',
-                skipButton : {text: "End Tour!"}
-            },
-            {
-                showSkip: !hastoDisplayTour,
-                'next #btn-search': 'Search US clinical trials database. Search can include Condition (disease), Treatment (intervention) and Additional options, <br> such as trials status can be set under "Other".',
                 skipButton : {text: "End Tour!"}
             },
             {
