@@ -242,17 +242,36 @@ function initDatatable() {
             },
         },
         dom: 'lBfrtip',
+        //disallows datatables to inject additional classnames
+        buttons: {
+            dom: {
+                button: {
+                    className: ''
+                }
+            },
         buttons: [
             {
-                extend: 'collection',
+                extend: 'collection', className: 'btn btn-outline-primary btn-export dropdown-toggle',
                 text: 'Export',
                 buttons: [
-                    {extend: 'excel',title: "studies"},
-                    {extend: 'csv',title: "studies"},
-                    {extend: 'print'},
-                ]
+                    {
+                        extend: 'excel',
+                        className: 'dropdown-item',
+                        titleAttr: "Export as Excel"
+                    },
+                    {
+                        extend: 'csv',
+                        className: 'dropdown-item',
+                        titleAttr: "Export as CSV"
+                    },
+                    {
+                        extend: 'print',
+                        className: 'dropdown-item',
+                        titleAttr: "Print"
+                    },
+                ],
             }
-        ],
+        ]},
         columns: [
             //{ data: "rank" },
             { data: "nct_id" },
