@@ -194,7 +194,14 @@
             }
             .dt-buttons {
                 float: right !important;
+                text-align: center !important;
             }
+        
+            .dt-button-collection {
+                padding: 0 !important;
+                width: auto !important;
+            }
+            
             .menu-btns {
                 text-align: center;
                 margin-bottom: 10px;
