@@ -189,9 +189,6 @@
             .font-12 {
                 font-size: 12px;
             }
-            .dataTables_length {
-                float: left;
-            }
             .dt-buttons {
                 float: right !important;
                 text-align: center !important;
@@ -222,6 +219,21 @@
                 box-shadow: 0 1px 10px rgba(0,0,0,.8);
                 background-color: white;
             }
+            
+            .container-fluid.top-elements {
+                padding-left: 0px;
+                padding-right: 0px;
+            }
+            
+            .row.top-elements .col {
+                padding-top: 0.2rem;
+                padding-bottom: 0.2rem;
+            }
+            
+            div.dataTables_info {
+            padding-top: 0px !important;
+            }
+
         </style>
     </head>
     <body>
