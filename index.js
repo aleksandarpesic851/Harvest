@@ -241,7 +241,8 @@ function initDatatable() {
                 return  $.extend(d, searchKeys);
             },
         },
-        dom: 'lBfrtip',
+        dom: "<'container-fluid top-elements'<'row top-elements d-flex align-items-center'" +
+             "<'col col-lg'l><'col col-md-auto'i><'col col-sm-auto'B>>>frt<'row'<'col'p>>",
         //disallows datatables to inject additional classnames
         buttons: {
             dom: {
@@ -285,7 +286,11 @@ function initDatatable() {
             { data: "phases" },
             { data: "study_designs" },
         ],
-        order: [[ 0, 'desc' ]]
+        order: [[ 0, 'desc' ]],
+        "language": {
+            "lengthMenu": "Showing first _MENU_ entries",
+        },
+        lengthMenu: [10, 20, 30]
     });
 }
 
