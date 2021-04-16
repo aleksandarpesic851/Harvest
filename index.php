@@ -275,7 +275,7 @@
                         </button>
                         -->
                         <button id="btn-feedback" style="padding: 0.5rem 1rem" title="Write Feedback for this website." data-toggle="modal" data-target="#feedback-container" class="btn btn-outline-info btn-flat hidden-xs nav-item mr-2">
-                        <i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
+                            <i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
                         </button>
                         <button id="btn-aboutus" class="btn btn-outline-primary nav-item mr-2" style="padding: 0.5rem 1rem"
                             data-toggle="modal" data-target="#about-modal">
@@ -358,15 +358,15 @@
                         </button>
                     </div>
                     <div class="modal-body">
-							<div class="col-12">
-							<form id="feedForm" action="feedback/add.php" method="post">
-							<label for="feedback">We would love to hear from you! (<i>250 character limit please</i>)</label>
-							<textarea rows="5" class="form-control" id="feedback" name="comment" required="required" maxlength="250"></textarea>
-							</div>
-							<div class="col-12 text-right" style="margin-top: 10px">
-							<input type="submit" value="Send Message" class="btn btn-primary">
-							</form>
-							</div>
+                        <div class="col-12">
+                            <form id="feedForm" action="feedback/add.php" method="post">
+                                <label for="feedback">We would love to hear from you! (<i>250 character limit please</i>)</label>
+                                <textarea rows="5" class="form-control" id="feedback" name="comment" required="required" maxlength="250"></textarea>
+                                <div class="col-12 text-right" style="margin-top: 10px">
+                                </div>
+                                <input type="submit" value="Send Message" class="btn btn-primary">
+                            </form>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary close-feed" data-dismiss="modal">Close</button>
