@@ -60,6 +60,16 @@
         <link rel="mask-icon" href="/imgs/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
+        
+        <!-- Javascripts -->
+        
+        <!-- JQuery -->
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
+		
+        <!-- Bootstrap -->
+        <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
         <style>
 		
@@ -281,8 +291,8 @@
                             data-toggle="modal" data-target="#about-modal">
                             <i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp;About Us
                         </button>
-                        <a id="btn-ffl" class="btn btn-outline-info nav-item mr-2" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank">
-                            <i class="fa fa-external-link" aria-hidden="true"></i>&nbsp;&nbsp;Micro-physiological systems
+                        <a id="btn-ffl" class="btn btn-outline-info nav-item mr-2" title="Visit Our Online Store" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank">
+                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;&nbsp;Micro-physiological systems
                         </a>
                     </div>
                 </div>
@@ -678,37 +688,45 @@
         
         <!-- Javascripts -->
 
-        <!-- JQuery -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
-        <!-- Bootstrap -->
-        <script async src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script async src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        
         <!-- Datatable -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+        <script defer type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+		<script defer type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+		<script defer type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+		<script defer type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+		<script defer type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+		<script defer type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
         
         <!-- Chart -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
-        <!-- <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script> -->
-        <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.4"></script> -->
+        <script defer src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
         
         <!-- Date RangePicker -->
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+        <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
         <!-- Treeview -->
-        <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
+        <!-- Generated from https://crg.syncfusion.com/ using the following json settings 
+        {
+            "components": [
+                "button",
+                "check-box",
+                "treeview"
+            ],
+            "minified": "true",
+            "themes": [
+                "material"
+            ],
+            "version": "19.1.56",
+            "name": "ej2.custom",
+            "isMinified": true,
+            "injectables": {}
+        }
+        -->
+        <script defer src="/ej2/ej2.custom.min.js" type="text/javascript"></script>
 
         <!-- Tour -->
-        <script src="/enjoyhint/enjoyhint.js"></script>
+        <script defer src="/enjoyhint/enjoyhint.js"></script>
         <!-- Page Js -->
-        <script src="index.js"></script>
+        <script defer src="index.js"></script>
 
     </body>
 </html>
