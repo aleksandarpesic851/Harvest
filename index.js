@@ -289,6 +289,7 @@ function initDatatable() {
         order: [[ 0, 'desc' ]],
         "language": {
             "lengthMenu": "Showing first _MENU_ entries",
+            "processing": "Updating Table..."
         },
         lengthMenu: [10, 20, 30]
     });

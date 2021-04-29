@@ -60,6 +60,32 @@
         <link rel="mask-icon" href="/imgs/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
+
+        <!-- Stylesheets -->
+
+        <!-- Font -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <!-- Datatable -->
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+
+        <!-- Date Range Picker -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+        <!-- Tree -->
+        <link href="https://cdn.syncfusion.com/ej2/ej2-base/styles/material.css" rel="stylesheet">
+        <link href="https://cdn.syncfusion.com/ej2/ej2-buttons/styles/material.css" rel="stylesheet">
+        <link href="https://cdn.syncfusion.com/ej2/ej2-navigations/styles/material.css" rel="stylesheet">
+
+        <!-- Tour -->
+        <link href="/enjoyhint/enjoyhint.css" rel="stylesheet"/>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="usclinicaltrails-custom.css" />
         
         <!-- Javascripts -->
         
@@ -71,185 +97,11 @@
         <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-        <style>
-		
-			div#feedback-container {
-				display: none;
-			}
-			div#feedback-container .btn.btn-primary {
-				float: left;
-			}
-            #chartjs-tooltip {
-                opacity: 1;
-                position: absolute;
-                background: rgba(0, 0, 0, .2);
-                color: black;
-                border-radius: 3px;
-                -webkit-transition: all .1s ease;
-                transition: all .1s ease;
-                pointer-events: none;
-                -webkit-transform: translate(-50%, 0);
-                transform: translate(-50%, 0);
-            }
-            .box {
-                padding: 5px;
-                margin-top: 10px;
-            }
-            .box-border {
-                border: 1px solid #eee;
-            }
-            .top-container {
-                margin: 0;
-                padding: 10px 2%;
-            }
-            .enable-scroll {
-                overflow: auto;
-            }
-            @media (orientation: landscape) {
-                .chart-container {
-                    width: 100%;
-                    height: 70vh;
-                }
-                .graph-left {
-                    max-height: calc(70vh - 50px);
-                    overflow: auto;
-                }
-            }
-
-            @media (orientation: portrait) {
-                .chart-container {
-                    width: 100%;
-                    height: 80vw;
-                }
-                .graph-left {
-                    max-height: calc(60vw - 50px);
-                    overflow: auto;
-                }
-            }
-            .item-box {
-                margin: 5px 0;
-            }
-            .sub-item-box {
-                padding-left: 5%;
-            }
-            .font-bold {
-                margin: 0px;
-                font-weight: 500;
-            }
-            .modal-body-content {
-				box-shadow: 1px 1px 3px rgba(0,0,0,0.1), -1px -1px 3px rgba(0,0,0,0.1);
-                height: calc(60vh);
-				padding: 10px;
-				overflow: auto;
-            }
-            .e-treeview > .e-ul {
-				overflow: initial !important;
-			}
-			.graph-search-box {
-                box-shadow: 1px 1px 3px rgba(0,0,0,0.1), -1px -1px 3px rgba(0,0,0,0.1);
-				padding: 10px;
-                display: flex;
-                flex-flow: column;
-            }
-            .height-remaining {
-                flex-grow : 1;
-                overflow: auto;
-            }
-			.lds-container {
-				width: 100%;
-				height: 100%;
-				background: rgba(0,0,0,0.6);
-				z-index: 1000;
-				position: fixed;
-				top: 0;
-				left: 0;
-				display: flex;
-			}
-			.lds-dual-ring {
-				color: #fff;
-				display: inline-block;
-				width: 80px;
-				height: 80px;
-				margin: auto;
-			}
-			.lds-dual-ring::after {
-				content: " ";
-				display: block;
-				width: 64px;
-				height: 64px;
-				margin: 8px;
-				border-radius: 50%;
-				border: 6px solid #fff;
-				border-color: #fff transparent #fff transparent;
-				animation: lds-dual-ring 1.2s linear infinite;
-			}
-			@keyframes lds-dual-ring {
-				0% {
-					transform: rotate(0deg);
-				}
-				100% {
-					transform: rotate(360deg);
-				}
-			}
-            canvas {
-                -moz-user-select: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-            }
-            .font-12 {
-                font-size: 12px;
-            }
-            .dt-buttons {
-                float: right !important;
-                text-align: center !important;
-            }
-        
-            .dt-button-collection {
-                padding: 0 !important;
-                width: auto !important;
-            }
-            
-            .menu-btns {
-                text-align: center;
-                margin-bottom: 10px;
-            }
-            @media (min-width: 992px) {
-                .menu-btns {
-                    text-align: right;
-                }
-            }
-            .not-show {
-                display: none !important;
-            }
-
-            .introjs-tooltip {
-                position: fixed !important;
-                left: calc(50vw - 60px) !important;
-                top: calc(50vh - 50px) !important;
-                box-shadow: 0 1px 10px rgba(0,0,0,.8);
-                background-color: white;
-            }
-            
-            .container-fluid.top-elements {
-                padding-left: 0px;
-                padding-right: 0px;
-            }
-            
-            .row.top-elements .col {
-                padding-top: 0.2rem;
-                padding-bottom: 0.2rem;
-            }
-            
-            div.dataTables_info {
-            padding-top: 0px !important;
-            }
-
-        </style>
     </head>
     <body>
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P45ZHDP"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        height="0" width="0"></iframe></noscript>
         <!-- End Google Tag Manager (noscript) -->
 
         <div class="lds-container" id="waiting">
@@ -260,7 +112,7 @@
             <nav class="navbar navbar-expand-md navbar-light">
                 <div class="d-flex flex-fill align-items-center">
                     <div class="navbar-brand">
-                            <img src="/imgs/clinical_index.png" style="height: auto; width: 100%; max-width: 350px;" alt="clinical trials">
+                            <img src="/imgs/clinical_index.png" id="brand-img" alt="clinical trials">
                     </div>
                     <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -268,12 +120,12 @@
                 </div>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <div class="navbar-nav ml-auto">
-                        <button type="button" id="start_tour" style="padding: 0.5rem 1rem"
+                        <button type="button" id="start_tour"
                         title="Tour Website" data-toggle="tooltip" data-placement="bottom"
                         class="btn btn-outline-info btn-flat hidden-xs nav-item mr-2">
                         &nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;
                         </button>
-                        <button id="btn-search" class="btn btn-outline-primary nav-item mr-2" style="padding: 0.5rem 1rem" data-toggle="modal" data-target="#search-modal">
+                        <button id="btn-search" class="btn btn-outline-primary nav-item mr-2" data-toggle="modal" data-target="#search-modal">
                             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
                         </button>
                         <!-- Corona/Cancer button hidden
@@ -284,14 +136,14 @@
                             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
                         </button>
                         -->
-                        <button id="btn-feedback" style="padding: 0.5rem 1rem" title="Write Feedback for this website." data-toggle="modal" data-target="#feedback-container" class="btn btn-outline-info btn-flat hidden-xs nav-item mr-2">
+                        <button id="btn-feedback" title="Write Feedback for this website." data-toggle="modal" data-target="#feedback-container" class="btn btn-outline-info btn-flat hidden-xs nav-item mr-2">
                             <i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;&nbsp;Feedback
                         </button>
-                        <button id="btn-aboutus" class="btn btn-outline-primary nav-item mr-2" style="padding: 0.5rem 1rem"
+                        <button id="btn-aboutus" class="btn btn-outline-primary nav-item mr-2"
                             data-toggle="modal" data-target="#about-modal">
                             <i class="fa fa-question" aria-hidden="true"></i>&nbsp;&nbsp;About Us
                         </button>
-                        <a id="btn-ffl" class="btn btn-outline-info nav-item mr-2" title="Visit Our Online Store" style="padding: 0.5rem 1rem" href="https://fluidsforlife.com/category/system.html" target="_blank">
+                        <a id="btn-ffl" class="btn btn-outline-info nav-item mr-2" title="Visit Our Online Store" href="https://fluidsforlife.com/category/system.html" target="_blank">
                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;&nbsp;Micro-physiological systems
                         </a>
                     </div>
@@ -299,7 +151,7 @@
             </nav>
             <div class="row">
                 <div class="col-12">
-                    <h1 class="text-center" id="title_graph" style="font-size: 30px"> Clinical Trials Grouped by Conditions</h1>
+                    <h1 class="text-center" id="title_graph"> Clinical Trials Grouped by Conditions</h1>
                 </div>
             </div>
             <!-- Chart Graph -->
@@ -310,7 +162,7 @@
                         <li class=" nav-item" id="btn-modifier"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
                         <li class=" nav-item" id="btn-treatment"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
-                    <div class="tab-content" style="margin-top: 10px;">
+                    <div class="tab-content">
                         <div class="tab-pane graph-left active" id="graph-tab-condition">
                             <!-- Condition Tree -->
                             <div id="condition-search-tree"></div>
@@ -335,10 +187,10 @@
             </div>
             
             <!-- Data table -->
-            <h2 class="text-center" style="margin-top: 2rem; font-size: 30px">Clinical Trials Data Table For Graph</h2>
+            <h2 class="text-center">Clinical Trials Data Table For Graph</h2>
             <div class="row box">
-                <div class="col-12" id="datatable-container" style="overflow: auto;">
-                    <table id="study-table" class="table table-striped table-bordered" style="width: 100%; max-width: 100%">
+                <div class="col-12" id="datatable-container">
+                    <table id="study-table" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>NCT ID</th>
@@ -358,7 +210,7 @@
             </div>
 
             <!-- Feedback -->
-        <div class="modal fade show" id="feedback-container" tabindex="-1" role="dialog" style="padding-right: 17px;" aria-modal="true">
+        <div class="modal fade show" id="feedback-container" tabindex="-1" role="dialog" aria-modal="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 				<div class="modal-content">
                     <div class="modal-header">
@@ -372,7 +224,7 @@
                             <form id="feedForm" action="feedback/add.php" method="post">
                                 <label for="feedback">We would love to hear from you! (<i>250 character limit please</i>)</label>
                                 <textarea rows="5" class="form-control" id="feedback" name="comment" required="required" maxlength="250"></textarea>
-                                <div class="col-12 text-right" style="margin-top: 10px">
+                                <div class="col-12 text-right">
                                 </div>
                                 <input type="submit" value="Send Message" class="btn btn-primary">
                             </form>
@@ -402,7 +254,7 @@
                             <li class=" nav-item"><a class="nav-link" data-toggle="tab" href="#tab-drug">Treatments</a></li>
                             <li class=" nav-item"><a class="nav-link" data-toggle="tab" href="#tab-other">Others</a></li>
                         </ul>
-                        <div class="tab-content" style="margin-top: 10px;">
+                        <div class="tab-content">
                             <!-- Condition Tree -->
                             <div class="tab-pane container active" id="tab-condition">
                                 <div class="row modal-body-content">
@@ -418,7 +270,7 @@
                                 </div>
                             </div>
                             <div class="tab-pane container fade" id="tab-other">
-                                <form id="search-other-form" style="margin-bottom: 0">
+                                <form id="search-other-form">
                                     <div class="row modal-body-content">
                                         <!-- Status -->
                                         <div class="col-12 item-box">
@@ -662,29 +514,6 @@
                 </div>
             </div>
         </div>
-
-
-        <!-- Stylesheets -->
-        <!-- Font -->
-        <link async rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-		<!-- Bootstrap -->
-        <link async rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-        <!-- Datatable -->
-		<link async rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
-		<link async rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
-
-        <!-- Date Range Picker -->
-        <link async rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
-        <!-- Tree -->
-        <link async href="//cdn.syncfusion.com/ej2/ej2-base/styles/material.css" rel="stylesheet">
-        <link async href="//cdn.syncfusion.com/ej2/ej2-buttons/styles/material.css" rel="stylesheet">
-        <link async href="//cdn.syncfusion.com/ej2/ej2-navigations/styles/material.css" rel="stylesheet">
-
-        <!-- Tour -->
-        <link async href="/enjoyhint/enjoyhint.css" rel="stylesheet"/>
         
         <!-- Javascripts -->
 
