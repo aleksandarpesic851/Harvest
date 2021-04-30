@@ -36,6 +36,42 @@
         <meta property="og:title" content="Intelligent navigation of USA clinical trials" />
         <meta property="og:description" content="Provide a graphical interface for navigating clinical trials in the USA repository. This website uses a biologist-curated hierarchy of both illness conditions and treatments to provide the user convenient categories." />
 
+        <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png" />
+        <link rel="manifest" href="/imgs/site.webmanifest" />
+        <link rel="mask-icon" href="/imgs/safari-pinned-tab.svg" color="#5bbad5" />
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+
+        <!-- Stylesheets -->
+
+        <!-- Font -->
+        <link rel="stylesheet preconnect preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous" />
+
+		<!-- Bootstrap -->
+        <link rel="stylesheet preconnect preload" as="style" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+        <!-- Datatable -->
+		<link rel="stylesheet preconnect preload" as="style" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous" />
+		<link rel="stylesheet preconnect preload" as="style" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css" crossorigin="anonymous" />
+
+        <!-- Date Range Picker -->
+        <link rel="stylesheet preconnect preload" as="style" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" crossorigin="anonymous" />
+
+        <!-- Tree -->
+        <link rel="stylesheet preconnect preload" as="style" href="https://cdn.syncfusion.com/ej2/ej2-base/styles/material.css" crossorigin="anonymous" />
+        <link rel="stylesheet preconnect preload" as="style" href="https://cdn.syncfusion.com/ej2/ej2-buttons/styles/material.css" crossorigin="anonymous" />
+        <link rel="stylesheet preconnect preload" as="style" href="https://cdn.syncfusion.com/ej2/ej2-navigations/styles/material.css" crossorigin="anonymous" />
+
+        <!-- Tour -->
+        <link rel="stylesheet preload" as="style" href="/enjoyhint/enjoyhint.css" />
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet preload" as="style" href="usclinicaltrails-custom.css" />
+        
+        <!-- Javascripts -->
+        
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -52,42 +88,6 @@
             }
         }
         </script>
-
-        <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
-        <link rel="manifest" href="/imgs/site.webmanifest">
-        <link rel="mask-icon" href="/imgs/safari-pinned-tab.svg" color="#5bbad5">
-        <meta name="msapplication-TileColor" content="#da532c">
-        <meta name="theme-color" content="#ffffff">
-
-        <!-- Stylesheets -->
-
-        <!-- Font -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-		<!-- Bootstrap -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-        <!-- Datatable -->
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
-
-        <!-- Date Range Picker -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
-        <!-- Tree -->
-        <link href="https://cdn.syncfusion.com/ej2/ej2-base/styles/material.css" rel="stylesheet">
-        <link href="https://cdn.syncfusion.com/ej2/ej2-buttons/styles/material.css" rel="stylesheet">
-        <link href="https://cdn.syncfusion.com/ej2/ej2-navigations/styles/material.css" rel="stylesheet">
-
-        <!-- Tour -->
-        <link href="/enjoyhint/enjoyhint.css" rel="stylesheet"/>
-
-        <!-- Custom CSS -->
-        <link rel="stylesheet" href="usclinicaltrails-custom.css" />
-        
-        <!-- Javascripts -->
         
         <!-- JQuery -->
         <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>

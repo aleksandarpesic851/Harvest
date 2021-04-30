@@ -189,7 +189,7 @@ canvas {
 }
 
 div.dataTables_info {
-padding-top: 0px !important;
+    padding-top: 0px !important;
 }
 
 #brand-img {
@@ -237,6 +237,6 @@ padding-top: 0px !important;
 }
 
 .dataTables_wrapper .dataTables_processing {
-    background-color:white;
+    background-color: white;
     z-index: 10;
     }
