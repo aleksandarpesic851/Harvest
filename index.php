@@ -128,10 +128,10 @@
                         <button id="btn-search" class="btn btn-outline-primary nav-item mr-2" data-toggle="modal" data-target="#search-modal">
                             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
                         </button>
-                        <!-- Corona/Cancer button hidden
-                        <button id="btn-corona" title="IN DEVELOPMENT" class="btn btn-outline-danger nav-item mr-2" style="padding: 0.5rem 1rem">
+                        <button id="btn-corona" class="btn btn-outline-primary nav-item mr-2" style="padding: 0.5rem 1rem">
                             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; COVID-19
                         </button>
+                        <!-- Cancer button hidden
                         <button id="btn-cancer" title="IN DEVELOPMENT" class="btn btn-outline-warning nav-item mr-2" style="padding: 0.5rem 1rem">
                             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
                         </button>
@@ -162,7 +162,7 @@
                         <li class=" nav-item" id="btn-modifier"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-modifier">Modifiers</a></li>
                         <li class=" nav-item" id="btn-treatment"><a class="nav-link font-12" data-toggle="tab" href="#graph-tab-drug">Treatments</a></li>
                     </ul>
-                    <div class="tab-content">
+                    <div class="tab-content" id="graph-tabs">
                         <div class="tab-pane graph-left active" id="graph-tab-condition">
                             <!-- Condition Tree -->
                             <div id="condition-search-tree"></div>
@@ -224,8 +224,7 @@
                             <form id="feedForm" action="feedback/add.php" method="post">
                                 <label for="feedback">We would love to hear from you! (<i>250 character limit please</i>)</label>
                                 <textarea rows="5" class="form-control" id="feedback" name="comment" required="required" maxlength="250"></textarea>
-                                <div class="col-12 text-right">
-                                </div>
+                                <div class="pb-2"></div>
                                 <input type="submit" value="Send Message" class="btn btn-primary">
                             </form>
                         </div>
@@ -514,6 +513,27 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Footer -->
+        <footer class="page-footer font-small">
+            <hr/>
+            <!-- Links -->
+            <div class="container">
+                <div class="row justify-content-center py-2">
+                    <div class="col-auto"> <a href="https://fluidsforlife.com/">Fluids For Life</a> </div>
+                    <div class="col-auto border-left"> <a href="https://flowcell.co">Flowcell</a> </div>
+                    <div class="col-auto border-left"> <a href="https://health-sherlock.com/">Health Sherlock</a> </div>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="footer-copyright text-center pb-3">Copyright &copy; <?php echo date("Y"); ?>
+                <a href="https://usclinicaltrials.org/"> usclinicaltrials.org</a> . All rights reserved.
+            </div>
+            <!-- Copyright -->
+
+        </footer>
+        <!-- Footer -->
         
         <!-- Javascripts -->
 
