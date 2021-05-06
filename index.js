@@ -1046,5 +1046,5 @@ function searchCancer() {
        
        //bind Cancer/Corona Search buttons
        //$('#btn-cancer').click(searchCancer);
-       //$('#btn-corona').click(searchCorona);
+       $('#btn-corona').click(searchCorona);
      });

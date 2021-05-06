@@ -128,10 +128,10 @@
                         <button id="btn-search" class="btn btn-outline-primary nav-item mr-2" data-toggle="modal" data-target="#search-modal">
                             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search
                         </button>
-                        <!-- Corona/Cancer button hidden
-                        <button id="btn-corona" title="IN DEVELOPMENT" class="btn btn-outline-danger nav-item mr-2" style="padding: 0.5rem 1rem">
+                        <button id="btn-corona" class="btn btn-outline-primary nav-item mr-2" style="padding: 0.5rem 1rem">
                             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; COVID-19
                         </button>
+                        <!-- Cancer button hidden
                         <button id="btn-cancer" title="IN DEVELOPMENT" class="btn btn-outline-warning nav-item mr-2" style="padding: 0.5rem 1rem">
                             <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp; Cancer
                         </button>
