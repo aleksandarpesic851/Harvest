@@ -242,7 +242,7 @@ function initDatatable() {
             },
         },
         dom: "<'container-fluid top-elements'<'row top-elements d-flex align-items-center'" +
-             "<'col col-lg'l><'col col-md-auto'i><'col col-sm-auto'B>>>frt<'row'<'col'p>>",
+             "<'col col-lg'l><'col col-md-auto'i><'col col-sm-auto'B>>>frt<'row'<'col pt-2'p>>",
         //disallows datatables to inject additional classnames
         buttons: {
             dom: {

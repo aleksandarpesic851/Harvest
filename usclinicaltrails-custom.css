@@ -223,20 +223,20 @@ div.dataTables_info {
     margin-bottom: 0
 }
 
-.tab-content {
+#graph-tabs {
     margin-top: 10px;
 }
 
-.text-center {
+#title_graph {
     margin-top: 2rem;
     font-size: 30px
-}
-
-.col-12.text-right {
-    margin-top: 10px
 }
 
 .dataTables_wrapper .dataTables_processing {
     background-color: white;
     z-index: 10;
-    }
+}
+
+.footer-copyright a {
+  color:#212529;
+}
